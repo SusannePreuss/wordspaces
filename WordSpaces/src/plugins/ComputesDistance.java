@@ -9,6 +9,7 @@
 
 package plugins;
 
+import exceptions.DimensionNotEqualException;
 import java.util.TreeMap;
 
 /**

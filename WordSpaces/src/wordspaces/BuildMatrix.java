@@ -15,7 +15,7 @@ import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingWorker;
-import plugins.DimensionNotEqualException;
+import exceptions.DimensionNotEqualException;
 
 /**
  *
@@ -68,7 +68,7 @@ public class BuildMatrix extends SwingWorker<Matrix, String>{
            
             try{    
                 if (selection[i].keySet().size() != m.getColumnDimension()) 
-                    throw new plugins.DimensionNotEqualException();                
+                    throw new exceptions.DimensionNotEqualException();                
             } catch (DimensionNotEqualException ex) {
                 Logger.getLogger("global").log(Level.SEVERE, null, ex);
             }

@@ -24,7 +24,7 @@ import wordspaces.gui.GUI;
  *
  * @author alexander
  */
-public class LoadModelThread extends SwingWorker<Object, Integer>{
+public class LoadModelThread extends SwingWorker<Model, Integer>{
     
     private GUI gui;
     
@@ -32,8 +32,9 @@ public class LoadModelThread extends SwingWorker<Object, Integer>{
         gui = g;
     }
     
-    protected Object doInBackground() throws Exception {
+    protected Model doInBackground() throws Exception {
         File file = null;
+        Model model = null;
         JFileChooser chooser = new JFileChooser();
         chooser.setFileFilter(new javax.swing.filechooser.FileFilter() {
             public boolean accept(File f) {
@@ -58,8 +59,8 @@ public class LoadModelThread extends SwingWorker<Object, Integer>{
             gui.getProgressBar().setIndeterminate(true);
             try {
                 ois = new ObjectInputStream(new FileInputStream(file));
-                Model model = (Model)ois.readObject();
-                ((DefaultListModel)gui.getModelList().getModel()).addElement(model);
+                model = (Model)ois.readObject();
+                gui.addModel(model);
                 
                 //automatically selects the new model if no model was selected before
                 if(gui.getModel() == null){
@@ -91,7 +92,7 @@ public class LoadModelThread extends SwingWorker<Object, Integer>{
             }
         }
         
-        return null;
+        return model;
     }
 
 }

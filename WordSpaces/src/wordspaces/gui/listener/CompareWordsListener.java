@@ -12,7 +12,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
-import plugins.DimensionNotEqualException;
+import exceptions.DimensionNotEqualException;
 import plugins.EuclideanDistance;
 import plugins.ScalarProductNorm;
 import wordspaces.Model;

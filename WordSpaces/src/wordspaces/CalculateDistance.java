@@ -14,7 +14,7 @@ import plugins.ComputesDistance;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
-import plugins.DimensionNotEqualException;
+import exceptions.DimensionNotEqualException;
 import plugins.EuclideanDistance;
 
 /**

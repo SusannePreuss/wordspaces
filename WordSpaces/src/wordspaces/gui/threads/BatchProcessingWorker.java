@@ -10,7 +10,6 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.Vector;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingWorker;

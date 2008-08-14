@@ -19,19 +19,22 @@ import wordspaces.*;
  */
 public class FileFilterWorker extends SwingWorker<Object, Integer> {
     
-    private File[] files;
+    private File file;
     
-    public FileFilterWorker(File[] f) {
-        files = f;
+    
+    public FileFilterWorker(File file) {
+        this.file = file;
     }
 
     @Override
     protected Object doInBackground() throws Exception {
-        for(File f:files)
-            firePropertyChange("progress",0,FileRefiner.filterFile(f));
-        
-        
+        firePropertyChange("progress",0,FileRefiner.filterFile(file));
+              
         return null;
+    }
+    
+    public File getFile(){
+        return file;
     }
     
 }

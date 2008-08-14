@@ -73,6 +73,7 @@ import wordspaces.gui.listener.RenameModelActionListener;
 import wordspaces.gui.listener.SaveModelActionListener;
 import wordspaces.gui.listener.SelectAllActionListener;
 import wordspaces.gui.threads.BatchProcessingWorker;
+import wordspaces.gui.threads.FileFilterBalancer;
 import wordspaces.gui.threads.LoadModelThread;
 
 /**
@@ -808,24 +809,28 @@ public class GUI extends javax.swing.JFrame {
                     files[i] = (File)textSourcesListModel.elementAt(indices[i]);                    
                 
                 textSourcesListModel.removeAllElements();
+                textSizeLabel.setText("0 items");
                 progressBar.setMaximum(indices.length);
+                progressBar.setString("(0/"+indices.length+") finished");
                 progressBar.setStringPainted(true);
                 progressBar.setIndeterminate(true);
-                final FileFilterWorker filter = new FileFilterWorker(files);
+                final FileFilterBalancer filter = new FileFilterBalancer(files);
                 filter.addPropertyChangeListener(new PropertyChangeListener() {
-                    int counter = 0;
+                    int counter = 0; boolean done = false;
                     public  void propertyChange(PropertyChangeEvent evt) {
                         if ("progress".equals(evt.getPropertyName())) {
                             textSourcesListModel.addElement(evt.getNewValue());
                             progressBar.setValue(counter++);
-                            progressBar.setString("("+counter+"/"+indices.length+")");
+                            progressBar.setString("("+counter+"/"+indices.length+") finished");
+                            textSizeLabel.setText(counter+" items");
                         }
-                        else if(filter.isDone()){
-                            System.out.println("Finished filtering...");
+                        else if(filter.isDone() && !done){
+                            done = true;                          
                             progressBar.setValue(0);
-                            progressBar.setString("0 %");
+                            progressBar.setString("");
                             progressBar.setStringPainted(false);
                             progressBar.setIndeterminate(false);
+                            System.out.println("Finished filtering...");
                         }
                     }
                 });
@@ -1053,12 +1058,12 @@ public class GUI extends javax.swing.JFrame {
     	String name = JOptionPane.showInputDialog("Please type in the models name");
         if(name != null && !name.isEmpty()){
             Model m = new Model(name);
-            modelListModel.addElement(m);
-            System.out.println("New model '"+m+"' created");
+            addModel(m);
+            System.out.println("New model '"+m+"' created...");
 
             //automatically selects the new model if no model was selected before
             if(model == null){
-    		model = m;
+    		setModel(m);
                 modelList.setSelectedIndex(modelListModel.getSize()-1);     //select the last added model
                 infoWindowFrame.setTitle(model.toString());
             }
