@@ -1,0 +1,199 @@
+/*
+ * StopWords.java
+ * 
+ * Created on 21.05.2007, 10:18:06
+ * 
+ * To change this template, choose Tools | Template Manager
+ * and open the template in the editor.
+ */
+
+package wordspaces;
+
+import java.util.HashSet;
+import java.util.Set;
+
+/**
+ *
+ * @author alexander
+ */
+public class StopWords {
+
+    
+    public static Set<String> getStopWords(){
+        HashSet<String> result = new HashSet();
+        result.add("about");
+        result.add("the");
+        result.add("this");
+        result.add("that");
+        result.add("such");
+        result.add("then");
+        result.add("than");
+        result.add("an");
+        result.add("as");
+        result.add("any");
+        result.add("anyone");
+        result.add("anything");
+        result.add("other");
+        result.add("same");
+        result.add("all");
+        result.add("with");
+        result.add("and");
+        result.add("or");
+        result.add("because");
+        result.add("since");
+        result.add("you");
+        result.add("he");
+        result.add("she");
+        result.add("it");
+        result.add("its");
+        result.add("we");
+        result.add("they");
+        result.add("me");
+        result.add("my");
+        result.add("him");
+        result.add("his");
+        result.add("her");
+        result.add("us");
+        result.add("our");
+        result.add("those");
+        result.add("them");
+        result.add("their");
+        result.add("these");
+        result.add("are");
+        result.add("aren");
+        result.add("is");
+        result.add("isn");
+        result.add("be");
+        result.add("being");
+        result.add("was");
+        result.add("wasn");
+        result.add("were");
+        result.add("weren");
+        result.add("been");
+        result.add("put");
+        result.add("in");
+        result.add("on");
+        result.add("off");
+        result.add("into");
+        result.add("out");
+        result.add("by");
+        result.add("to");
+        result.add("too");
+        result.add("also");
+        result.add("of");
+        result.add("for");
+        result.add("from");
+        result.add("at");
+        result.add("up");
+        result.add("above");
+        result.add("behind");
+        result.add("under");
+        result.add("next");
+        result.add("but");
+        result.add("though");
+        result.add("before");
+        result.add("after");
+        result.add("now");
+        result.add("along");
+        result.add("while");
+        result.add("until");
+        result.add("just");
+        result.add("only");
+        result.add("not");
+        result.add("no");
+        result.add("nor");
+        result.add("ever");
+        result.add("every");
+        result.add("each");
+        result.add("what");
+        result.add("when");
+        result.add("where");
+        result.add("who");
+        result.add("whose");
+        result.add("within");
+        result.add("which");
+        result.add("why");
+        result.add("how");
+        result.add("do");
+        result.add("did");
+        result.add("done");
+        result.add("does");
+        result.add("doesn");
+        result.add("doing");
+        result.add("want");
+        result.add("wanted");
+        result.add("can");
+        result.add("may");
+        result.add("cannot");
+        result.add("could");
+        result.add("couldn");
+        result.add("should");
+        result.add("shouldn");
+        result.add("would");
+        result.add("wouldn");
+        result.add("might");
+        result.add("must");
+        result.add("mustn");
+        result.add("once");
+        result.add("twice");
+        result.add("very");
+        result.add("besides");
+        result.add("if");
+        result.add("else");
+        result.add("yet");
+        result.add("have");
+        result.add("haven");
+        result.add("has");
+        result.add("hasn");
+        result.add("had");
+        result.add("hadn");
+        result.add("both");
+        result.add("here");
+        result.add("there");
+        result.add("non");
+        result.add("so");
+        result.add("still");
+        result.add("some");
+        result.add("something");
+        result.add("one");
+        result.add("many");
+        result.add("few");
+        result.add("lot");
+        result.add("lots");
+        result.add("simply");
+        result.add("rather");
+        result.add("whether");
+        result.add("re");
+        result.add("neither");
+        result.add("either");
+        result.add("actual");
+        result.add("overall");
+        result.add("again");
+        result.add("unless");
+        result.add("according");
+        result.add("oft");
+        result.add("often");
+        result.add("among");
+        result.add("etc");
+        result.add("am");
+        result.add("ve");
+        result.add("due");
+        result.add("thus");
+        result.add("another");
+        result.add("through");
+        result.add("really");
+        result.add("himself");
+        result.add("herself");
+        result.add("itself");
+        result.add("several");
+        result.add("further");
+        result.add("self");
+        result.add("la");
+        result.add("com");
+        result.add("en");
+        result.add("will");
+        
+        return result;
+    }
+
+}
