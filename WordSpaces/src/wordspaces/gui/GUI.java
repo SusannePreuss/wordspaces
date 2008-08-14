@@ -1051,8 +1051,7 @@ public class GUI extends javax.swing.JFrame {
     
     private void newModelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newModelButtonActionPerformed
     	String name = JOptionPane.showInputDialog("Please type in the models name");
-
-        if(!name.isEmpty()){
+        if(name != null && !name.isEmpty()){
             Model m = new Model(name);
             modelListModel.addElement(m);
             System.out.println("New model '"+m+"' created");

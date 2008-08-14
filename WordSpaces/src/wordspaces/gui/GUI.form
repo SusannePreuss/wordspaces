@@ -329,12 +329,12 @@
                   <Component id="logPanel" alignment="0" max="32767" attributes="0"/>
                   <Component id="textSizeLabel" alignment="0" min="-2" pref="143" max="-2" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="sourcesTabbedPane" pref="399" max="32767" attributes="0"/>
+                      <Component id="sourcesTabbedPane" pref="400" max="32767" attributes="0"/>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
                           <Group type="102" attributes="0">
                               <EmptySpace min="-2" max="-2" attributes="0"/>
-                              <Component id="modelsTabbedPane" pref="181" max="32767" attributes="0"/>
+                              <Component id="modelsTabbedPane" pref="218" max="32767" attributes="0"/>
                               <EmptySpace min="-2" max="-2" attributes="0"/>
                               <Component id="parserTabbedPane" min="-2" pref="115" max="-2" attributes="2"/>
                           </Group>
@@ -579,7 +579,7 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="logScrollPane" alignment="1" pref="707" max="32767" attributes="0"/>
+              <Component id="logScrollPane" alignment="1" pref="733" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
