@@ -31,10 +31,5 @@ public class FileFilterWorker extends SwingWorker<Object, Integer> {
         firePropertyChange("progress",0,FileRefiner.filterFile(file));
               
         return null;
-    }
-    
-    public File getFile(){
-        return file;
-    }
-    
+    }    
 }

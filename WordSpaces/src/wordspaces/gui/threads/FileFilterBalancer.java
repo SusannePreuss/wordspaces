@@ -22,6 +22,7 @@ public class FileFilterBalancer extends SwingWorker<File, Integer>{
     
     public FileFilterBalancer(File[] files){
         this.files = files;
+        queue = new Vector();
     }
     
     protected File doInBackground() throws Exception {
@@ -32,7 +33,7 @@ public class FileFilterBalancer extends SwingWorker<File, Integer>{
                 boolean done = false;
                 public void propertyChange(PropertyChangeEvent evt) {
                     if ("progress".equals(evt.getPropertyName())) {
-                        firePropertyChange("progress",0,thread.getFile());
+                        firePropertyChange("progress",0,evt.getNewValue());
                     }
                     if(thread.isDone() && !done){
                         done = true;
@@ -42,8 +43,9 @@ public class FileFilterBalancer extends SwingWorker<File, Integer>{
                 }
                 
             });
-            queue.addElement(thread);
-            thread.execute();
+
+            queue.add(thread);            
+            thread.execute();   
         }
         if(queue.size() != 0)
             queue.firstElement().get();     //wait until the last thread has finished
