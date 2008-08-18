@@ -163,6 +163,10 @@ public class Parser {
         return focusWords;
     } 
     
+    public Set getStopWords(){
+        return stopWords;
+    }
+    
     public boolean isFocusWordsEnabled(){
         if(focusWords != null)
             return true;
@@ -183,6 +187,10 @@ public class Parser {
     
     public void setName(String n){
         name = n;
+    }
+    
+    public String getName(){
+        return name;
     }
  
     public String toString(){

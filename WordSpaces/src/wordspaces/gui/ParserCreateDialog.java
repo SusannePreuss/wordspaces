@@ -12,7 +12,7 @@ import wordspaces.*;
 
 /**
  *
- * @author  alexander
+ * @author  alexander frey afrey@uos.de
  */
 public class ParserCreateDialog extends javax.swing.JPanel {
 
@@ -136,7 +136,20 @@ public class ParserCreateDialog extends javax.swing.JPanel {
         String name = parserNameTextField.getText();
         if(name != null){
             parser.setName(name);
-            gui.lastParserNameCache = name;  //save the name
+            /* name equals the last created parser, thus we can apply all 
+             * properties of the last parser */
+            if(name.equals(gui.lastParserNameCache)){
+                /* get the last created parser, its name must equal to name */
+                Parser last_parser = gui.getParser();
+                if(last_parser.getName().equals(name)){
+                    /* now we apply all settings to the new parser */
+                    parser.enableFocusWords(last_parser.getFocusWords());
+                    parser.enableStopWordsFilter(last_parser.getStopWords());
+                    parser.enableFiller(last_parser.isFillerEnabled());
+                }
+            }
+            else        //if names differ, then set the new name into gui 
+                gui.lastParserNameCache = name;  //save the name
         }
         dialog.dispose();       
         gui.addParser(parser);
