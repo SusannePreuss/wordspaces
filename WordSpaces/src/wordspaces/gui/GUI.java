@@ -858,6 +858,7 @@ public class GUI extends javax.swing.JFrame {
                 progressBar.setMaximum(indices.length);
                 progressBar.setStringPainted(true);
                 progressBar.setIndeterminate(true);
+                progressBar.setString("(0/"+indices.length+") finished");
                 final IrregularVerbsStemmerWorker stemmer = new IrregularVerbsStemmerWorker(files);
                 stemmer.addPropertyChangeListener(new PropertyChangeListener() {
                     int counter = 0;
@@ -865,14 +866,14 @@ public class GUI extends javax.swing.JFrame {
                         if ("progress".equals(evt.getPropertyName())) {
                             textSourcesListModel.addElement(evt.getNewValue());
                             progressBar.setValue(counter++);
-                            progressBar.setString("("+counter+"/"+indices.length+")");
+                            progressBar.setString("("+counter+"/"+indices.length+") finished");
                         }
-                        else if(stemmer.isDone()){
-                            System.out.println("Finished stemming...");
+                        else if(stemmer.isDone()){                           
                             progressBar.setValue(0);
-                            progressBar.setString("0 %");
+                            progressBar.setString("");
                             progressBar.setStringPainted(false);
                             progressBar.setIndeterminate(false);
+                            System.out.println("Finished stemming...");
                         }
                     }
                 });
