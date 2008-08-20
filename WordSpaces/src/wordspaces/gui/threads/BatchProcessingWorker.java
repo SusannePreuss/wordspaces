@@ -14,6 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingWorker;
 import wordspaces.Model;
+import wordspaces.ModelSaver;
 import wordspaces.Parser;
 
 /**
@@ -47,21 +48,15 @@ public class BatchProcessingWorker extends SwingWorker<Object, Integer>{
                         firePropertyChange("progress",0,evt.getNewValue());
                     }              
                     if(thread.isDone() && !done){
-                        done = true;
-                        try {
-                            SaveModelWorker task = new SaveModelWorker(model);
-                            task.execute();task.get();
-                        } catch (InterruptedException ex) {
-                            Logger.getLogger(BatchProcessingWorker.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (ExecutionException ex) {
-                            Logger.getLogger(BatchProcessingWorker.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                        firePropertyChange("finished",0,model);            
+                        done = true;                    
+                        firePropertyChange("finished",0,ModelSaver.saveModel(model));            
                     }
                 }              
             });
-            thread.execute(); thread.get();
-        }        
+            thread.execute(); 
+            System.out.println("Result :"+thread.get());
+        }
+        System.out.println("IN:BatchProcessingWorker:Parser "+parserVector.length);
                            
         return null;
     }

@@ -1137,10 +1137,9 @@ private void batchProcessingMenuItemActionPerformed(java.awt.event.ActionEvent e
                     progressBar.setValue(++fileProg);
                 }
                 /* building of one model is finished */
-                if ("finished".equals(evt.getPropertyName())) {
-                    Model m = (Model) evt.getNewValue();
+                if ("finished".equals(evt.getPropertyName())) {               
                     progressBar.setString("("+(++modelProg)+"/"+parserVector.length+") models finished");
-                    System.out.println("Finished building of model "+m);
+                    System.out.println("Model saved to "+evt.getNewValue());
                 }
                 
                 if(batchWorker.isDone() && !done){

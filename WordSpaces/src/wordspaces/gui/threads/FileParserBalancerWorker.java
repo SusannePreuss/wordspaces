@@ -13,6 +13,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.Vector;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Semaphore;
 import javax.swing.SwingWorker;
 import wordspaces.*;
@@ -62,6 +63,7 @@ public class FileParserBalancerWorker extends SwingWorker<Model, Integer>{
                         semaphore.release();
                         queue.remove(thread);
                         firePropertyChange("progress",0,file);
+                        System.out.println("In thread alles ok "+file);
                     }
                     
                 }
@@ -69,10 +71,20 @@ public class FileParserBalancerWorker extends SwingWorker<Model, Integer>{
             queue.addElement(thread);
             thread.execute();          
         }
-        while(queue.size() != 0)
-            queue.firstElement().get();
+        System.out.println("Vor queue...");
+        while(queue.size() != 0){
+           // System.out.println("IN queue...");
+            try{
+                queue.firstElement().get();
+            }catch(InterruptedException e){
+                System.out.println("InterruptedException!");
+            }catch(ExecutionException e){
+                System.out.println("ExecutionException!");
+            }
+           // System.out.println("Nach get...");
+        }
         
-        System.out.println("Balancer finished...");
+        System.out.println("Balancer finished... queue is "+queue.size());
             
         
         return model;

@@ -9,8 +9,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -28,7 +26,7 @@ public class ModelSaver {
                     file.createNewFile();
                 }
                 catch (IOException ex) {
-                    Logger.getLogger("global").log(Level.SEVERE, null, ex);
+                    System.out.println(ex);
                 }
             }
             else{           //File already exists
@@ -41,14 +39,14 @@ public class ModelSaver {
                 return file;
             }
             catch (IOException ex) {
-                Logger.getLogger("global").log(Level.SEVERE, null, ex);
+                System.out.println(ex);
             }
             finally {
                 try {
                     oos.close();
                 }
                 catch (IOException ex) {
-                    Logger.getLogger("global").log(Level.SEVERE, null, ex);
+                    System.out.println(ex);
                 }
             }
         }
