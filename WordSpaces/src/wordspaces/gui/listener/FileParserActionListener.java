@@ -49,7 +49,7 @@ public class FileParserActionListener implements ActionListener{
             for(int i=0; i < indices.length; i++){
                 file = (File)((DefaultListModel)gui.getTextSourcesList().getModel()).getElementAt(indices[i]);
                 if(!alwaysAdd){  //depends upon the decision that is made in the JOptionpane
-                    for(String s:model.parsedSources){
+                    for(String s:model.getParsedSources()){
                         if(s.equals(file.getName().toLowerCase())){
                             Object[] options = { "Never Add", "Don't add", "Always add", "Add" };
                             int decision = JOptionPane.showOptionDialog(null, file.getName()+" has already been added to model.", "Warning",
@@ -86,7 +86,7 @@ public class FileParserActionListener implements ActionListener{
                 public  void propertyChange(PropertyChangeEvent evt) {
                     if("progress".equals(evt.getPropertyName())){
                         gui.setModelhasChanged(model);
-                        gui.showWordTable();
+   //                     gui.showWordTable();          //on small files this produces concurrent exceptions
                         progress++;
                         progressBar.setValue(progress);
                         progressBar.setString("("+progress+"/"+files.size()+") files finished");   

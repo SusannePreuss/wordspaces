@@ -9,9 +9,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.Vector;
-import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.SwingWorker;
 import wordspaces.Model;
 import wordspaces.ModelSaver;
@@ -54,9 +51,7 @@ public class BatchProcessingWorker extends SwingWorker<Object, Integer>{
                 }              
             });
             thread.execute(); 
-            System.out.println("Result :"+thread.get());
         }
-        System.out.println("IN:BatchProcessingWorker:Parser "+parserVector.length);
                            
         return null;
     }

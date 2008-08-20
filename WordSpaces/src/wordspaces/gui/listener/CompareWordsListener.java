@@ -39,8 +39,8 @@ public class CompareWordsListener implements ActionListener {
             distPanel.clearComparisonTable();
             String vectorName1 = (String) tableModel.getValueAt(table.convertRowIndexToModel(indices[0]), 0);
             String vectorName2 = (String) tableModel.getValueAt(table.convertRowIndexToModel(indices[1]), 0);
-            SortedMap vector1 = model.wordDirectory.get(vectorName1);
-            SortedMap vector2 = model.wordDirectory.get(vectorName2);
+            SortedMap vector1 = model.getWordDirectory().get(vectorName1);
+            SortedMap vector2 = model.getWordDirectory().get(vectorName2);
             try {
                 double[] simArray = (new ScalarProductNorm()).compute(vector1, vector2);
                 double[] divArray = (new EuclideanDistance()).compute(vector1, vector2);

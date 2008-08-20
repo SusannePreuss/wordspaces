@@ -13,13 +13,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Collections;
-import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 
@@ -88,10 +85,10 @@ public class Parser {
                     word = lineTokens.elementAt(i);
                     if(filler && !word.equals(FILLER)){
                         //now the word gets counted in the treemap wordOccurences in the model                    
-                        if(model.wordOccurences.get(word) != null){     //word has already been seen
-                            model.wordOccurences.put(word, model.wordOccurences.get(word) + 1);
+                        if(model.getWordOccurences().get(word) != null){     //word has already been seen
+                            model.getWordOccurences().put(word, model.getWordOccurences().get(word) + 1);
                         }else{                                          //it's the first occurence of word
-                            model.wordOccurences.put(word, 1);
+                            model.getWordOccurences().put(word, 1);
                         }
                     
                     
@@ -114,12 +111,12 @@ public class Parser {
                             }
                             //if word is new then add it to the 'words' treemap with an
                             //fresh initialized context treemap'
-                            if(!model.wordDirectory.containsKey(word)){
-                                model.wordDirectory.put(word,Collections.synchronizedSortedMap(new TreeMap<String,Double>()));
+                            if(!model.getWordDirectory().containsKey(word)){
+                                model.getWordDirectory().put(word,Collections.synchronizedSortedMap(new TreeMap<String,Double>()));
                             }                       
                             //contextVector is the corresponding vector to 'word', containing
                             //the 'context words' as keys and their frequency as values
-                            contextVector = model.wordDirectory.get(word);
+                            contextVector = model.getWordDirectory().get(word);
                             for(int j=0; j < context.length; j++){
                                 if(!context[j].equals(FILLER)){       //dont add the filler to the context
                                     Double freq = contextVector.get(context[j]);

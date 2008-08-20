@@ -42,10 +42,10 @@ public class ModelPopupListener extends MouseAdapter {
                  * if a new model has been selected. */
                 else {
                     model = (Model) modelListModel.getElementAt(index);
-                    System.out.println(model.parsedSources.size());
+                    System.out.println(model.getParsedSources().size());
                     gui.setModel(model);
                     gui.showWordTable();
-                    gui.getDistancesPanel().showDistances(model.distances);
+                    gui.getDistancesPanel().showDistances(model.getCachedDistances());
                     gui.distWindowButton.setText("Hide DistWindow");
                     gui.getInfoWindow().setTitle(model.toString());
                 }

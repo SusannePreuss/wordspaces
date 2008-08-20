@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.Vector;
@@ -334,7 +335,7 @@ public class DistancesPanel extends javax.swing.JPanel {
             int k_smallest_edges = Integer.parseInt(num);
             String s = new String(), wordVector, contextWord;
             Model model = gui.getModel();
-            Iterator wordsIter = model.distances.keySet().iterator();
+            Iterator wordsIter = model.getCachedDistances().keySet().iterator();
 
             TreeSet<Entry<String,Double>> sortedSet;
             Iterator<Entry<String,Double>> sortedSetIter;
@@ -342,7 +343,7 @@ public class DistancesPanel extends javax.swing.JPanel {
 
             while(wordsIter.hasNext()){             //run through all words in wordDirTable
                 wordVector = (String) wordsIter.next();           
-                sortedSet = getKsmallestEdges( model.distances.get(wordVector) , k_smallest_edges );
+                sortedSet = getKsmallestEdges( model.getCachedDistances().get(wordVector) , k_smallest_edges );
 
                 sortedSetIter = sortedSet.iterator();
 
@@ -355,7 +356,7 @@ public class DistancesPanel extends javax.swing.JPanel {
                 }     
             }
             System.out.println("Transmitting : "+s);
-            Graph graph = new Graph(s,k_smallest_edges+" largest edges considered",model.distances.size());
+            Graph graph = new Graph(s,k_smallest_edges+" largest edges considered",model.getCachedDistances().size());
         }
 }//GEN-LAST:event_visualizeButtonActionPerformed
 
@@ -386,7 +387,7 @@ public class DistancesPanel extends javax.swing.JPanel {
             /* go through all words in the group */
             for( int i=0 ; i < grp_SIZE ; i++ ){        
                 word = members.elementAt(i);            //get the next word name
-                k_smallest_edges = getKsmallestEdges(model.distances.get(word), grp_SIZE-1);   //now we have the k smallest edges to word                                
+                k_smallest_edges = getKsmallestEdges(model.getCachedDistances().get(word), grp_SIZE-1);   //now we have the k smallest edges to word                                
                 k_smallest_edges_iter = k_smallest_edges.iterator();
                 pos_in_k_smallest_edges = 0;                    //is reseted for the next word
                 
@@ -443,7 +444,7 @@ public class DistancesPanel extends javax.swing.JPanel {
      * @return TreeSet<Entry>. Entries are sorted by values in descending order. If two 
      * equal, then keys are used for ordering.
      */     
-    public TreeSet< Entry<String,Double> > getKsmallestEdges(TreeMap<String, Double> map, int k){
+    public TreeSet< Entry<String,Double> > getKsmallestEdges(SortedMap<String, Double> map, int k){
          TreeSet< Entry<String,Double> > result = new TreeSet(new Comparator() {
             public int compare(Object obj, Object obj1) {
                 int vcomp = ((Comparable) ((Map.Entry) obj1).getValue()).compareTo(((Map.Entry) obj).getValue());
@@ -490,7 +491,7 @@ public class DistancesPanel extends javax.swing.JPanel {
         return groups;
     }
 
-    public void showDistances(TreeMap distances){
+    public void showDistances(SortedMap distances){
         this.distances = distances;
         clearWordDirTable();
         clearWordDistTable();
@@ -509,7 +510,7 @@ public class DistancesPanel extends javax.swing.JPanel {
     
     public void showWordDistTable(String selectedWord){
         clearWordDistTable();
-        TreeMap distMap = (TreeMap)gui.getModel().distances.get(selectedWord);
+        TreeMap distMap = (TreeMap)gui.getModel().getCachedDistances().get(selectedWord);
         Iterator iter = distMap.keySet().iterator();
         while(iter.hasNext()){
             String word = (String) iter.next();
@@ -624,7 +625,7 @@ public class DistancesPanel extends javax.swing.JPanel {
     protected javax.swing.table.DefaultTableModel wordDirTableModel;
     protected javax.swing.table.DefaultTableModel wordDistTableModel;
     protected javax.swing.table.DefaultTableModel comparisonTableModel;
-    private TreeMap distances;
+    private SortedMap distances;
     public DoubleComparator doubleComparator;
     private JPopupMenu distPopup;
 }

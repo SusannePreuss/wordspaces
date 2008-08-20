@@ -31,8 +31,7 @@ public class FileParserWorker extends SwingWorker<Model, Integer>{
     
     protected Model doInBackground() throws Exception {
         parser.parseFile(file,model);
-        model.parsedSources.addElement(file.getName().toLowerCase());
-        System.out.println("FileParserWorker finished "+file.getName());
+        model.getParsedSources().addElement(file.getName().toLowerCase());
         return model;
     }
 

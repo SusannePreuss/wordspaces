@@ -23,7 +23,7 @@ public class WordClassBuilder extends SwingWorker<Object, Integer>{
     
     public static final float THRESHOLD = (float)0.8;
     
-    private static SortedMap<String, SortedMap> wordMap;
+    private static SortedMap<String, SortedMap<String,Double>> wordMap;
     
     //occurences is a reference to model.wordOccurences which saves the freq
     private static Map<String, Integer> occurences;
@@ -31,8 +31,8 @@ public class WordClassBuilder extends SwingWorker<Object, Integer>{
      * Creates a new instance of WordClassBuilder
      */
     public WordClassBuilder(Model m) {
-        wordMap    = m.wordDirectory;
-        occurences = (SortedMap<String, Integer>) m.wordOccurences;       
+        wordMap    = m.getWordDirectory();
+        occurences = (SortedMap<String, Integer>) m.getWordOccurences();       
     }
     
     public void buildWordClasses(){

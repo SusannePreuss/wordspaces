@@ -17,21 +17,22 @@ import java.io.ObjectOutputStream;
 public class ModelSaver {
     
     public static File saveModel(Model model){
+        int dublicate_counter = 1;
         if(model != null){
             File file = new File(model+".model");
-            ObjectOutputStream oos = null;
             
-            if(!file.exists()){
-                try {
-                    file.createNewFile();
-                }
-                catch (IOException ex) {
-                    System.out.println(ex);
-                }
+            while(file.exists()){
+                dublicate_counter++;
+                file = new File(model+"("+dublicate_counter+")"+".model");
             }
-            else{           //File already exists
-                return null;
+            try {
+                file.createNewFile();
             }
+            catch (IOException ex) {
+                System.out.println(ex);
+            }
+            
+            ObjectOutputStream oos = null;
             try{
                 oos = new ObjectOutputStream(new FileOutputStream(file));
                 oos.writeObject(model);

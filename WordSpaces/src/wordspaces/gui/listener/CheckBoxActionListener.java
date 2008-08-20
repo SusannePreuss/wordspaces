@@ -31,7 +31,7 @@ public class CheckBoxActionListener implements ActionListener {
 
     
     public void cleanModelwithFocusWords(Model model, Parser parser) {
-        Map wordDir = model.wordDirectory;
+        Map wordDir = model.getWordDirectory();
         Set<String> focusWords = parser.getFocusWords();
         Iterator<String> wordDirIter = wordDir.keySet().iterator();
         
@@ -40,8 +40,8 @@ public class CheckBoxActionListener implements ActionListener {
             
             if(!focusWords.contains(word)){
                 wordDirIter.remove();
-                model.distances.remove(word);
-                model.wordOccurences.remove(word);
+                model.getCachedDistances().remove(word);
+                model.getWordOccurences().remove(word);
             }
         }
         gui.setModelhasChanged(model);
@@ -58,7 +58,12 @@ public class CheckBoxActionListener implements ActionListener {
             if (parser != null) {               
                 parser.enableFiller(checkBoxState);
             }
-        }       
+        }
+
+        //das laden von StopWords und FocusWords muss in EINE methode ausgelagert werden !
+        //auf die methode sollte auch von aussen zugegriffen werden können...->für GUI.stdParser
+
+
         if (src.getText().equals("Enable stop word filtering")) {
             if (parser != null) {
                 if (checkBoxState) {
@@ -117,7 +122,7 @@ public class CheckBoxActionListener implements ActionListener {
                             }
                         }
                         parser.enableFocusWords(words);
-                        if(model != null && model.wordDirectory.size() != 0) {
+                        if(model != null && model.getWordDirectory().size() != 0) {
                             int decision = JOptionPane.showConfirmDialog(null, "Automatically delete all words in model except the selected focus words ?", "Question", JOptionPane.YES_NO_OPTION);
                             if (decision == 0) {
                                 cleanModelwithFocusWords(model, parser);

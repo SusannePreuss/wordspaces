@@ -51,13 +51,13 @@ public class FrequencyFilter {
     }
     
     public static void filterFrequenciesInWordMap(Model m, int freq){
-        Iterator iter = m.wordOccurences.keySet().iterator();
+        Iterator iter = m.getWordOccurences().keySet().iterator();
         
         while(iter.hasNext()){
             String word = (String) iter.next();
-            int f = m.wordOccurences.get(word);
+            int f = m.getWordOccurences().get(word);
             if(f <= freq){
-                m.wordDirectory.remove(word);
+                m.getWordDirectory().remove(word);
             }
         }
     }
@@ -72,7 +72,7 @@ public class FrequencyFilter {
             int f = (Integer)colVector.elementAt(1);
             if(f <= freq){
  //               System.out.println(vectorName+" geloescht"+"  freq is"+f);
-                m.wordDirectory.remove(vectorName);
+                m.getWordDirectory().remove(vectorName);
                 tableModel.removeRow(i);
             }
         }

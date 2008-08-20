@@ -23,33 +23,33 @@ import java.util.Vector;
  */
 public class Model implements Serializable{
     
-    public SortedMap<String,SortedMap> wordDirectory;
+    private SortedMap<String,SortedMap<String,Double>> wordDirectory;
     
     //distances caches all computed distances between words.Should be cleared when new words are added to the model
-    public TreeMap<String, TreeMap<String,Double>> distances;
+    private SortedMap<String,SortedMap<String,Double>> distances;
     
     //saves the occurences of the words in wordDirectory from all texts
-    public Map<String, Integer> wordOccurences;
+    private Map<String, Integer> wordOccurences;
 
     //contains the names of the parsed texts
-    public Vector<String> parsedSources;
+    private Vector<String> parsedSources;
     
     private String name;
     
 
     public Model(String name) {
-        wordDirectory  = Collections.synchronizedSortedMap(new TreeMap<String, SortedMap>());
+        wordDirectory  = Collections.synchronizedSortedMap(new TreeMap<String, SortedMap<String,Double>>());
         wordOccurences = Collections.synchronizedMap(new HashMap<String, Integer>());
-        distances      = new TreeMap<String, TreeMap<String,Double>>();
+        distances      = new TreeMap<String, SortedMap<String,Double>>();
         parsedSources  = new Vector<String>();       
         this.name      = name;
     }
     
     public Double lookupDistance(String w1, String w2){
         if(distances.containsKey(w1)){
-            TreeMap t = distances.get(w1);
-            if(t.containsKey(w2))
-                return (Double) t.get(w2);
+            Map map = distances.get(w1);
+            if(map.containsKey(w2))
+                return (Double) map.get(w2);
         }
         
         return (double) -1;
@@ -59,9 +59,26 @@ public class Model implements Serializable{
         this.name = name;
     }
     
+    public SortedMap<String,SortedMap<String,Double>> getWordDirectory(){
+        return wordDirectory;
+    }
+    
+    public SortedMap<String,SortedMap<String,Double>> getCachedDistances(){
+        return distances;
+    }
+    
+    public Map<String, Integer> getWordOccurences(){
+        return wordOccurences;
+    }
+    
+    public Vector<String> getParsedSources(){
+        return parsedSources;
+    }
+    
+    
     public String toString(){ return name; }
     
     public void eraseDistanceCache(){
-        distances = new TreeMap<String, TreeMap<String,Double>>();
+        distances = new TreeMap<String, SortedMap<String,Double>>();
     }
 }

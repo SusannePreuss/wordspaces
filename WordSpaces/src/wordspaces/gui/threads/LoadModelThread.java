@@ -69,7 +69,7 @@ public class LoadModelThread extends SwingWorker<Model, Integer>{
                     gui.showWordTable();
                     gui.showHistoryTable();
                 }
-                System.out.println("Model '"+model+"' with "+model.wordDirectory.size()+" words loaded...");
+                System.out.println("Model '"+model+"' with "+model.getWordDirectory().size()+" words loaded...");
             } catch (InvalidClassException ex) {
                 JOptionPane.showMessageDialog(null, "Model is not compatible.", "Warning", JOptionPane.ERROR_MESSAGE);
             } catch (ClassNotFoundException ex) {
