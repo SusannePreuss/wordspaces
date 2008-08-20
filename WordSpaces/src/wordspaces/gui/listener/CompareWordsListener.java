@@ -4,7 +4,6 @@ import wordspaces.gui.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Iterator;
-import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -13,6 +12,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import exceptions.DimensionNotEqualException;
+import java.util.SortedMap;
 import plugins.EuclideanDistance;
 import plugins.ScalarProductNorm;
 import wordspaces.Model;
@@ -39,8 +39,8 @@ public class CompareWordsListener implements ActionListener {
             distPanel.clearComparisonTable();
             String vectorName1 = (String) tableModel.getValueAt(table.convertRowIndexToModel(indices[0]), 0);
             String vectorName2 = (String) tableModel.getValueAt(table.convertRowIndexToModel(indices[1]), 0);
-            TreeMap vector1 = model.wordDirectory.get(vectorName1);
-            TreeMap vector2 = model.wordDirectory.get(vectorName2);
+            SortedMap vector1 = model.wordDirectory.get(vectorName1);
+            SortedMap vector2 = model.wordDirectory.get(vectorName2);
             try {
                 double[] simArray = (new ScalarProductNorm()).compute(vector1, vector2);
                 double[] divArray = (new EuclideanDistance()).compute(vector1, vector2);

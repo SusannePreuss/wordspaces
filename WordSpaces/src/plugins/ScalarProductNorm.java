@@ -11,7 +11,7 @@ package plugins;
 
 import exceptions.DimensionNotEqualException;
 import java.util.Iterator;
-import java.util.TreeMap;
+import java.util.SortedMap;
 
 /**
  *
@@ -29,7 +29,7 @@ public class ScalarProductNorm implements ComputesDistance{
      * @param Vector v1 , Vector v2 
      * @return array with entries that divided by the norm of the two vectors
      */
-    public double[] compute(TreeMap v1, TreeMap v2) throws DimensionNotEqualException{
+    public double[] compute(SortedMap v1, SortedMap v2) throws DimensionNotEqualException{
         if(v1.size() != v2.size()) throw new DimensionNotEqualException();
         double[] resultArray = new double[v1.size()];
         double x             = 0;

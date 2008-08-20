@@ -15,6 +15,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 import exceptions.DimensionNotEqualException;
+import java.util.Map.Entry;
+import java.util.SortedMap;
 import plugins.EuclideanDistance;
 
 /**
@@ -23,13 +25,12 @@ import plugins.EuclideanDistance;
  */
 public class CalculateDistance extends SwingWorker<Object,String>{
     
-    private TreeMap<String,TreeMap> vectors;
-    private TreeMap cachedDistances;
+    private TreeMap<String,SortedMap> vectors;
+    private Map cachedDistances;
     private ComputesDistance cDist;
-    private TreeMap<String,TreeMap<String,Double>> result;
 
     
-    public CalculateDistance(TreeMap<String,TreeMap> vectors, TreeMap distances, ComputesDistance cDist){
+    public CalculateDistance(TreeMap<String,SortedMap> vectors, Map distances, ComputesDistance cDist){
         this.cDist           = cDist;
         this.vectors         = vectors;
         this.cachedDistances = distances; 
@@ -46,18 +47,18 @@ public class CalculateDistance extends SwingWorker<Object,String>{
     }
     
     public void getDistances() throws DimensionNotEqualException{
-        Map.Entry firstEntry  = null;
-        Iterator iter         = null;
-        String word           = null;
-        String compareWord    = null;
-        TreeMap vector        = null;
-        TreeMap compareVector = null;
+        Entry<String, SortedMap> firstEntry  = null;
+        Iterator iter            = null;
+        String word              = null;
+        String compareWord       = null;
+        SortedMap vector         = null;
+        SortedMap compareVector  = null;
         double distance;
         
         while(!vectors.isEmpty()){
             firstEntry = vectors.pollFirstEntry();
             word       = (String)firstEntry.getKey();
-            vector     = (TreeMap)firstEntry.getValue();
+            vector     = (SortedMap)firstEntry.getValue();
             iter       = vectors.keySet().iterator();
             
             while(iter.hasNext()){
@@ -65,7 +66,7 @@ public class CalculateDistance extends SwingWorker<Object,String>{
                 compareVector = vectors.get(compareWord);
                 
                 //check whether the distance between the two words has already been computed
-                if(!cachedDistances.containsKey(word) || !((TreeMap)cachedDistances.get(word)).containsKey(compareWord)  ){
+                if(!cachedDistances.containsKey(word) || !((SortedMap)cachedDistances.get(word)).containsKey(compareWord)  ){
                     mergeVectors(vector,compareVector);
                     distance = sum(cDist.compute(vector,compareVector));
                     if(cDist instanceof EuclideanDistance)
@@ -91,7 +92,7 @@ public class CalculateDistance extends SwingWorker<Object,String>{
     } 
     
     
-    public static void mergeVectors(TreeMap v1, TreeMap v2){
+    public static void mergeVectors(Map v1, Map v2){
         Iterator iterV1 = v1.keySet().iterator();
         String entryV1 = null;
         String entryV2 = null;
@@ -112,7 +113,7 @@ public class CalculateDistance extends SwingWorker<Object,String>{
         } 
     }
       
-    public static double getDistance(TreeMap vector1, TreeMap vector2, ComputesDistance cDist) throws DimensionNotEqualException{        
+    public static double getDistance(SortedMap vector1, SortedMap vector2, ComputesDistance cDist) throws DimensionNotEqualException{        
         mergeVectors(vector1, vector2);
         return sum(cDist.compute(vector1, vector2));
     } 

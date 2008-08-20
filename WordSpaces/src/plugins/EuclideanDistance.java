@@ -11,7 +11,7 @@ package plugins;
 
 import exceptions.DimensionNotEqualException;
 import java.util.Iterator;
-import java.util.TreeMap;
+import java.util.SortedMap;
 
 /**
  *
@@ -29,7 +29,7 @@ public class EuclideanDistance implements ComputesDistance{
      * @return double array with normalized entries, sum up all entries 
      * take the square root and you get the eucl. dist.
      */
-    public double[] compute(TreeMap v1, TreeMap v2) throws DimensionNotEqualException{
+    public double[] compute(SortedMap v1, SortedMap v2) throws DimensionNotEqualException{
         if(v1.size() != v2.size()) throw new DimensionNotEqualException();
         double[] resultArray = new double[v1.size()];
         double normX = 0;

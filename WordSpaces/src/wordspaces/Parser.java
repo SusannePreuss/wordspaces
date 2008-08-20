@@ -12,7 +12,10 @@ package wordspaces;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Collections;
+import java.util.Map;
 import java.util.Set;
+import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -61,7 +64,7 @@ public class Parser {
         BufferedReader reader = null;
         String word;
         String[] splitLine,context;
-        TreeMap<String,Double> contextVector;
+        SortedMap<String,Double> contextVector;
         Vector<String> lineTokens = new Vector();
         try {
             reader = new java.io.BufferedReader(new java.io.FileReader(file));
@@ -112,7 +115,7 @@ public class Parser {
                             //if word is new then add it to the 'words' treemap with an
                             //fresh initialized context treemap'
                             if(!model.wordDirectory.containsKey(word)){
-                                model.wordDirectory.put(word,new TreeMap<String,Double>());
+                                model.wordDirectory.put(word,Collections.synchronizedSortedMap(new TreeMap<String,Double>()));
                             }                       
                             //contextVector is the corresponding vector to 'word', containing
                             //the 'context words' as keys and their frequency as values
@@ -134,7 +137,7 @@ public class Parser {
             }
         }
         catch (Exception ex) {
-            Logger.getLogger("global").log(Level.SEVERE, null, ex);
+            System.out.println(ex.getMessage());
         }
         
     }

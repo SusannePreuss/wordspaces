@@ -10,12 +10,12 @@
 package plugins;
 
 import exceptions.DimensionNotEqualException;
-import java.util.TreeMap;
+import java.util.SortedMap;
 
 /**
  *
  * @author alexander
  */
 public interface ComputesDistance {
-    public double[] compute(TreeMap v1,TreeMap v2)throws DimensionNotEqualException;
+    public double[] compute(SortedMap v1, SortedMap v2)throws DimensionNotEqualException;
 }

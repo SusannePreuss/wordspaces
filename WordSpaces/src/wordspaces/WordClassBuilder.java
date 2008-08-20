@@ -11,6 +11,7 @@ package wordspaces;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.SortedMap;
 import java.util.TreeMap;
 import javax.swing.SwingWorker;
 
@@ -22,7 +23,7 @@ public class WordClassBuilder extends SwingWorker<Object, Integer>{
     
     public static final float THRESHOLD = (float)0.8;
     
-    private static Map<String, TreeMap> wordMap;
+    private static SortedMap<String, SortedMap> wordMap;
     
     //occurences is a reference to model.wordOccurences which saves the freq
     private static Map<String, Integer> occurences;
@@ -31,7 +32,7 @@ public class WordClassBuilder extends SwingWorker<Object, Integer>{
      */
     public WordClassBuilder(Model m) {
         wordMap    = m.wordDirectory;
-        occurences = m.wordOccurences;       
+        occurences = (SortedMap<String, Integer>) m.wordOccurences;       
     }
     
     public void buildWordClasses(){
@@ -50,7 +51,7 @@ public class WordClassBuilder extends SwingWorker<Object, Integer>{
                 if(computeSimilarity(stem,word) >= THRESHOLD){                        //this indicates that the two words are similar               
                     firePropertyChange("merge", null, stem+" and "+word+" got merged...");
                     firePropertyChange("remove",null,wordPos);
-                    mergeContextMaps((TreeMap) wordMap.get(stem), (TreeMap) wordMap.get(word));
+                    mergeContextMaps(wordMap.get(stem), wordMap.get(word));
                     occurences.put(stem, occurences.get(stem)+occurences.get(word));
                     wordMap.remove(word);                       //'word' and its context must be deleted
                     wordArray = (String[]) wordMap.keySet().toArray();     //the array must also be updated due to the remove
@@ -67,7 +68,7 @@ public class WordClassBuilder extends SwingWorker<Object, Integer>{
         }   
     }
     
-    public void shrinkContextWords(TreeMap contextMap){
+    public void shrinkContextWords(SortedMap contextMap){
         Iterator iter    = contextMap.keySet().iterator();
         int stemFreq     = 0;     //frequency of the word that is the stem
         int wordFreq     = 0;     //frequency of the word that is going to be reduced to the stem
@@ -98,7 +99,7 @@ public class WordClassBuilder extends SwingWorker<Object, Integer>{
      * @param stemContext The TreeMap to which we merge
      * @param similarWordContext is merged into stemContext
      */
-    public static void mergeContextMaps(TreeMap v1, TreeMap v2){
+    public static void mergeContextMaps(Map v1, Map v2){
         Iterator iter = v2.keySet().iterator();
         String contextWord = null;
         double freq;

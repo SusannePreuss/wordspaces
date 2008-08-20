@@ -2,7 +2,7 @@ package wordspaces.gui.listener;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.TreeMap;
+import java.util.SortedMap;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JMenuItem;
@@ -75,7 +75,7 @@ public class DeleteActionListener implements ActionListener{
             }
             /* Go through all wordVectors, this might be only one... */
             for(String wordVector:wordVectors){
-                TreeMap contextMap = model.wordDirectory.get(wordVector);
+                SortedMap contextMap = model.wordDirectory.get(wordVector);
                 /* Now delete all selected context words in contextmap */
                 for(String selectedWord:selectedContextWords){
                     System.out.print("deleting "+selectedWord+" ");

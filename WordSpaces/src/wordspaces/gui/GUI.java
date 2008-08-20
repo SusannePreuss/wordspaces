@@ -14,7 +14,6 @@ import wordspaces.gui.listener.ModelPopupListener;
 import wordspaces.gui.listener.ParserPopupListener;
 import wordspaces.gui.listener.CompareWordsListener;
 import wordspaces.gui.threads.IrregularVerbsStemmerWorker;
-import wordspaces.gui.threads.FileFilterWorker;
 import Jama.Matrix;
 import Jama.SingularValueDecomposition;
 import java.beans.PropertyChangeEvent;
@@ -34,6 +33,7 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -671,10 +671,10 @@ public class GUI extends javax.swing.JFrame {
         svdWordMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 int[] indices = wordTable.getSelectedRows();
-                final TreeMap[] selectedVectors;
+                final SortedMap[] selectedVectors;
                 String vectorName = null;
                 if(indices.length > 0){
-                    selectedVectors = new TreeMap[indices.length];
+                    selectedVectors = new SortedMap[indices.length];
                     for(int i=0; i < indices.length; i++){
                         vectorName = (String) wordTableModel.getValueAt( wordTable.convertRowIndexToModel(indices[i]), 0);
                         selectedVectors[i] = model.wordDirectory.get(vectorName);
@@ -718,10 +718,10 @@ public class GUI extends javax.swing.JFrame {
                                     if(transposed)
                                         result = result.transpose();
 
-                                    TreeMap[] finalVectors = BuildMatrix.decomposeMatrixToTreeMap(result, selectedVectors);
+                                    SortedMap[] finalVectors = BuildMatrix.decomposeMatrixToMap(result, selectedVectors);
 
                                     for(int i=0; i<selectedVectors.length; i++){
-                                        TreeMap vector = selectedVectors[i];
+                                        SortedMap vector = selectedVectors[i];
                                         Iterator iter = vector.keySet().iterator();
                                         Iterator finalIter = finalVectors[i].values().iterator();
                                         while(iter.hasNext()){
@@ -746,10 +746,10 @@ public class GUI extends javax.swing.JFrame {
         getDistanceMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 final int[] indices = wordTable.getSelectedRows();
-                TreeMap<String, TreeMap> selection = null;
+                TreeMap<String, SortedMap> selection = null;
                 if(indices.length >= 2){
                     contextTableModel.setRowCount(0);
-                    selection = new TreeMap<String, TreeMap>();
+                    selection = new TreeMap<String, SortedMap>();
                     for(int i=0; i < indices.length; i++){          //put the selected word vectors into selection
                         String word = (String) wordTableModel.getValueAt( wordTable.convertRowIndexToModel(indices[i]), 0);
                         selection.put(word, model.wordDirectory.get(word));

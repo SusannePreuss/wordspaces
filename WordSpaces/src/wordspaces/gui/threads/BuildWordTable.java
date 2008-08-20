@@ -11,7 +11,7 @@ package wordspaces.gui.threads;
 
 import java.util.Iterator;
 import java.util.Map;
-import java.util.TreeMap;
+import java.util.SortedMap;
 import javax.swing.SwingWorker;
 import wordspaces.Model;
 
@@ -30,7 +30,7 @@ public class BuildWordTable extends SwingWorker<Object[][],Object[]>{
 
     protected Object[][] doInBackground() throws Exception {
         //first the new wordTableModel is build and then filled with words from wordDirectory in model
-        Map<String, TreeMap> wordDirectory  = model.wordDirectory;
+        SortedMap<String, SortedMap> wordDirectory  = model.wordDirectory;
         Map<String, Integer> wordOccurences = model.wordOccurences;
         Object[][] data = new Object[wordDirectory.size()][3];
         Object[] preResult = new Object[3];

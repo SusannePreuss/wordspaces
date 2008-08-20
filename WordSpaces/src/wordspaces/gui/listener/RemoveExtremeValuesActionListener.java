@@ -10,7 +10,7 @@ import java.awt.event.ActionListener;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.TreeMap;
+import java.util.SortedMap;
 import java.util.TreeSet;
 import wordspaces.gui.GUI;
 
@@ -32,7 +32,7 @@ public class RemoveExtremeValuesActionListener implements ActionListener{
         int selectedRow, removeable_count;
         String selectedWord = new String();
         Entry<String, Double> entry;
-        TreeMap<String, Double> selectedMap;              
+        SortedMap<String, Double> selectedMap;              
         //this treeset is necessary to sort the TreeMap by values...
         TreeSet<Entry> set = new TreeSet(new Comparator() {
             public int compare(Object obj, Object obj1) {

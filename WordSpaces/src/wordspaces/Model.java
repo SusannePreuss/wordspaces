@@ -13,6 +13,7 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.Vector;
 
@@ -22,10 +23,10 @@ import java.util.Vector;
  */
 public class Model implements Serializable{
     
-    public Map<String,TreeMap> wordDirectory;
+    public SortedMap<String,SortedMap> wordDirectory;
     
     //distances caches all computed distances between words.Should be cleared when new words are added to the model
-    public TreeMap<String,TreeMap<String,Double>> distances;
+    public TreeMap<String, TreeMap<String,Double>> distances;
     
     //saves the occurences of the words in wordDirectory from all texts
     public Map<String, Integer> wordOccurences;
@@ -37,7 +38,7 @@ public class Model implements Serializable{
     
 
     public Model(String name) {
-        wordDirectory  = Collections.synchronizedSortedMap(new TreeMap<String, TreeMap>());
+        wordDirectory  = Collections.synchronizedSortedMap(new TreeMap<String, SortedMap>());
         wordOccurences = Collections.synchronizedMap(new HashMap<String, Integer>());
         distances      = new TreeMap<String, TreeMap<String,Double>>();
         parsedSources  = new Vector<String>();       

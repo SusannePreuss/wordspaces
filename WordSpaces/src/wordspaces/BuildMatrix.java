@@ -16,6 +16,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingWorker;
 import exceptions.DimensionNotEqualException;
+import java.util.Map;
+import java.util.SortedMap;
 
 /**
  *
@@ -23,10 +25,10 @@ import exceptions.DimensionNotEqualException;
  */
 public class BuildMatrix extends SwingWorker<Matrix, String>{
     
-    private TreeMap[] selectedVectors;
+    private SortedMap[] selectedVectors;
     
     /** Creates a new instance of BuildMatrix */
-    public BuildMatrix(TreeMap<String, Double>[] selection) {
+    public BuildMatrix(SortedMap<String, Double>[] selection) {
         this.selectedVectors = selection;
     }
 
@@ -36,7 +38,7 @@ public class BuildMatrix extends SwingWorker<Matrix, String>{
      * progress.
      */
     protected Matrix doInBackground() throws Exception {
-        TreeMap contextVector = null;
+        SortedMap contextVector = null;
         Iterator freqIter     = null;
         double[][] freqArray  = new double[selectedVectors.length][selectedVectors[0].size()];
         
@@ -55,15 +57,15 @@ public class BuildMatrix extends SwingWorker<Matrix, String>{
     
     /**
      * This method fills the frequency values from the Matrix m into a 
-     * TreeMap[] array. Each TreeMap in the TreeMap array selection 
+     * SortedMap[] array. Each SortedMap in the SortedMap array selection 
      * corresponds to one context vector. This method is especially usefull after
      * SVD.
      */
-    public static TreeMap[] decomposeMatrixToTreeMap(Matrix m, TreeMap<String, Double>[] selection){
-        TreeMap[] result = new TreeMap[m.getRowDimension()];
+    public static SortedMap[] decomposeMatrixToMap(Matrix m, SortedMap<String, Double>[] selection){
+        SortedMap[] result = new SortedMap[m.getRowDimension()];
         for(int i=0; i<m.getRowDimension(); i++){
             
-            result[i] = new java.util.TreeMap<java.lang.String, java.lang.Double>();
+            result[i] = new TreeMap<java.lang.String, java.lang.Double>();
             java.util.Iterator stringIter = selection[i].keySet().iterator();
            
             try{    
