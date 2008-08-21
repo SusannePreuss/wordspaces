@@ -1244,6 +1244,7 @@ private void batchProcessingMenuItemActionPerformed(java.awt.event.ActionEvent e
             parser = null;
             parserList.clearSelection();
             selectFocusWords(false);
+            enableFocusWords(false);
             enableParserParameter(false);
             selectParserParameter(false);
         }
@@ -1268,6 +1269,10 @@ private void batchProcessingMenuItemActionPerformed(java.awt.event.ActionEvent e
     
     public void setModel(Model m){
         model = m;
+        if(model != null)
+            setTitle("WordSpaces Laboratorium ( "+model+" )");
+        else
+            setTitle("WordSpaces Laboratorium");
     }
     
     public void addModel(Model m){
