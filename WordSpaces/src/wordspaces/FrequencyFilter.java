@@ -11,7 +11,6 @@ package wordspaces;
 
 import java.util.Iterator;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.Vector;
 import javax.swing.table.DefaultTableModel;
 
@@ -21,32 +20,12 @@ import javax.swing.table.DefaultTableModel;
  */
 public class FrequencyFilter {
     
-    /** Creates a new instance of FrequencyFilter */
-    public FrequencyFilter() {
-    }
-    
-    public static void filterFrequenciesInContext(Map vector, int freq){
-        Iterator iter = vector.keySet().iterator();
-        Iterator contextIter = null;
-        TreeMap contextMap = null;
+    public static void filterFrequenciesInContext(Map<String, Double> vector, int freq){
+        Iterator<String> iter = vector.keySet().iterator();
         while(iter.hasNext()){
-            String vectorName = (String) iter.next();
-            contextMap  = (TreeMap) vector.get(vectorName);
-            contextIter = contextMap.keySet().iterator();
-            
-            while(contextIter.hasNext()){
-                String contextWord  = (String) contextIter.next();
-                if(contextWord == null || contextMap == null || contextMap.get(contextWord) == null)    
-                    System.out.println("ContextWord:"+contextWord+"  contextMap:"+contextMap+"  vectorName"+vectorName);
-                double wordFreq = (Double)contextMap.get(contextWord);
-                if(wordFreq <= freq)
-                    contextIter.remove();
-                
-            }
-            
-            if(contextMap.size() == 0)
-                iter.remove();
-            
+            String contextWord = iter.next();
+            if(vector.get(contextWord) <= freq)
+                vector.remove(contextWord);              
         }
     }
     
@@ -57,7 +36,7 @@ public class FrequencyFilter {
             String word = (String) iter.next();
             int f = m.getWordOccurences().get(word);
             if(f <= freq){
-                m.getWordDirectory().remove(word);
+                m.deleteWordVector(word);
             }
         }
     }
@@ -72,7 +51,7 @@ public class FrequencyFilter {
             int f = (Integer)colVector.elementAt(1);
             if(f <= freq){
  //               System.out.println(vectorName+" geloescht"+"  freq is"+f);
-                m.getWordDirectory().remove(vectorName);
+                m.deleteWordVector(vectorName);
                 tableModel.removeRow(i);
             }
         }

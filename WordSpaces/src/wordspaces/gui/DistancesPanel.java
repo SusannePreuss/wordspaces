@@ -437,7 +437,7 @@ public class DistancesPanel extends javax.swing.JPanel {
     }
     
     /**
-     * Computes the k greatest key-values pairs from map and returns them in descending
+     * Computes the k greatest key-value pairs from map and returns them in descending
      * order in a TreeSet.
      * @param map Map from which the k greatest key-values pairs are computed.
      * @param k Number of greatest key-value pairs in map where values are used for ordering.

@@ -56,7 +56,7 @@ public class MergeVectorsListener implements MenuListener{
                             String otherWord = (String) wordTableModel.getValueAt( wordTable.convertRowIndexToModel(indices[i]), 0);
                             if(!word.equals(otherWord)){
                                 //now the vectors get merged.
-                                WordClassBuilder.mergeContextMaps(model.getWordDirectory().get(word), model.getWordDirectory().get(otherWord));
+                                WordClassBuilder.mergeContextMaps(model.getContextVector(word), model.getContextVector(otherWord));
                                 //now the occurences have to be updated
                                 model.getWordOccurences().put(word, model.getWordOccurences().get(word)+model.getWordOccurences().get(otherWord));
                                 System.out.println(otherWord+" was merged with "+word);
@@ -67,19 +67,19 @@ public class MergeVectorsListener implements MenuListener{
                         }
                         //now the entries of the merge Vector get updated
                         wordTableModel.setValueAt(model.getWordOccurences().get(word),wordTable.convertRowIndexToModel(index_mergeVector), 1);
-                        wordTableModel.setValueAt(model.getWordDirectory().get(word).size(),wordTable.convertRowIndexToModel(index_mergeVector), 2);
+                        wordTableModel.setValueAt(model.getContextVector(word).size(),wordTable.convertRowIndexToModel(index_mergeVector), 2);
                         //now all vectors except the vector to which we merged get deleted
                         for(int i=indices.length-1;i>=0;i--){
                             int selectedRow = wordTable.convertRowIndexToModel(indices[i]);
                             String otherVecName = (String) wordTableModel.getValueAt( selectedRow, 0);
                             if(!word.equals(otherVecName)){
-                                model.getWordDirectory().remove(otherVecName);
+                                model.deleteWordVector(otherVecName);
                                 model.getWordOccurences().remove(otherVecName);
                                 wordTableModel.removeRow(selectedRow);
                             }
                         }
                         ((DefaultTableModel)gui.getContextTable().getModel()).setRowCount(0);
-                        gui.getSizeLabel().setText(model.getWordDirectory().size()+"");
+                        gui.getSizeLabel().setText(model.getDirectorySize()+"");
                         gui.setModelhasChanged(model);
                     }
                 });

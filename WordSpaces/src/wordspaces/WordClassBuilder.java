@@ -12,7 +12,6 @@ package wordspaces;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.SortedMap;
-import java.util.TreeMap;
 import javax.swing.SwingWorker;
 
 /**
@@ -23,43 +22,42 @@ public class WordClassBuilder extends SwingWorker<Object, Integer>{
     
     public static final float THRESHOLD = (float)0.8;
     
-    private static SortedMap<String, SortedMap<String,Double>> wordMap;
+    private Model model;
     
     //occurences is a reference to model.wordOccurences which saves the freq
-    private static Map<String, Integer> occurences;
+    private Map<String, Integer> occurences;
     /**
      * Creates a new instance of WordClassBuilder
      */
     public WordClassBuilder(Model m) {
-        wordMap    = m.getWordDirectory();
+        model      = m;
         occurences = (SortedMap<String, Integer>) m.getWordOccurences();       
     }
     
     public void buildWordClasses(){
-        String[] wordArray = (String[]) wordMap.keySet().toArray();
         String word        = null;
         String stem        = null;
         int wordPos      = 0;
                 
-        for(int i=0;i<wordArray.length;i++){             
-            stem = wordArray[i];                    //take a word that might be a stem for others      
+        for(int i=0;i<model.getDirectorySize();i++){             
+            stem = model.getVectorNameAt(i);                    //take a word that might be a stem for others      
             wordPos = i + 1;                                 //from wordPos start the while loop to look for sim. words
-            word = wordArray[wordPos];         
-            while(wordArray.length > wordPos && stem.charAt(0) == word.charAt(0)){
+            word = model.getVectorNameAt(wordPos);         
+            while(model.getDirectorySize() > wordPos && stem.charAt(0) == word.charAt(0)){
                 //System.out.println("Sim:"+stem+"   "+word+" is"+computeSimilarity(stem,word));
                 //stop searching for similar words when the first letter changes or the end of the array is reached...                
                 if(computeSimilarity(stem,word) >= THRESHOLD){                        //this indicates that the two words are similar               
                     firePropertyChange("merge", null, stem+" and "+word+" got merged...");
                     firePropertyChange("remove",null,wordPos);
-                    mergeContextMaps(wordMap.get(stem), wordMap.get(word));
+                    mergeContextMaps(model.getContextVector(stem), model.getContextVector(word));
                     occurences.put(stem, occurences.get(stem)+occurences.get(word));
-                    wordMap.remove(word);                       //'word' and its context must be deleted
-                    wordArray = (String[]) wordMap.keySet().toArray();     //the array must also be updated due to the remove
+                    model.deleteWordVector(word);           //'word' and its context must be deleted
+  //                  wordArray = (String[]) wordMap.keySet().toArray();     //the array must also be updated due to the remove
                 }
                 else wordPos++;     //when sim was big enough there is no need for wordPos++ since 'word' was deleted and we are 
                                     //already at the next wordPos !
-                if(wordPos < wordArray.length){      
-                    word = wordArray[wordPos];
+                if(wordPos < model.getDirectorySize()){      
+                    word = model.getVectorNameAt(wordPos);
                 }
                 
             }
@@ -117,7 +115,7 @@ public class WordClassBuilder extends SwingWorker<Object, Integer>{
         }   
     }
     
-    private static float computeSimilarity(String w1, String w2){
+    private float computeSimilarity(String w1, String w2){
         int simChars = 0;
         int restChar = 0;
             
@@ -153,7 +151,7 @@ public class WordClassBuilder extends SwingWorker<Object, Integer>{
                 return 1;
             }else if(attachement.equals("ly")){
                 return 1;
-            }else if(wordMap.containsKey(attachement)){    // -->check whether attachement is in wordMap
+            }else if(model.getContextVector(attachement) != null){    // -->check whether attachement is in wordMap
                 return 0;
             }
         }

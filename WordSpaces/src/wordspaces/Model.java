@@ -12,6 +12,7 @@ package wordspaces;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -33,15 +34,23 @@ public class Model implements Serializable{
 
     //contains the names of the parsed texts
     private Vector<String> parsedSources;
+
+    /* avoids thousands of dublicates of Strings in wordDirectory and in
+     * each wordContextVector */
+    private Map<String,String> wordCache;
+    
+    private Map<String, Double> wordFreq;
     
     private String name;
     
 
     public Model(String name) {
-        wordDirectory  = Collections.synchronizedSortedMap(new TreeMap<String, SortedMap<String,Double>>());
-        wordOccurences = Collections.synchronizedMap(new HashMap<String, Integer>());
+        wordDirectory  = new TreeMap<String, SortedMap<String,Double>>();
+        wordOccurences = new HashMap<String, Integer>();
         distances      = new TreeMap<String, SortedMap<String,Double>>();
-        parsedSources  = new Vector<String>();       
+        parsedSources  = new Vector<String>();
+        wordCache      = new HashMap();
+        wordFreq       = new HashMap();
         this.name      = name;
     }
     
@@ -58,11 +67,7 @@ public class Model implements Serializable{
     public void setName(String name){
         this.name = name;
     }
-    
-    public SortedMap<String,SortedMap<String,Double>> getWordDirectory(){
-        return wordDirectory;
-    }
-    
+     
     public SortedMap<String,SortedMap<String,Double>> getCachedDistances(){
         return distances;
     }
@@ -74,11 +79,97 @@ public class Model implements Serializable{
     public Vector<String> getParsedSources(){
         return parsedSources;
     }
+
+    public SortedMap<String,Double> getContextVector(String vectorName){
+        if(wordDirectory.containsKey(vectorName))
+            return wordDirectory.get(vectorName);
+
+        else
+            return null;
+    }
+
+    public String getVectorNameAt(int pos){
+        if(pos < 0 || pos >= wordDirectory.size())      //out of bounds !
+            return null;
+
+        return (String) wordDirectory.keySet().toArray()[pos];
+    }
+
+    public int getDirectorySize(){
+        return wordDirectory.size();
+    }
+
+    public synchronized SortedMap<String,Double> addWordVector(String vectorName){
+        if(!wordDirectory.containsKey(vectorName)){
+            addWordtoWordCache(vectorName);
+            wordDirectory.put(wordCache.get(vectorName), Collections.synchronizedSortedMap(new TreeMap<String,Double>()));           
+        }
+
+        return wordDirectory.get(vectorName);
+    }
     
+    public synchronized double addContextWord(String vectorName, String contextWord){
+        double freq = 0;
+        addWordtoWordCache(contextWord);
+        if(!wordDirectory.containsKey(vectorName)){
+            addWordVector(vectorName).put(wordCache.get(contextWord), 0.0);
+        }
+        else if(!wordDirectory.get(vectorName).containsKey(contextWord)){
+            wordDirectory.get(vectorName).put(wordCache.get(contextWord), 0.0);
+        }
+        else{
+            freq = wordDirectory.get(vectorName).get(contextWord);         
+            wordDirectory.get(vectorName).put(wordCache.get(contextWord), ++freq);
+        }  
+   
+        return freq;
+    }
+    
+    public synchronized void deleteWordVector(String word){       
+        /* run through all contextWords and remove them from the wordCache */
+        Iterator<String> contextIter = wordDirectory.get(word).keySet().iterator();
+        while(contextIter.hasNext()){
+            removeWordfromWordCache(contextIter.next());
+            contextIter.remove();
+        }
+
+        /* finally we remove also the vectorName */
+        wordDirectory.remove(word);
+        removeWordfromWordCache(word);
+    }
+
+    public synchronized void deleteContextWord(String vectorName, String contextWord){
+        wordDirectory.get(vectorName).remove(contextWord);
+        removeWordfromWordCache(contextWord);
+    }
     
     public String toString(){ return name; }
     
     public void eraseDistanceCache(){
         distances = new TreeMap<String, SortedMap<String,Double>>();
+    }
+    
+    private void addWordtoWordCache(String word){
+        if(!wordCache.containsKey(word)){
+            wordCache.put(word,word);
+            wordFreq.put(wordCache.get(word), 0.0);
+        }
+        else{
+            double freq = wordFreq.get(word);
+            wordFreq.put(wordCache.get(word), ++freq);
+        }
+    }
+    
+    private void removeWordfromWordCache(String word){
+        if(wordCache.containsKey(word)){
+            double freq = wordFreq.get(word);
+            freq--;
+            if(freq > 0)
+                wordFreq.put(wordCache.get(word), freq);
+            else{
+                wordCache.remove(word);
+                wordFreq.remove(word);
+            }
+        }
     }
 }

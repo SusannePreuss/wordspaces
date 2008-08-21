@@ -9,8 +9,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,15 +29,14 @@ public class CheckBoxActionListener implements ActionListener {
 
     
     public void cleanModelwithFocusWords(Model model, Parser parser) {
-        Map wordDir = model.getWordDirectory();
+ //       Map wordDir = model.getWordDirectory();
         Set<String> focusWords = parser.getFocusWords();
-        Iterator<String> wordDirIter = wordDir.keySet().iterator();
         
-        while(wordDirIter.hasNext()){
-            String word = wordDirIter.next();
+        for(int i=0;i<model.getDirectorySize();i++){
+            String word = model.getVectorNameAt(i);
             
             if(!focusWords.contains(word)){
-                wordDirIter.remove();
+                model.deleteWordVector(word);
                 model.getCachedDistances().remove(word);
                 model.getWordOccurences().remove(word);
             }
@@ -122,7 +119,7 @@ public class CheckBoxActionListener implements ActionListener {
                             }
                         }
                         parser.enableFocusWords(words);
-                        if(model != null && model.getWordDirectory().size() != 0) {
+                        if(model != null && model.getDirectorySize() != 0) {
                             int decision = JOptionPane.showConfirmDialog(null, "Automatically delete all words in model except the selected focus words ?", "Question", JOptionPane.YES_NO_OPTION);
                             if (decision == 0) {
                                 cleanModelwithFocusWords(model, parser);

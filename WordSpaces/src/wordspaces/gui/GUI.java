@@ -9,6 +9,7 @@ package wordspaces.gui;
 //package wordspaces.gui;
 
 import java.io.IOException;
+import javax.swing.UnsupportedLookAndFeelException;
 import wordspaces.gui.threads.BuildWordTable;
 import wordspaces.gui.listener.ModelPopupListener;
 import wordspaces.gui.listener.ParserPopupListener;
@@ -56,6 +57,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.RowFilter;
+import javax.swing.UIManager;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
@@ -84,7 +86,14 @@ public class GUI extends javax.swing.JFrame {
 
     /** Creates new form GUI */
     public GUI() {
+        try {
+            UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+        } catch (Exception ex) {
+            Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+
         checkBoxListener        = new CheckBoxActionListener(this);
+
         initComponents();
         secondInit();
 
@@ -677,7 +686,7 @@ public class GUI extends javax.swing.JFrame {
                     selectedVectors = new SortedMap[indices.length];
                     for(int i=0; i < indices.length; i++){
                         vectorName = (String) wordTableModel.getValueAt( wordTable.convertRowIndexToModel(indices[i]), 0);
-                        selectedVectors[i] = model.getWordDirectory().get(vectorName);
+                        selectedVectors[i] = model.getContextVector(vectorName);
                     }
 
                     progressBar.setMaximum(selectedVectors.length);
@@ -752,7 +761,7 @@ public class GUI extends javax.swing.JFrame {
                     selection = new TreeMap<String, SortedMap>();
                     for(int i=0; i < indices.length; i++){          //put the selected word vectors into selection
                         String word = (String) wordTableModel.getValueAt( wordTable.convertRowIndexToModel(indices[i]), 0);
-                        selection.put(word, model.getWordDirectory().get(word));
+                        selection.put(word, model.getContextVector(word));
                     }
                     textSizeLabel.setText("Calculating distances...");
                     progressBar.setMaximum(selection.size());
@@ -761,7 +770,7 @@ public class GUI extends javax.swing.JFrame {
                         int counter = 0;
                         public  void propertyChange(PropertyChangeEvent evt) {
                                 if ("progress".equals(evt.getPropertyName())) {
-                                    wordTableModel.setValueAt((model.getWordDirectory().get(evt.getNewValue())).size(),wordTable.convertRowIndexToModel(indices[counter]), 2);
+                                    wordTableModel.setValueAt((model.getContextVector((String) evt.getNewValue())).size(),wordTable.convertRowIndexToModel(indices[counter]), 2);
                                     distPanel.wordDirTableModel.addRow(new Object[] {evt.getNewValue()});
                                     distPanel.wordsCountLabel.setText(Integer.parseInt(distPanel.wordsCountLabel.getText())+1+"");
                                     progressBar.setValue(counter++);
@@ -793,8 +802,13 @@ public class GUI extends javax.swing.JFrame {
         filterContextWords.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 int inputValue = Integer.parseInt(JOptionPane.showInputDialog("Filter words with a frequency in context that is smaller or equal to"));
-                FrequencyFilter.filterFrequenciesInContext(model.getWordDirectory(),inputValue);
-            //        model.eraseDistanceCache();
+                final int[] indices = wordTable.getSelectedRows();
+                for( int i=indices.length-1 ; i>=0 ; i-- ){
+                    String vectorName = (String) wordTableModel.getValueAt( wordTable.convertRowIndexToModel(indices[i]), 0);
+                    FrequencyFilter.filterFrequenciesInContext(model.getContextVector(vectorName),inputValue);
+                    if(model.getContextVector(vectorName).size() == 0)
+                        model.deleteWordVector(vectorName);
+                }
 
                 tableModelMap.remove(model.toString());
                 showWordTable();
@@ -949,7 +963,7 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_fetchFromInternetMenuItemActionPerformed
 
     private void buildWordClassesMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buildWordClassesMenuItemActionPerformed
-        progressBar.setMaximum(model.getWordDirectory().size());
+        progressBar.setMaximum(model.getDirectorySize());
         final WordClassBuilder task = new WordClassBuilder(model);
         task.addPropertyChangeListener(new PropertyChangeListener() {
             public  void propertyChange(PropertyChangeEvent evt) {
@@ -963,7 +977,7 @@ public class GUI extends javax.swing.JFrame {
                 if(task.isDone()){
                     textSizeLabel.setText("Building word classes is done...");
                     progressBar.setValue(0);
-                    sizeLabel.setText(model.getWordDirectory().size()+"");
+                    sizeLabel.setText(model.getDirectorySize()+"");
                 }
             }
         });
@@ -1006,7 +1020,7 @@ public class GUI extends javax.swing.JFrame {
         /* If tableModel has not been constructed before, we construct it and save it in tableModelMap*/
         if(!tableModelMap.containsKey(model.toString()) || (modelHasChanged.containsKey(model.toString()) && modelHasChanged.get(model.toString()))){
             System.out.println("Table Model is being build...");
-            progressBar.setMaximum(model.getWordDirectory().size());
+            progressBar.setMaximum(model.getDirectorySize());
             final BuildWordTable task = new BuildWordTable(model);
             task.addPropertyChangeListener(new PropertyChangeListener() {
                 boolean done = false;  //workaround,ensures that task.isDone is only once done...
@@ -1027,7 +1041,7 @@ public class GUI extends javax.swing.JFrame {
                             wordTableSorter.setComparator(2, intComparator);
                             wordTable.setRowSorter(wordTableSorter);
                             modelHasChanged.put(model.toString(), false);
-                            sizeLabel.setText(model.getWordDirectory().size()+"");
+                            sizeLabel.setText(model.getDirectorySize()+"");
                             System.out.println("Table Model created for "+model+"...");
                             progressBar.setValue(0);                       
                         } catch (InterruptedException ex) {
@@ -1042,7 +1056,7 @@ public class GUI extends javax.swing.JFrame {
         }else{      //tableModel was constructed before or wasn't modified
             Object[][] dataArray = tableModelMap.get(model.toString());
             wordTableModel.setDataVector(dataArray,new Object[]{"Words", "Frequency", "Context size"});
-            sizeLabel.setText(model.getWordDirectory().size()+"");
+            sizeLabel.setText(model.getDirectorySize()+"");
         }
     }
 
@@ -1426,12 +1440,12 @@ private void batchProcessingMenuItemActionPerformed(java.awt.event.ActionEvent e
                     String selectedWord = (String) wordTableModel.getValueAt(
                             wordTable.convertRowIndexToModel(wordTable.getSelectedRow()),0);
                     System.out.println("Start building context table!");
-                    Iterator<String> iter = model.getWordDirectory().get(selectedWord).keySet().iterator();
+                    Iterator<String> iter = model.getContextVector(selectedWord).keySet().iterator();
                     String contextWord;
                     while(iter.hasNext()){
                         contextWord = iter.next();
                         contextTableModel.addRow(new Object[] {
-                            contextWord, model.getWordDirectory().get(selectedWord).get(contextWord)
+                            contextWord, model.getContextVector(selectedWord).get(contextWord)
                         });
                     }
                     System.out.println("Finished table building!");

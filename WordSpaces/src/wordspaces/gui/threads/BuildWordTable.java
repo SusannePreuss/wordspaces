@@ -30,22 +30,18 @@ public class BuildWordTable extends SwingWorker<Object[][],Object[]>{
 
     protected Object[][] doInBackground() throws Exception {
         //first the new wordTableModel is build and then filled with words from wordDirectory in model
-        SortedMap<String, SortedMap<String,Double>> wordDirectory  = model.getWordDirectory();
         Map<String, Integer> wordOccurences = model.getWordOccurences();
-        Object[][] data = new Object[wordDirectory.size()][3];
+        Object[][] data = new Object[model.getDirectorySize()][3];
         Object[] preResult = new Object[3];
-        Iterator iter = wordDirectory.keySet().iterator();
         String word;
-        int counter = 0;
-        while(iter.hasNext()){
-            word = (String)iter.next();
-            data[counter][0] = word;
-            data[counter][1] = wordOccurences.get(word);
-            data[counter][2] = wordDirectory.get(word).size();
-            preResult[0]     = word;
-            preResult[1]     = data[counter][1];
-            preResult[2]     = data[counter][2];
-            counter++; 
+        for(int i=0;i<model.getDirectorySize();i++){
+            word = model.getVectorNameAt(i);
+            data[i][0] = word;
+            data[i][1] = wordOccurences.get(word);
+            data[i][2] = model.getContextVector(word).size();
+            preResult[0] = word;
+            preResult[1] = data[i][1];
+            preResult[2] = data[i][2];
             
             firePropertyChange("progress",null, preResult);
         }

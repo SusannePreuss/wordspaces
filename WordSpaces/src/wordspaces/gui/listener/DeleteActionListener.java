@@ -38,12 +38,12 @@ public class DeleteActionListener implements ActionListener{
             for(int i=indices.length-1; i >= 0; i--){
                 selectedRow = wordTable.convertRowIndexToModel(indices[i]);
                 selectedWord = (String) wordModel.getValueAt(selectedRow,0);
-                m.getWordDirectory().remove(selectedWord);
+                m.deleteWordVector(selectedWord);
                 m.getWordOccurences().remove(selectedWord);
                 wordModel.removeRow(selectedRow);
             }
             contextModel.setRowCount(0);
-            gui.getSizeLabel().setText(m.getWordDirectory().size()+"");
+            gui.getSizeLabel().setText(m.getDirectorySize()+"");
             gui.getTableModelMap().put(m, true);
         }
         
@@ -64,8 +64,8 @@ public class DeleteActionListener implements ActionListener{
             String[] wordVectors;
             DefaultTableModel wordTableModel = (DefaultTableModel) wordTable.getModel();
             if(menu.getText().equals("Delete in all contexts")){
-                wordVectors = new String[model.getWordDirectory().size()];
-                for(int i=0;i<model.getWordDirectory().size();i++){
+                wordVectors = new String[model.getDirectorySize()];
+                for(int i=0;i<model.getDirectorySize();i++){
                     wordVectors[i] = (String) wordTableModel.getValueAt(i, 0);
                 }
             }
@@ -75,7 +75,7 @@ public class DeleteActionListener implements ActionListener{
             }
             /* Go through all wordVectors, this might be only one... */
             for(String wordVector:wordVectors){
-                SortedMap contextMap = model.getWordDirectory().get(wordVector);
+                SortedMap contextMap = model.getContextVector(wordVector);
                 /* Now delete all selected context words in contextmap */
                 System.out.print("deleting ");
                 for(String selectedWord:selectedContextWords){
@@ -84,7 +84,7 @@ public class DeleteActionListener implements ActionListener{
                 }
                 System.out.println("from "+wordVector+"...");
                 if(contextMap.size() == 0){           //we deleted all context words from context vector
-                    model.getWordDirectory().remove(wordVector);
+                    model.deleteWordVector(wordVector);
                     if(wordVectors.length == 1)       //we can only update the table if we delete from only one word vector
                         wordTableModel.removeRow(wordTable.convertRowIndexToModel(wordTable.getSelectedRow()));
                     

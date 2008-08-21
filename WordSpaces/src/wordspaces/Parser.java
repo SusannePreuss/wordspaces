@@ -108,15 +108,10 @@ public class Parser {
                                 if(j != i){
                                     context[k++] = lineTokens.elementAt(j);
                                 }
-                            }
-                            //if word is new then add it to the 'words' treemap with an
-                            //fresh initialized context treemap'
-                            if(!model.getWordDirectory().containsKey(word)){
-                                model.getWordDirectory().put(word,Collections.synchronizedSortedMap(new TreeMap<String,Double>()));
-                            }                       
+                            }                      
                             //contextVector is the corresponding vector to 'word', containing
                             //the 'context words' as keys and their frequency as values
-                            contextVector = model.getWordDirectory().get(word);
+                            contextVector = model.addWordVector(word);
                             for(int j=0; j < context.length; j++){
                                 if(!context[j].equals(FILLER)){       //dont add the filler to the context
                                     Double freq = contextVector.get(context[j]);

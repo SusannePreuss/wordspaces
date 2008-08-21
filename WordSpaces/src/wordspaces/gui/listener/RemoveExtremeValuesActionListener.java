@@ -45,7 +45,7 @@ public class RemoveExtremeValuesActionListener implements ActionListener{
         for(int i=0;i<indices.length;i++){
             selectedRow = gui.getWordTable().convertRowIndexToModel(indices[i]);
             selectedWord = (String) gui.getWordTable().getModel().getValueAt(selectedRow,0);
-            selectedMap = gui.getModel().getWordDirectory().get(selectedWord);
+            selectedMap = gui.getModel().getContextVector(selectedWord);
             removeable_count = (int)(((float)selectedMap.size() / (float)100)*10);
             set.addAll(selectedMap.entrySet());
             for(int j=0;j<removeable_count;j++){
