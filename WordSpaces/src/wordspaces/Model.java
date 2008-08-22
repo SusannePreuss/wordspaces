@@ -37,9 +37,9 @@ public class Model implements Serializable{
 
     /* avoids thousands of dublicates of Strings in wordDirectory and in
      * each wordContextVector */
-    private Map<String,String> wordCache;
+    public Map<String,String> wordCache;
     
-    private Map<String, Double> wordFreq;
+    public Map<String, Double> wordFreq;
     
     private String name;
     
@@ -112,14 +112,14 @@ public class Model implements Serializable{
         double freq = 0;
         addWordtoWordCache(contextWord);
         if(!wordDirectory.containsKey(vectorName)){
-            addWordVector(vectorName).put(wordCache.get(contextWord), 0.0);
+            addWordVector(vectorName).put(wordCache.get(contextWord), 0.0);     //wordCache.get
         }
         else if(!wordDirectory.get(vectorName).containsKey(contextWord)){
-            wordDirectory.get(vectorName).put(wordCache.get(contextWord), 0.0);
+            wordDirectory.get(vectorName).put(wordCache.get(contextWord), 0.0);    //wordCache.get
         }
         else{
             freq = wordDirectory.get(vectorName).get(contextWord);         
-            wordDirectory.get(vectorName).put(wordCache.get(contextWord), ++freq);
+            wordDirectory.get(vectorName).put(wordCache.get(contextWord), ++freq);     //
         }  
    
         return freq;
@@ -143,7 +143,6 @@ public class Model implements Serializable{
         removeWordfromWordCache(contextWord);
     }
     
-    public String toString(){ return name; }
     
     public void eraseDistanceCache(){
         distances = new TreeMap<String, SortedMap<String,Double>>();
@@ -156,7 +155,7 @@ public class Model implements Serializable{
         }
         else{
             double freq = wordFreq.get(word);
-            wordFreq.put(wordCache.get(word), ++freq);
+            wordFreq.put(wordCache.get(word), ++freq); //wordCache.get
         }
     }
     
@@ -172,4 +171,6 @@ public class Model implements Serializable{
             }
         }
     }
+    
+    public String toString(){ return name; }
 }

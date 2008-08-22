@@ -60,8 +60,7 @@ public class Parser {
     public void parseFile(File file, Model model) throws FileNotFoundException{
         BufferedReader reader = null;
         String word;
-        String[] splitLine,context;
-        SortedMap<String,Double> contextVector;
+        String[] splitLine, context;
         Vector<String> lineTokens = new Vector();
         try {
             reader = new java.io.BufferedReader(new java.io.FileReader(file));
@@ -83,7 +82,7 @@ public class Parser {
                 }
                 for(int i=0; i<lineTokens.size(); i++){         //go through all words...
                     word = lineTokens.elementAt(i);
-                    if(filler && !word.equals(FILLER)){
+                    if(!filler || (filler && !word.equals(FILLER))){
                         //now the word gets counted in the treemap wordOccurences in the model                    
                         if(model.getWordOccurences().get(word) != null){     //word has already been seen
                             model.getWordOccurences().put(word, model.getWordOccurences().get(word) + 1);
@@ -111,15 +110,10 @@ public class Parser {
                             }                      
                             //contextVector is the corresponding vector to 'word', containing
                             //the 'context words' as keys and their frequency as values
-                            contextVector = model.addWordVector(word);
+                            model.addWordVector(word);
                             for(int j=0; j < context.length; j++){
                                 if(!context[j].equals(FILLER)){       //dont add the filler to the context
-                                    Double freq = contextVector.get(context[j]);
-                                    if(freq == null){
-                                        contextVector.put(context[j], new Double(1));
-                                    }else{
-                                        contextVector.put(context[j], new Double(++freq));
-                                    }                
+                                    model.addContextWord(word, context[j]);              
                                 }
                             }
                         }

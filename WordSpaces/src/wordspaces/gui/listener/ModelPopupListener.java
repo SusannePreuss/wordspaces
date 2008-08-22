@@ -4,6 +4,8 @@ import wordspaces.gui.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.SortedMap;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JPopupMenu;
@@ -25,7 +27,7 @@ public class ModelPopupListener extends MouseAdapter {
             menu.show(e.getComponent(), e.getX(), e.getY());
         } else if (e.getButton() == MouseEvent.BUTTON1) {
             JList modelList = (JList) e.getComponent();
-            Model model = gui.getModel();
+            Model model = gui.getModel();        
             DefaultListModel modelListModel = (DefaultListModel) gui.getModelList().getModel();
             HashMap<String, Boolean> modelChangedMap = gui.getModelChangedMap();
             int index = modelList.getSelectedIndex();

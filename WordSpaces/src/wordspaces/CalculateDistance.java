@@ -100,7 +100,7 @@ public class CalculateDistance extends SwingWorker<Object,String>{
         while(iterV1.hasNext()){
             entryV1 = (String) iterV1.next();  
             if(!v2.containsKey(entryV1)){
-                v2.put(entryV1,new Double(0));
+                v2.put(entryV1, 0.0);
             }
         }
         
@@ -108,7 +108,7 @@ public class CalculateDistance extends SwingWorker<Object,String>{
         while (iterV2.hasNext()){
             entryV2 = (String) iterV2.next();  
             if(!v1.containsKey(entryV2)){
-                v1.put(entryV2,new Double(0));
+                v1.put(entryV2, 0.0);
             }
         } 
     }
