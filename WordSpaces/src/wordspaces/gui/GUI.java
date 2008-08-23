@@ -9,7 +9,6 @@ package wordspaces.gui;
 //package wordspaces.gui;
 
 import java.io.IOException;
-import javax.swing.UnsupportedLookAndFeelException;
 import wordspaces.gui.threads.BuildWordTable;
 import wordspaces.gui.listener.ModelPopupListener;
 import wordspaces.gui.listener.ParserPopupListener;
@@ -1025,8 +1024,15 @@ public class GUI extends javax.swing.JFrame {
             task.addPropertyChangeListener(new PropertyChangeListener() {
                 boolean done = false;  //workaround,ensures that task.isDone is only once done...
                 public void propertyChange(PropertyChangeEvent evt) {
+                    /*This is to avoid duplicate events */
+                    String vectorName = null;
                     if ("progress".equals(evt.getPropertyName())) {
-                        progressBar.setValue(progressBar.getValue()+1);
+                        Object[] data = (Object[])evt.getNewValue();
+                        if(!vectorName.equals(data[0])){            //not very nice !!!
+                            wordTableModel.addRow(data);                      
+                            sizeLabel.setText(progressBar.getValue()+1+"");
+                        }
+                        progressBar.setValue(progressBar.getValue()+1);                   
                     }
                     else if(task.isDone() && !done){
                         done = true;

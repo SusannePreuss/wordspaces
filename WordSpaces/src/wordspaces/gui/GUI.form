@@ -77,16 +77,16 @@
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
-                          <Component id="wordScrollPane" pref="277" max="32767" attributes="0"/>
+                          <Component id="wordScrollPane" pref="278" max="32767" attributes="0"/>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
-                          <Component id="contextScrollPane" pref="248" max="32767" attributes="0"/>
+                          <Component id="contextScrollPane" pref="250" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="wordScrollPane" alignment="0" pref="382" max="32767" attributes="0"/>
-                      <Component id="contextScrollPane" alignment="0" pref="382" max="32767" attributes="0"/>
+                      <Component id="wordScrollPane" alignment="0" pref="392" max="32767" attributes="0"/>
+                      <Component id="contextScrollPane" alignment="0" pref="392" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
               </Layout>
@@ -579,7 +579,7 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="logScrollPane" alignment="1" pref="733" max="32767" attributes="0"/>
+              <Component id="logScrollPane" alignment="1" pref="745" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">

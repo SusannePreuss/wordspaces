@@ -37,9 +37,9 @@ public class Model implements Serializable{
 
     /* avoids thousands of dublicates of Strings in wordDirectory and in
      * each wordContextVector */
-    public Map<String,String> wordCache;
+    private Map<String,String> wordCache;
     
-    public Map<String, Double> wordFreq;
+    private Map<String, Double> wordFreq;
     
     private String name;
     
@@ -102,7 +102,7 @@ public class Model implements Serializable{
     public synchronized SortedMap<String,Double> addWordVector(String vectorName){
         if(!wordDirectory.containsKey(vectorName)){
             addWordtoWordCache(vectorName);
-            wordDirectory.put(wordCache.get(vectorName), Collections.synchronizedSortedMap(new TreeMap<String,Double>()));           
+            wordDirectory.put(wordCache.get(vectorName), Collections.synchronizedSortedMap(new TreeMap<String,Double>()));
         }
 
         return wordDirectory.get(vectorName);
@@ -150,16 +150,16 @@ public class Model implements Serializable{
     
     private void addWordtoWordCache(String word){
         if(!wordCache.containsKey(word)){
-            wordCache.put(word,word);
+            wordCache.put(word, word);
             wordFreq.put(wordCache.get(word), 0.0);
         }
         else{
             double freq = wordFreq.get(word);
-            wordFreq.put(wordCache.get(word), ++freq); //wordCache.get
+            wordFreq.put(wordCache.get(word), ++freq);
         }
     }
     
-    private void removeWordfromWordCache(String word){
+    private void removeWordfromWordCache(String word){       
         if(wordCache.containsKey(word)){
             double freq = wordFreq.get(word);
             freq--;
