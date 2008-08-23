@@ -990,7 +990,7 @@ public class GUI extends javax.swing.JFrame {
         parser = new Parser(4,4);
         parser.enableFiller(true);
         //muss anders sein, wenn keine datei für stopWords ausgewählt wird ??? was dann ?
-        enableStopWordsMenuItem.doClick();
+        parser.enableStopWordsFilter(checkBoxListener.createSetFromFile("Select stop words file"));
         addParser(parser);
         System.out.println("New Parser with Filler="+parser.isFillerEnabled()+" and Stop Words="+parser.isStopWordsEnabled()+" created...");
 }//GEN-LAST:event_fourParserMenuItemActionPerformed
@@ -1121,7 +1121,7 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_loadTextSourceButtonActionPerformed
 
 private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutMenuItemActionPerformed
-    JOptionPane.showMessageDialog(null, "Programmed by Alexander Frey. Email to afrey@uos.de", "About...", JOptionPane.INFORMATION_MESSAGE);
+    JOptionPane.showMessageDialog(null, "Programed by Alexander Frey. Email to afrey@uos.de", "About...", JOptionPane.INFORMATION_MESSAGE);
 
 }//GEN-LAST:event_aboutMenuItemActionPerformed
 
@@ -1309,6 +1309,7 @@ private void batchProcessingMenuItemActionPerformed(java.awt.event.ActionEvent e
 
     private File[] LoadTextFiles(){
         JFileChooser chooser = new JFileChooser();
+        chooser.setDialogTitle("Select text files");
         chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         chooser.setMultiSelectionEnabled(true);
         chooser.setFileFilter(new javax.swing.filechooser.FileFilter() {

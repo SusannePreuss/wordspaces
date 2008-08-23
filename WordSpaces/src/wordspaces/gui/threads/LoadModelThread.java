@@ -36,6 +36,7 @@ public class LoadModelThread extends SwingWorker<Model, Integer>{
         File file = null;
         Model model = null;
         JFileChooser chooser = new JFileChooser();
+        chooser.setDialogTitle("Select model file");
         chooser.setFileFilter(new javax.swing.filechooser.FileFilter() {
             public boolean accept(File f) {
                 if(f.getName().toLowerCase().endsWith(".model") || f.isDirectory()){

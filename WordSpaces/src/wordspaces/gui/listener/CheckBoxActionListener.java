@@ -64,80 +64,63 @@ public class CheckBoxActionListener implements ActionListener {
         if (src.getText().equals("Enable stop word filtering")) {
             if (parser != null) {
                 if (checkBoxState) {
-                    File file = null;
-                    BufferedReader reader;
-                    JFileChooser chooser = new JFileChooser();                    
-                    if (chooser.showOpenDialog(gui) == JFileChooser.APPROVE_OPTION) {
-                        file = chooser.getSelectedFile();
-                    }
-                    if (file != null && file.exists()) {
-                        HashSet<String> stopWords = new HashSet<String>();
-                        String word;
-                        try {
-                            reader = new BufferedReader(new FileReader(file));
-                            while (reader.ready()) {
-                                word = reader.readLine().toLowerCase().trim();
-                                if (!word.isEmpty()) {
-                                    stopWords.add(word);
-                                    System.out.println(word+" added to stop word list...");
-                                }
-                            }
-                            parser.enableStopWordsFilter(stopWords);
-                        }catch (FileNotFoundException ex) {
-                            Logger.getLogger("global").log(Level.SEVERE, null, ex);
-                        } catch (IOException ex) {
-                            Logger.getLogger("global").log(Level.SEVERE, null, ex);
-                        }                       
-                    }
-                    else{
-                        src.setSelected(false);
-                    }
+                    parser.enableStopWordsFilter(createSetFromFile("Select stop words file"));
                 }
-                else {
-                    parser.disableStopWordsFilter();
+                else{
+                    src.setSelected(false);
                 }
+            }
+            else {
+                parser.disableStopWordsFilter();
             }
         }           
         if (src.getText().equals("Activate word selection list")){
             if (checkBoxState) {
-                File file = null;
-                BufferedReader reader;
-                JFileChooser chooser = new JFileChooser();
-                if (chooser.showOpenDialog(gui) == JFileChooser.APPROVE_OPTION) {
-                    file = chooser.getSelectedFile();
-                }
-                if (file != null && file.exists()) {
-                    HashSet<String> words = new HashSet<String>();
-                    String word;
-                    try {
-                        reader = new BufferedReader(new FileReader(file));
-                        while (reader.ready()) {
-                            word = reader.readLine().toLowerCase().trim();
-                            if (!word.isEmpty()) {
-                                words.add(word);
-                                System.out.println(word+" added to focus list...");
-                            }
-                        }
-                        parser.enableFocusWords(words);
-                        if(model != null && model.getDirectorySize() != 0) {
-                            int decision = JOptionPane.showConfirmDialog(null, "Automatically delete all words in model except the selected focus words ?", "Question", JOptionPane.YES_NO_OPTION);
-                            if (decision == 0) {
-                                cleanModelwithFocusWords(model, parser);
-                            }
-                        }
-                    } catch (FileNotFoundException ex) {
-                        Logger.getLogger("global").log(Level.SEVERE, null, ex);
-                    } catch (IOException ex) {
-                        Logger.getLogger("global").log(Level.SEVERE, null, ex);
+                parser.enableFocusWords(createSetFromFile("Select focus words file"));
+                if(model != null && model.getDirectorySize() != 0) {
+                    int decision = JOptionPane.showConfirmDialog(null, "Automatically delete all words in model except the selected focus words ?", "Question", JOptionPane.YES_NO_OPTION);
+                    if (decision == 0) {
+                        cleanModelwithFocusWords(model, parser);
                     }
-                } else {
-                    src.setSelected(false);
                 }
             } else {
-                if(parser != null)
-                    parser.disableFocusWords();
+                src.setSelected(false);
+            }
+        } else {
+            if(parser != null)
+                parser.disableFocusWords();
+        }
+    }
+    
+    public Set createSetFromFile(String title){
+        File file = null;
+        Set<String> words = null;
+        BufferedReader reader;
+        JFileChooser chooser = new JFileChooser();
+        chooser.setDialogTitle(title);
+        if (chooser.showOpenDialog(gui) == JFileChooser.APPROVE_OPTION) {
+            file = chooser.getSelectedFile();
+        }
+        if (file != null && file.exists()) {
+            words = new HashSet<String>();
+            String word;
+            try {
+                reader = new BufferedReader(new FileReader(file));
+                while (reader.ready()) {
+                    word = reader.readLine().toLowerCase().trim();
+                    if (!word.isEmpty()) {
+                        words.add(word);
+                        System.out.println(word+" added to SET...");
+                    }
+                }
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger("global").log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger("global").log(Level.SEVERE, null, ex);
             }
         }
+
+        return words;
     }
 }
 
