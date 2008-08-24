@@ -46,7 +46,7 @@ public class Model implements Serializable{
 
     public Model(String name) {
         wordDirectory  = new TreeMap<String, SortedMap<String,Double>>();
-        wordOccurences = new HashMap<String, Integer>();
+        wordOccurences = Collections.synchronizedMap(new HashMap<String, Integer>());
         distances      = new TreeMap<String, SortedMap<String,Double>>();
         parsedSources  = new Vector<String>();
         wordCache      = new HashMap();

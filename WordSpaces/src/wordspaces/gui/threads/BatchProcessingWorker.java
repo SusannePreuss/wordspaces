@@ -45,12 +45,22 @@ public class BatchProcessingWorker extends SwingWorker<Object, Integer>{
                         firePropertyChange("progress",0,evt.getNewValue());
                     }              
                     if(thread.isDone() && !done){
-                        done = true;                    
-                        firePropertyChange("finished",0,ModelSaver.saveModel(model));            
+                        done = true;
+                        /* Now the model is being saved ! */
+                        firePropertyChange("finished",0,ModelSaver.saveModel(model));       
                     }
                 }              
             });
-            thread.execute(); 
+            if(!this.isCancelled()){
+                thread.execute(); thread.get();
+            }
+            else{
+                /* FileParserBalancerWorker invokes the cancel() on the parser */
+                thread.cancel(false);
+                firePropertyChange("cancelled",0,null);
+                System.out.println("BatchProcessingWorker cancelled !");
+                return null;
+            }          
         }
                            
         return null;

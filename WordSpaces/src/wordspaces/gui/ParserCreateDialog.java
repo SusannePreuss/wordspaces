@@ -134,7 +134,7 @@ public class ParserCreateDialog extends javax.swing.JPanel {
     private void createButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createButtonActionPerformed
         parser = new Parser((Integer)leftSpinner.getValue(),(Integer)rightSpinner.getValue());
         String name = parserNameTextField.getText();
-        if(name != null){
+        if(!name.isEmpty()){
             parser.setName(name);
             /* name equals the last created parser, thus we can apply all 
              * properties of the last parser */

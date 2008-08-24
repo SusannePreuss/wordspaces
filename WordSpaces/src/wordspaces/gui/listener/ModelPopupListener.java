@@ -4,8 +4,6 @@ import wordspaces.gui.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.SortedMap;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JPopupMenu;

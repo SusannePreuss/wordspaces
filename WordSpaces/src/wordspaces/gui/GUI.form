@@ -573,6 +573,9 @@
         <Property name="toolTipText" type="java.lang.String" value="Stop batch processing after next finished model."/>
         <Property name="enabled" type="boolean" value="false"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="stopBatchButtonActionPerformed"/>
+      </Events>
     </Component>
     <Container class="javax.swing.JPanel" name="logPanel">
 

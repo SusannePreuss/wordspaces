@@ -12,10 +12,7 @@ package wordspaces;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Collections;
 import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
 import java.util.Vector;
 
 
@@ -29,6 +26,8 @@ public class Parser {
     private static final String FILLER = "xxxxxx";
     
     private boolean filler;
+
+    private boolean cancelled;
     
     private String name;
     
@@ -49,6 +48,7 @@ public class Parser {
         this.leftContextWidth  = leftContextWidth;
         this.rightContextWidth = rightContextWidth;
         this.filler            = false;
+        this.cancelled         = false;
         name                   = new String();
     }    
     
@@ -64,7 +64,7 @@ public class Parser {
         Vector<String> lineTokens = new Vector();
         try {
             reader = new java.io.BufferedReader(new java.io.FileReader(file));
-            while (reader.ready()) {                                                   
+            while (reader.ready() && !cancelled) {
                 splitLine = reader.readLine().toLowerCase().split("\\s");               //read line from reader and split it...
                 for(String w: splitLine){
                     if(        !(w.length() <= 1)                                       //ignore words that consists only of one character
@@ -121,6 +121,9 @@ public class Parser {
                 }
                 lineTokens.removeAllElements();
             }
+            /* parseFile might have been cancelled, but before we stop the parsing
+             * process we have to reset the boolean value */
+            cancelled = false;
         }
         catch (Exception ex) {
             System.out.println(ex.getMessage());
@@ -180,6 +183,10 @@ public class Parser {
     
     public String getName(){
         return name;
+    }
+
+    public void cancelParsing(){
+        cancelled = true;
     }
  
     public String toString(){

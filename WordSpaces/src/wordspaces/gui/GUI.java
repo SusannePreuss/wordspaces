@@ -75,6 +75,7 @@ import wordspaces.gui.listener.SaveModelActionListener;
 import wordspaces.gui.listener.SelectAllActionListener;
 import wordspaces.gui.threads.BatchProcessingWorker;
 import wordspaces.gui.threads.FileFilterBalancer;
+import wordspaces.gui.threads.FileParserBalancerWorker;
 import wordspaces.gui.threads.LoadModelThread;
 
 /**
@@ -355,9 +356,9 @@ public class GUI extends javax.swing.JFrame {
         stopBatchButton.setText("Stop");
         stopBatchButton.setToolTipText("Stop batch processing after next finished model.");
         stopBatchButton.setEnabled(false);
-	stopBatchButton.addActionListener(new java.awt.event.ActionListener() {
+        stopBatchButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                stopButtonActionPerformed();
+                stopBatchButtonActionPerformed(evt);
             }
         });
 
@@ -1028,16 +1029,17 @@ public class GUI extends javax.swing.JFrame {
             final BuildWordTable task = new BuildWordTable(model);
             task.addPropertyChangeListener(new PropertyChangeListener() {
                 boolean done = false;  //workaround,ensures that task.isDone is only once done...
-                public void propertyChange(PropertyChangeEvent evt) {
-                    /*This is to avoid duplicate events */
-                    String vectorName = "";
+                /*This is to avoid duplicate events */
+                String vectorName = "";
+                public void propertyChange(PropertyChangeEvent evt) {    
                     if ("progress".equals(evt.getPropertyName())) {
                         Object[] data = (Object[])evt.getNewValue();
-                        if(!vectorName.equals(data[0])){            //not very nice !!!
-                            wordTableModel.addRow(data);                      
+           //             if(!vectorName.equals(data[0])){            //not very nice !!!
+           //                 wordTableModel.addRow(data);
                             sizeLabel.setText(progressBar.getValue()+1+"");
-                        }
-                        progressBar.setValue(progressBar.getValue()+1);                   
+                            progressBar.setValue(progressBar.getValue()+1);
+           //                 vectorName = (String) data[0];
+           //             }
                     }
                     else if(task.isDone() && !done){
                         done = true;
@@ -1125,75 +1127,100 @@ public class GUI extends javax.swing.JFrame {
         textSizeLabel.setText(textSourcesListModel.getSize()+" items");       
     }//GEN-LAST:event_loadTextSourceButtonActionPerformed
 
-    private void stopButtonActionPerformed(){
+    private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-    	 FIRST:event_aboutMenuItemActionPerformed
+        JOptionPane.showMessageDialog(null, "Programed by Alexander Frey. Email to afrey@uos.de", "About...", 			JOptionPane.INFORMATION_MESSAGE);
 
+    }                                             
 
+    private void loadModelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadModelActionPerformed
+        LoadModelThread thread = new LoadModelThread(this);
+        thread.execute();
+    }//GEN-LAST:event_loadModelActionPerformed
+
+    private void batchProcessingMenuItemActionPerformed(java.awt.event.ActionEvent evt) {                                                        
+    	Vector<File> files = new Vector();
+    	final Parser[] parserVector = new Parser[parserListModel.getSize()];
+    	/* Check if text sources and parser are avaiable... */
+    	if(textSourcesListModel.getSize() >= 1 && parserListModel.getSize() >= 1 ){            
+            /* Put all files from sources list into vector */
+            for(int i=0;i<textSourcesListModel.getSize();i++)
+                files.addElement((File) textSourcesListModel.elementAt(i));          
+                                                         
+            /* Put all parser from parser list into the parser vector */
+            for(int i=0;i<parserListModel.getSize();i++)
+                parserVector[i] = (Parser) parserListModel.elementAt(i);
+        
+           
+            progressBar.setMaximum(parserVector.length*files.size());
+            progressBar.setString("(0/"+parserVector.length+") models finished");
+            progressBar.setStringPainted(true);
+            batchWorker = new BatchProcessingWorker(files,parserVector);
+            batchWorker.addPropertyChangeListener(new PropertyChangeListener() {
+                boolean done = false;
+                int fileProg = 0;           //for the file progress
+                int modelProg = 0;          //for the model progress
+                public  void propertyChange(PropertyChangeEvent evt) {
+                    /* one file has been parsed */
+                    if ("progress".equals(evt.getPropertyName())) {
+                        System.out.println("Finished parsing of "+((File)evt.getNewValue()).getName()+"...");
+                        progressBar.setValue(++fileProg);
+                    }
+                    /* building of one model is finished */
+                    if ("finished".equals(evt.getPropertyName())) {               
+                        progressBar.setString("("+(++modelProg)+"/"+parserVector.length+") models finished");
+                        System.out.println("Model saved to "+evt.getNewValue());
+                    }
+
+                    if("cancelled".equals(evt.getPropertyName())){
+                        System.out.println("Batch processing cancelled !");
+                    }
+                    /* first check !done because batchWorker is set to null in body ! */
+                    if(!done && batchWorker.isDone()){
+                        done = true;
+                        System.out.println("Finished batch processing...");
+                        progressBar.setString("");
+                        progressBar.setStringPainted(false);
+                        progressBar.setValue(0);
+                        batchWorker = null;
+                        stopBatchButton.setEnabled(false);
+                    }
+                }
+            });
+            batchWorker.execute();
+            stopBatchButton.setEnabled(true);
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "There must be at least one parser and text source.", "Warning", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
-private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutMenuItemActionPerformed
-    JOptionPane.showMessageDialog(null, "Programed by Alexander Frey. Email to afrey@uos.de", "About...", JOptionPane.INFORMATION_MESSAGE);
-
-}//GEN-LAST:event_aboutMenuItemActionPerformed
-
-private void loadModelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadModelActionPerformed
-    LoadModelThread thread = new LoadModelThread(this);
-    thread.execute();
-}//GEN-LAST:event_loadModelActionPerformed
-
-private void batchProcessingMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_batchProcessingMenuItemActionPerformed
-    Vector<File> files = new Vector();
-    final Parser[] parserVector = new Parser[parserListModel.getSize()];
-    /* Check if text sources and parser are avaiable... */
-    if(textSourcesListModel.getSize() >= 1 && parserListModel.getSize() >= 1 ){            
-        /* Put all files from sources list into vector */
-        for(int i=0;i<textSourcesListModel.getSize();i++)
-            files.addElement((File) textSourcesListModel.elementAt(i));          
-//GEN-LAST:event_batchProcessingMenuItemActionPerformed
-        /* Put all parser from parser list into the parser vector */
-        for(int i=0;i<parserListModel.getSize();i++)
-            parserVector[i] = (Parser) parserListModel.elementAt(i);
-        
-        batchWorker = new BatchProcessingWorker(files,parserVector);
-        progressBar.setMaximum(parserVector.length*files.size());
-        progressBar.setString("(0/"+parserVector.length+") models finished");
-        progressBar.setStringPainted(true);
-        batchWorker.addPropertyChangeListener(new PropertyChangeListener() {
-            boolean done = false;
-            int fileProg = 0;           //for the file progress
-            int modelProg = 0;          //for the model progress
-            public  void propertyChange(PropertyChangeEvent evt) {
-                /* one file has been parsed */
-                if ("progress".equals(evt.getPropertyName())) {
-                    System.out.println("Finished parsing of "+((File)evt.getNewValue()).getName()+"...");
-                    progressBar.setValue(++fileProg);
-                }
-                /* building of one model is finished */
-                if ("finished".equals(evt.getPropertyName())) {               
-                    progressBar.setString("("+(++modelProg)+"/"+parserVector.length+") models finished");
-                    System.out.println("Model saved to "+evt.getNewValue());
-                }
-
-                if("cancelled".equals(evt.getPropertyName())){
-                    System.out.println("Batch processing cancelled !");
-                }
-                
-                if(batchWorker.isDone() && !done){
-                    done = true;
-                    System.out.println("Finished batch processing...");
-                    progressBar.setString("");
-                    progressBar.setStringPainted(false);
-                    progressBar.setValue(0);
-                    stopBatchButton.setEnabled(false);
-                }
+    private void stopBatchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopBatchButtonActionPerformed
+        if(batchWorker != null || fileParserBalancerWorker != null){
+            if(batchWorker != null){
+                batchWorker.cancel(false);
             }
-        });
-        batchWorker.execute();
+            else if(fileParserBalancerWorker != null){
+                fileParserBalancerWorker.cancel(false);
+            }
+            
+            progressBar.setString("");
+            progressBar.setStringPainted(false);
+            progressBar.setValue(0);         
+        }
+        
+        stopBatchButton.setEnabled(false);
+    }//GEN-LAST:event_stopBatchButtonActionPerformed
+    
+
+    public void addFileParserBalancerWorker(FileParserBalancerWorker w){
+        fileParserBalancerWorker = w;
         stopBatchButton.setEnabled(true);
     }
-    else{
-        JOptionPane.showMessageDialog(null, "There must be at least one parser and text source.", "Warning", JOptionPane.ERROR_MESSAGE);
+    
+    public void removeFileParserBalancerWorker(FileParserBalancerWorker w){
+        fileParserBalancerWorker = null;
+        stopBatchButton.setEnabled(false);
     }
-}
 
     public Model getModel(){
         return model;
@@ -1437,6 +1464,9 @@ private void batchProcessingMenuItemActionPerformed(java.awt.event.ActionEvent e
     private CheckBoxActionListener checkBoxListener;
     public String lastParserNameCache;
     private BatchProcessingWorker batchWorker;
+    /* To be able to interrupt the parsing process,we keep an reference to the thread
+     * which can be interrupted... */
+    private FileParserBalancerWorker fileParserBalancerWorker;
    
 
 

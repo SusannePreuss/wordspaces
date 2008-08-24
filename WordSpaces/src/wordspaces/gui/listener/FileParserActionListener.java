@@ -27,8 +27,7 @@ import wordspaces.gui.threads.FileParserBalancerWorker;
 public class FileParserActionListener implements ActionListener{
 
     private GUI gui;
- 
-    private int progress = 0;
+    
     
     public FileParserActionListener(GUI g){
         gui = g;
@@ -45,7 +44,7 @@ public class FileParserActionListener implements ActionListener{
             
             /* Get the selected Files */
             int[] indices = gui.getTextSourcesList().getSelectedIndices();
-            final Vector<File> files = new Vector<File>();            
+            final Vector<File> files = new Vector();            
             for(int i=0; i < indices.length; i++){
                 file = (File)((DefaultListModel)gui.getTextSourcesList().getModel()).getElementAt(indices[i]);
                 if(!alwaysAdd){  //depends upon the decision that is made in the JOptionpane
@@ -73,7 +72,6 @@ public class FileParserActionListener implements ActionListener{
                     files.addElement(file);
                 }
             }
-            
             final long zeit = System.currentTimeMillis();
             final JProgressBar progressBar = gui.getProgressBar();
             progressBar.setMaximum(files.size());
@@ -83,6 +81,7 @@ public class FileParserActionListener implements ActionListener{
             final FileParserBalancerWorker task = new FileParserBalancerWorker(parser,files,model);
             task.addPropertyChangeListener(new PropertyChangeListener() {
                 boolean done = false;
+                int progress = 0;
                 public  void propertyChange(PropertyChangeEvent evt) {
                     if("progress".equals(evt.getPropertyName())){
                         gui.setModelhasChanged(model);
@@ -105,12 +104,14 @@ public class FileParserActionListener implements ActionListener{
                         progressBar.setString("");
                         progressBar.setValue(0);
                         progressBar.setIndeterminate(false);   
-                        System.out.println("Parsing is done...");
+                        /* Needs to be removed, so task can't be interrupted..*/
+                        gui.removeFileParserBalancerWorker(task);
                         System.out.println("Time needed for parsing into "+model+" took "+(System.currentTimeMillis()-zeit)+" (millis)");
                     }
                 }
             });
-            task.execute();               
+            task.execute();
+            gui.addFileParserBalancerWorker(task);
         }           
         else
             JOptionPane.showMessageDialog(null, "Please select a Parser and a Model", "Warning", JOptionPane.ERROR_MESSAGE);

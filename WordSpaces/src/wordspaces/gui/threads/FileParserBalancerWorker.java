@@ -47,7 +47,7 @@ public class FileParserBalancerWorker extends SwingWorker<Model, Integer>{
     }
 
 
-    protected Model doInBackground()throws Exception {       
+    protected Model doInBackground() throws Exception {       
         /* For each file start a fileParserWorker. This way we can control
          * the number of threads that parse a file into a model... */
         for(final File file: files){
@@ -66,17 +66,23 @@ public class FileParserBalancerWorker extends SwingWorker<Model, Integer>{
                     
                 }
             });
-            queue.addElement(thread);
-            thread.execute();          
+            if(!this.isCancelled()){
+                thread.execute();    
+                queue.addElement(thread);
+            }
+            else{
+                parser.cancelParsing();
+                System.out.println("FileParserBalancer cancelled !");
+                break;
+            }
         }
-        while(queue.size() != 0)
-         //   queue.firstElement().get();
-                      Thread.sleep(150);
-        
-        System.out.println("Balancer finished... queue is "+queue.size());            
+        while(queue.size() != 0){
+            queue.firstElement().get();
+            System.out.println("Schnarch "+queue.size());
+            Thread.sleep(200);
+        }
+        System.out.println("FileParserBalancer finished...");            
         
         return model;
     }
-    
-
 }
