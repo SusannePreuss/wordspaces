@@ -201,14 +201,14 @@ public class GUI extends javax.swing.JFrame {
         contextPanelLayout.setHorizontalGroup(
             contextPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(contextPanelLayout.createSequentialGroup()
-                .add(wordScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
+                .add(wordScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(contextScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 248, Short.MAX_VALUE))
+                .add(contextScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE))
         );
         contextPanelLayout.setVerticalGroup(
             contextPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(wordScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 382, Short.MAX_VALUE)
-            .add(contextScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 382, Short.MAX_VALUE)
+            .add(wordScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 392, Short.MAX_VALUE)
+            .add(contextScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 392, Short.MAX_VALUE)
         );
 
         mainTabbedPane.addTab("Context", contextPanel);
@@ -355,6 +355,11 @@ public class GUI extends javax.swing.JFrame {
         stopBatchButton.setText("Stop");
         stopBatchButton.setToolTipText("Stop batch processing after next finished model.");
         stopBatchButton.setEnabled(false);
+	stopBatchButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                stopButtonActionPerformed();
+            }
+        });
 
         logTextArea.setColumns(20);
         logTextArea.setRows(5);
@@ -364,7 +369,7 @@ public class GUI extends javax.swing.JFrame {
         logPanel.setLayout(logPanelLayout);
         logPanelLayout.setHorizontalGroup(
             logPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, logScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 707, Short.MAX_VALUE)
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, logScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 745, Short.MAX_VALUE)
         );
         logPanelLayout.setVerticalGroup(
             logPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -478,12 +483,12 @@ public class GUI extends javax.swing.JFrame {
                     .add(org.jdesktop.layout.GroupLayout.LEADING, logPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(org.jdesktop.layout.GroupLayout.LEADING, textSizeLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 143, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(org.jdesktop.layout.GroupLayout.LEADING, layout.createSequentialGroup()
-                        .add(sourcesTabbedPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 399, Short.MAX_VALUE)
+                        .add(sourcesTabbedPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
                             .add(layout.createSequentialGroup()
                                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                                .add(modelsTabbedPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
+                                .add(modelsTabbedPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 218, Short.MAX_VALUE)
                                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                                 .add(parserTabbedPane, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 115, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                             .add(layout.createSequentialGroup()
@@ -1025,7 +1030,7 @@ public class GUI extends javax.swing.JFrame {
                 boolean done = false;  //workaround,ensures that task.isDone is only once done...
                 public void propertyChange(PropertyChangeEvent evt) {
                     /*This is to avoid duplicate events */
-                    String vectorName = null;
+                    String vectorName = "";
                     if ("progress".equals(evt.getPropertyName())) {
                         Object[] data = (Object[])evt.getNewValue();
                         if(!vectorName.equals(data[0])){            //not very nice !!!
@@ -1120,6 +1125,11 @@ public class GUI extends javax.swing.JFrame {
         textSizeLabel.setText(textSourcesListModel.getSize()+" items");       
     }//GEN-LAST:event_loadTextSourceButtonActionPerformed
 
+    private void stopButtonActionPerformed(){
+
+
+    }
+
 private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutMenuItemActionPerformed
     JOptionPane.showMessageDialog(null, "Programed by Alexander Frey. Email to afrey@uos.de", "About...", JOptionPane.INFORMATION_MESSAGE);
 
@@ -1161,6 +1171,10 @@ private void batchProcessingMenuItemActionPerformed(java.awt.event.ActionEvent e
                 if ("finished".equals(evt.getPropertyName())) {               
                     progressBar.setString("("+(++modelProg)+"/"+parserVector.length+") models finished");
                     System.out.println("Model saved to "+evt.getNewValue());
+                }
+
+                if("cancelled".equals(evt.getPropertyName())){
+                    System.out.println("Batch processing cancelled !");
                 }
                 
                 if(batchWorker.isDone() && !done){
