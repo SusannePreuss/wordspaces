@@ -37,9 +37,9 @@ public class Model implements Serializable{
 
     /* avoids thousands of dublicates of Strings in wordDirectory and in
      * each wordContextVector */
-    private Map<String,String> wordCache;
+    private Map<String,String> stringCache;
     
-    private Map<String, Double> wordFreq;
+    private Map<String, Double> stringFreq;
     
     private String name;
     
@@ -49,8 +49,8 @@ public class Model implements Serializable{
         wordOccurences = Collections.synchronizedMap(new HashMap<String, Integer>());
         distances      = new TreeMap<String, SortedMap<String,Double>>();
         parsedSources  = new Vector<String>();
-        wordCache      = new HashMap();
-        wordFreq       = new HashMap();
+        stringCache      = new HashMap();
+        stringFreq       = new HashMap();
         this.name      = name;
     }
     
@@ -99,10 +99,18 @@ public class Model implements Serializable{
         return wordDirectory.size();
     }
 
+    public Map getStringCache(){
+        return stringCache;
+    }
+
+    public Map getStringFreq(){
+        return stringFreq;
+    }
+
     public synchronized SortedMap<String,Double> addWordVector(String vectorName){
         if(!wordDirectory.containsKey(vectorName)){
             addWordtoWordCache(vectorName);
-            wordDirectory.put(wordCache.get(vectorName), Collections.synchronizedSortedMap(new TreeMap<String,Double>()));
+            wordDirectory.put(stringCache.get(vectorName), Collections.synchronizedSortedMap(new TreeMap<String,Double>()));
         }
 
         return wordDirectory.get(vectorName);
@@ -112,21 +120,21 @@ public class Model implements Serializable{
         double freq = 0;
         addWordtoWordCache(contextWord);
         if(!wordDirectory.containsKey(vectorName)){
-            addWordVector(vectorName).put(wordCache.get(contextWord), 1.0);     
+            addWordVector(vectorName).put(stringCache.get(contextWord), 1.0);
         }
         else if(!wordDirectory.get(vectorName).containsKey(contextWord)){
-            wordDirectory.get(vectorName).put(wordCache.get(contextWord), 1.0);    
+            wordDirectory.get(vectorName).put(stringCache.get(contextWord), 1.0);
         }
         else{
             freq = wordDirectory.get(vectorName).get(contextWord);         
-            wordDirectory.get(vectorName).put(wordCache.get(contextWord), ++freq);     
+            wordDirectory.get(vectorName).put(stringCache.get(contextWord), ++freq);
         }  
    
         return freq;
     }
     
     public synchronized void deleteWordVector(String word){       
-        /* run through all contextWords and remove them from the wordCache */
+        /* run through all contextWords and remove them from the stringCache */
         Iterator<String> contextIter = wordDirectory.get(word).keySet().iterator();
         while(contextIter.hasNext()){
             removeWordfromWordCache(contextIter.next());
@@ -139,6 +147,7 @@ public class Model implements Serializable{
     }
 
     public synchronized void deleteContextWord(String vectorName, String contextWord){
+        System.out.println(contextWord+" deleted in model");
         wordDirectory.get(vectorName).remove(contextWord);
         removeWordfromWordCache(contextWord);
     }
@@ -149,25 +158,25 @@ public class Model implements Serializable{
     }
     
     private void addWordtoWordCache(String word){
-        if(!wordCache.containsKey(word)){
-            wordCache.put(word, word);
-            wordFreq.put(wordCache.get(word), 0.0);
+        if(!stringCache.containsKey(word)){
+            stringCache.put(word, word);
+            stringFreq.put(stringCache.get(word), 0.0);
         }
         else{
-            double freq = wordFreq.get(word);
-            wordFreq.put(wordCache.get(word), ++freq);
+            double freq = stringFreq.get(word);
+            stringFreq.put(stringCache.get(word), ++freq);
         }
     }
     
     private void removeWordfromWordCache(String word){       
-        if(wordCache.containsKey(word)){
-            double freq = wordFreq.get(word);
+        if(stringCache.containsKey(word)){
+            double freq = stringFreq.get(word);
             freq--;
             if(freq > 0)
-                wordFreq.put(wordCache.get(word), freq);
+                stringFreq.put(stringCache.get(word), freq);
             else{
-                wordCache.remove(word);
-                wordFreq.remove(word);
+                stringCache.remove(word);
+                stringFreq.remove(word);
             }
         }
     }

@@ -41,13 +41,16 @@ public class ModelPopupListener extends MouseAdapter {
                 /* Build the wordTable if there wasn't a model selected before, or
                  * if a new model has been selected. */
                 else {
-                    model = (Model) modelListModel.getElementAt(index);
-                    System.out.println(model.getParsedSources().size());
+                    model = (Model) modelListModel.getElementAt(index);                   
                     gui.setModel(model);
                     gui.showWordTable();
                     gui.getDistancesPanel().showDistances(model.getCachedDistances());
                     gui.distWindowButton.setText("Hide DistWindow");
                     gui.getInfoWindow().setTitle(model.toString());
+                    System.out.println("Parsed sources in model "+model.getParsedSources().size()+
+                            " vectors "+model.getDirectorySize()+
+                            " occurences cache "+model.getWordOccurences()
+                            );
                 }
                 gui.showHistoryTable();
             }

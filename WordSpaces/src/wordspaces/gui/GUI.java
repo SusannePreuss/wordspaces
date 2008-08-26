@@ -33,6 +33,7 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.Vector;
@@ -89,7 +90,7 @@ public class GUI extends javax.swing.JFrame {
         try {
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
         } catch (Exception ex) {
-            System.out.println("Couldn't find com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel --> install Java 1.6.0_10");
+            System.out.println("Couldn't find com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel --> install Java 1.6.0_10t");
         } 
 
         checkBoxListener        = new CheckBoxActionListener(this);
@@ -540,7 +541,7 @@ public class GUI extends javax.swing.JFrame {
         /* this is the name cache that is entered in the parserCreateDialog */
         lastParserNameCache = "";
         //This is a treemap that saves all from model generated Table Models
-        tableModelMap           = new TreeMap<String, Object[][]>();
+        tableModelMap           = new HashMap<String, Object[][]>();
         gui                     = this;                 // this is not really nice !
         distPanel               = new DistancesPanel(gui);
         doubleComparator        = new DoubleComparator();
@@ -988,14 +989,11 @@ public class GUI extends javax.swing.JFrame {
         });
         task.execute();
         modelHasChanged.put(model.toString(), true);
-
-        textSizeLabel.setText("Building word classes...");
     }//GEN-LAST:event_buildWordClassesMenuItemActionPerformed
 
     private void fourParserMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fourParserMenuItemActionPerformed
         parser = new Parser(4,4);
         parser.enableFiller(true);
-        //muss anders sein, wenn keine datei für stopWords ausgewählt wird ??? was dann ?
         parser.enableStopWordsFilter(checkBoxListener.createSetFromFile("Select stop words file"));
         addParser(parser);
         System.out.println("New Parser with Filler="+parser.isFillerEnabled()+" and Stop Words="+parser.isStopWordsEnabled()+" created...");
@@ -1266,7 +1264,7 @@ public class GUI extends javax.swing.JFrame {
         return infoWindowFrame;
     }
     
-    public TreeMap getTableModelMap(){
+    public Map getTableModelMap(){
         return tableModelMap;
     }
     
@@ -1459,7 +1457,7 @@ public class GUI extends javax.swing.JFrame {
     private TableRowSorter<TableModel> wordTableSorter;
     private DoubleComparator doubleComparator;
     protected DistancesPanel distPanel;
-    protected TreeMap<String, Object[][]> tableModelMap;
+    protected Map<String, Object[][]> tableModelMap;
     private HashMap<String, Boolean> modelHasChanged;
     private CheckBoxActionListener checkBoxListener;
     public String lastParserNameCache;

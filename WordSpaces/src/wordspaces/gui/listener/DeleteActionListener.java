@@ -44,7 +44,7 @@ public class DeleteActionListener implements ActionListener{
             }
             contextModel.setRowCount(0);
             gui.getSizeLabel().setText(m.getDirectorySize()+"");
-            gui.getTableModelMap().put(m, true);
+            gui.getTableModelMap().put(m.toString(), true);
         }
         
         else if(menu.getText().equals("Delete") || menu.getText().equals("Delete in all contexts")){
