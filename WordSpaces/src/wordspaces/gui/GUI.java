@@ -89,7 +89,7 @@ public class GUI extends javax.swing.JFrame {
         try {
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
         } catch (Exception ex) {
-            Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Couldn't find com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel --> install Java 1.6.0_10");
         } 
 
         checkBoxListener        = new CheckBoxActionListener(this);

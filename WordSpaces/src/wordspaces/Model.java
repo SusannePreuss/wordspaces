@@ -112,14 +112,14 @@ public class Model implements Serializable{
         double freq = 0;
         addWordtoWordCache(contextWord);
         if(!wordDirectory.containsKey(vectorName)){
-            addWordVector(vectorName).put(wordCache.get(contextWord), 0.0);     //wordCache.get
+            addWordVector(vectorName).put(wordCache.get(contextWord), 1.0);     
         }
         else if(!wordDirectory.get(vectorName).containsKey(contextWord)){
-            wordDirectory.get(vectorName).put(wordCache.get(contextWord), 0.0);    //wordCache.get
+            wordDirectory.get(vectorName).put(wordCache.get(contextWord), 1.0);    
         }
         else{
             freq = wordDirectory.get(vectorName).get(contextWord);         
-            wordDirectory.get(vectorName).put(wordCache.get(contextWord), ++freq);     //
+            wordDirectory.get(vectorName).put(wordCache.get(contextWord), ++freq);     
         }  
    
         return freq;

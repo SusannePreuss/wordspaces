@@ -26,12 +26,13 @@ public class WordClassBuilder extends SwingWorker<Object, Integer>{
     
     //occurences is a reference to model.wordOccurences which saves the freq
     private Map<String, Integer> occurences;
+    
     /**
      * Creates a new instance of WordClassBuilder
      */
     public WordClassBuilder(Model m) {
         model      = m;
-        occurences = (SortedMap<String, Integer>) m.getWordOccurences();       
+        occurences = (Map<String, Integer>) m.getWordOccurences();       
     }
     
     public void buildWordClasses(){
