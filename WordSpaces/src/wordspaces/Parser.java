@@ -84,10 +84,10 @@ public class Parser {
                     word = lineTokens.elementAt(i);
                     if(!filler || (filler && !word.equals(FILLER))){
                         //now the word gets counted in the treemap wordOccurences in the model                    
-                        if(model.getWordOccurences().get(word) != null){     //word has already been seen
-                            model.getWordOccurences().put(word, model.getWordOccurences().get(word) + 1);
+                        if(model.getWordVectorFrequency().get(word) != null){     //word has already been seen
+                            model.getWordVectorFrequency().put(word, model.getWordVectorFrequency().get(word) + 1);
                         }else{                                          //it's the first occurence of word
-                            model.getWordOccurences().put(word, 1);
+                            model.getWordVectorFrequency().put(word, 1);
                         }
                     
                     

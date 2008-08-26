@@ -30,7 +30,7 @@ public class BuildWordTable extends SwingWorker<Object[][],Object[]>{
 
     protected Object[][] doInBackground() throws Exception {
         //first the new wordTableModel is build and then filled with words from wordDirectory in model
-        Map<String, Integer> wordOccurences = model.getWordOccurences();
+        Map<String, Integer> wordOccurences = model.getWordVectorFrequency();
         Object[][] data = new Object[model.getDirectorySize()][3];
         Object[] preResult = new Object[3];
         String word;

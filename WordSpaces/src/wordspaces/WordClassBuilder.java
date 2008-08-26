@@ -32,8 +32,7 @@ public class WordClassBuilder extends SwingWorker<Object, Integer>{
      */
     public WordClassBuilder(Model m) {
         model      = m;
-        occurences = (Map<String, Integer>) m.getWordOccurences(); 
-        System.out.println("WCB");
+        occurences = (Map<String, Integer>) m.getWordVectorFrequency();
     }
     
     public void buildWordClasses(){
@@ -45,7 +44,6 @@ public class WordClassBuilder extends SwingWorker<Object, Integer>{
             stem = model.getVectorNameAt(i);                    //take a word that might be a stem for others      
             wordPos = i + 1;                                 //from wordPos start the while loop to look for sim. words
             word = model.getVectorNameAt(wordPos);  
-            System.out.println("Take "+stem);
             /* before we look for similar words, we find word classes in
              * the context vector of stem. This is done first when we see stem
              * and then after it has been merged with another context vector. */
@@ -88,14 +86,11 @@ public class WordClassBuilder extends SwingWorker<Object, Integer>{
         double wordFreq  = 0;     //frequency of the word that is going to be reduced to the stem
         String stem      = null;
         String word      = null;
-        System.out.println("hier1 "+contextMap.size()+" keyset "+contextMap.keySet().toArray().length);
-        String[] context = (String[]) contextMap.keySet().toArray();
-        System.out.println("context.length "+context.length);
+        String[] context = contextMap.keySet().toArray(new String[contextMap.size()]);
         /* for each word in contextMap */
         for(int i=0;i<context.length;i++){
             /* take a word that might be a stem for others */
             stem = context[i];
-            System.out.println("IN SCW "+stem);
             /* run through all following words as long as the first letters are
              * similar or the context_array_end hasn't been reached */
             for( int j=i+1 ; j<context.length && stem.charAt(0) == context[j].charAt(0) ; j++){
@@ -103,12 +98,14 @@ public class WordClassBuilder extends SwingWorker<Object, Integer>{
                 word = context[j];
                 
                 if(computeSimilarity(stem,word) >= THRESHOLD){
-                    System.out.println(stem+" is stem for "+word);
+                    System.out.println(stem+" "+contextMap.get(stem)+ " is stem for "+word+" "+contextMap.get(word));
                     stemFreq = contextMap.get(stem);
                     wordFreq = contextMap.get(word);
                     contextMap.put(stem,stemFreq+wordFreq);
                     /* word must be deleted now */
                     model.deleteContextWord(vectorName, word);
+                    /* array has changed so we need to obtain it again */
+                    context = contextMap.keySet().toArray(new String[contextMap.size()]);
                 }
             }
         }        

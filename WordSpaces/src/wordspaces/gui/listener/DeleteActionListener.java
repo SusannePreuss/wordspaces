@@ -38,8 +38,15 @@ public class DeleteActionListener implements ActionListener{
             for(int i=indices.length-1; i >= 0; i--){
                 selectedRow = wordTable.convertRowIndexToModel(indices[i]);
                 selectedWord = (String) wordModel.getValueAt(selectedRow,0);
+
+                System.out.print("Deleting vector "+selectedWord+
+                        " old freqency "+m.getStringFrequency().get(selectedWord));
+                
                 m.deleteWordVector(selectedWord);
-                m.getWordOccurences().remove(selectedWord);
+                
+                System.out.println(" new frequency "+m.getStringFrequency().get(selectedWord));
+
+                m.getWordVectorFrequency().remove(selectedWord);
                 wordModel.removeRow(selectedRow);
             }
             contextModel.setRowCount(0);

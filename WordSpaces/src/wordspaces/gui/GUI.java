@@ -93,7 +93,7 @@ public class GUI extends javax.swing.JFrame {
             System.out.println("Couldn't find com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel --> install Java 1.6.0_10t");
         } 
 
-        checkBoxListener        = new CheckBoxActionListener(this);
+        checkBoxListener = new CheckBoxActionListener(this);
 
         initComponents();
         secondInit();
@@ -875,6 +875,7 @@ public class GUI extends javax.swing.JFrame {
                     files[i] = (File)textSourcesListModel.elementAt(indices[i]);                    
                 
                 textSourcesListModel.removeAllElements();
+                textSizeLabel.setText("0 items");
                 progressBar.setMaximum(indices.length);
                 progressBar.setStringPainted(true);
                 progressBar.setIndeterminate(true);
@@ -887,6 +888,7 @@ public class GUI extends javax.swing.JFrame {
                             textSourcesListModel.addElement(evt.getNewValue());
                             progressBar.setValue(counter++);
                             progressBar.setString("("+counter+"/"+indices.length+") finished");
+                            textSizeLabel.setText(counter+" items");
                         }
                         else if(stemmer.isDone()){                           
                             progressBar.setValue(0);
@@ -1488,7 +1490,7 @@ public class GUI extends javax.swing.JFrame {
                     contextTableModel.setRowCount(0);
                     String selectedWord = (String) wordTableModel.getValueAt(
                             wordTable.convertRowIndexToModel(wordTable.getSelectedRow()),0);
-                    System.out.println("Start building context table!");
+  //                  System.out.println("Start building context table!");
                     Iterator<String> iter = model.getContextVector(selectedWord).keySet().iterator();
                     String contextWord;
                     while(iter.hasNext()){
@@ -1497,7 +1499,7 @@ public class GUI extends javax.swing.JFrame {
                             contextWord, model.getContextVector(selectedWord).get(contextWord)
                         });
                     }
-                    System.out.println("Finished table building!");
+                    System.out.println("Finished context table building!");
                 }
             }
         }

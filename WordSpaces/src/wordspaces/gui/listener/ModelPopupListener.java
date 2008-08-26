@@ -46,12 +46,13 @@ public class ModelPopupListener extends MouseAdapter {
                     gui.showWordTable();
                     gui.getDistancesPanel().showDistances(model.getCachedDistances());
                     gui.distWindowButton.setText("Hide DistWindow");
-                    gui.getInfoWindow().setTitle(model.toString());
-                    System.out.println("Parsed sources in model "+model.getParsedSources().size()+
-                            " vectors "+model.getDirectorySize()+
-                            " occurences cache "+model.getWordOccurences()
-                            );
+                    gui.getInfoWindow().setTitle(model.toString());                    
                 }
+                System.out.println("Parsed sources in model "+model.getParsedSources().size()+
+                            ", vectors "+model.getDirectorySize()+
+                            ", word vector freq "+model.getWordVectorFrequency().size()+
+                            ", string cache "+model.getStringCache().size()+
+                            ", freq cache "+model.getStringFrequency().size());
                 gui.showHistoryTable();
             }
         }

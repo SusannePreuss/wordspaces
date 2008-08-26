@@ -29,8 +29,8 @@ public class Model implements Serializable{
     //distances caches all computed distances between words.Should be cleared when new words are added to the model
     private SortedMap<String,SortedMap<String,Double>> distances;
     
-    //saves the occurences of the words in wordDirectory from all texts
-    private Map<String, Integer> wordOccurences;
+    //saves the occurences of the vectors in wordDirectory from all texts
+    private Map<String, Integer> wordVectorFrequency;
 
     //contains the names of the parsed texts
     private Vector<String> parsedSources;
@@ -46,7 +46,7 @@ public class Model implements Serializable{
 
     public Model(String name) {
         wordDirectory  = new TreeMap<String, SortedMap<String,Double>>();
-        wordOccurences = Collections.synchronizedMap(new HashMap<String, Integer>());
+        wordVectorFrequency = Collections.synchronizedMap(new HashMap<String, Integer>());
         distances      = new TreeMap<String, SortedMap<String,Double>>();
         parsedSources  = new Vector<String>();
         stringCache      = new HashMap();
@@ -72,8 +72,11 @@ public class Model implements Serializable{
         return distances;
     }
     
-    public Map<String, Integer> getWordOccurences(){
-        return wordOccurences;
+    public Map<String, Integer> getWordVectorFrequency(){
+ //       for(int i=0;i<1;i++){
+ //          System.out.println(((Object[])wordVectorFrequency.keySet().toArray())[i]);
+ //        }
+        return wordVectorFrequency;
     }
     
     public Vector<String> getParsedSources(){
@@ -99,11 +102,11 @@ public class Model implements Serializable{
         return wordDirectory.size();
     }
 
-    public Map getStringCache(){
+    public Map<String,String> getStringCache(){
         return stringCache;
     }
 
-    public Map getStringFreq(){
+    public Map<String,Double> getStringFrequency(){
         return stringFreq;
     }
 
@@ -137,19 +140,19 @@ public class Model implements Serializable{
         /* run through all contextWords and remove them from the stringCache */
         Iterator<String> contextIter = wordDirectory.get(word).keySet().iterator();
         while(contextIter.hasNext()){
-            removeWordfromWordCache(contextIter.next());
+            removeWordfromStringCache(contextIter.next());
             contextIter.remove();
         }
 
         /* finally we remove also the vectorName */
         wordDirectory.remove(word);
-        removeWordfromWordCache(word);
+        removeWordfromStringCache(word);
     }
 
     public synchronized void deleteContextWord(String vectorName, String contextWord){
         System.out.println(contextWord+" deleted in model");
         wordDirectory.get(vectorName).remove(contextWord);
-        removeWordfromWordCache(contextWord);
+        removeWordfromStringCache(contextWord);
     }
     
     
@@ -160,7 +163,7 @@ public class Model implements Serializable{
     private void addWordtoWordCache(String word){
         if(!stringCache.containsKey(word)){
             stringCache.put(word, word);
-            stringFreq.put(stringCache.get(word), 0.0);
+            stringFreq.put(stringCache.get(word), 1.0);
         }
         else{
             double freq = stringFreq.get(word);
@@ -168,7 +171,7 @@ public class Model implements Serializable{
         }
     }
     
-    private void removeWordfromWordCache(String word){       
+    private void removeWordfromStringCache(String word){       
         if(stringCache.containsKey(word)){
             double freq = stringFreq.get(word);
             freq--;
