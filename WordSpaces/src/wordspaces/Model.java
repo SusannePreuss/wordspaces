@@ -150,7 +150,7 @@ public class Model implements Serializable{
     }
 
     public synchronized void deleteContextWord(String vectorName, String contextWord){
-        System.out.println(contextWord+" deleted in model");
+ //       System.out.println(contextWord+" deleted in model");
         wordDirectory.get(vectorName).remove(contextWord);
         removeWordfromStringCache(contextWord);
     }

@@ -807,17 +807,20 @@ public class GUI extends javax.swing.JFrame {
 
         filterContextWords.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                int inputValue = Integer.parseInt(JOptionPane.showInputDialog("Filter words with a frequency in context that is smaller or equal to"));
-                final int[] indices = wordTable.getSelectedRows();
-                for( int i=indices.length-1 ; i>=0 ; i-- ){
-                    String vectorName = (String) wordTableModel.getValueAt( wordTable.convertRowIndexToModel(indices[i]), 0);
-                    FrequencyFilter.filterFrequenciesInContext(model.getContextVector(vectorName),inputValue);
-                    if(model.getContextVector(vectorName).size() == 0)
-                        model.deleteWordVector(vectorName);
-                }
+                String string = JOptionPane.showInputDialog("Filter words with a frequency in all context vectors that is smaller or equal to");
+                if(!string.isEmpty()){
+                    int inputValue = Integer.parseInt(string);
+                    final int[] indices = wordTable.getSelectedRows();
+                    for( int i=indices.length-1 ; i>=0 ; i-- ){
+                        String vectorName = (String) wordTableModel.getValueAt( wordTable.convertRowIndexToModel(indices[i]), 0);
+                        FrequencyFilter.filterFrequenciesInContext(model.getContextVector(vectorName),inputValue);
+                        if(model.getContextVector(vectorName).size() == 0)
+                            model.deleteWordVector(vectorName);
+                    }
 
-                tableModelMap.remove(model.toString());
-                showWordTable();
+                    tableModelMap.remove(model.toString());
+                    showWordTable();
+                }
             }
         });
 
@@ -861,9 +864,12 @@ public class GUI extends javax.swing.JFrame {
 
         filterWords.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                int inputValue = Integer.parseInt(JOptionPane.showInputDialog("Filter words with a frequency in text that is smaller or equal to"));
-                FrequencyFilter.filterFrequenciesInWordMap(wordTableModel,model, inputValue);
-                modelHasChanged.put(model.toString(), true);
+                String string = JOptionPane.showInputDialog("Filter words with a frequency in text that is smaller or equal to");
+                if(!string.isEmpty()){
+                    int inputValue = Integer.parseInt(string);
+                    FrequencyFilter.filterFrequenciesInWordMap(wordTableModel,model, inputValue);
+                    modelHasChanged.put(model.toString(), true);
+                }
             }
         });
 

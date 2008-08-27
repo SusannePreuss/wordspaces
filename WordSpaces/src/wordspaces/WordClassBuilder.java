@@ -98,7 +98,7 @@ public class WordClassBuilder extends SwingWorker<Object, Integer>{
                 word = context[j];
                 
                 if(computeSimilarity(stem,word) >= THRESHOLD){
-                    System.out.println(stem+" "+contextMap.get(stem)+ " is stem for "+word+" "+contextMap.get(word));
+    //                System.out.println(stem+" "+contextMap.get(stem)+ " is stem for "+word+" "+contextMap.get(word));
                     stemFreq = contextMap.get(stem);
                     wordFreq = contextMap.get(word);
                     contextMap.put(stem,stemFreq+wordFreq);
