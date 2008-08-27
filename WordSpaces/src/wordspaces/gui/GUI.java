@@ -624,7 +624,7 @@ public class GUI extends javax.swing.JFrame {
         JMenuItem deleteInContext       = new JMenuItem("Delete");
         JMenuItem deleteInAllContexts   = new JMenuItem("Delete in all contexts");
         JMenuItem filterContextWords    = new JMenuItem("Filter context frequencies");
-        JMenuItem filterExtremeValues   = new JMenuItem("Remove 20% of the extreme values");
+        JMenuItem filterExtremeValues   = new JMenuItem("Filter a percentage of extreme values");
         contextPopup.add(filterExtremeValues);
         contextPopup.add(filterContextWords);
         contextPopup.add(deleteMenu);
