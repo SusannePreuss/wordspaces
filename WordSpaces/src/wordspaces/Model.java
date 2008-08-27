@@ -29,7 +29,7 @@ public class Model implements Serializable{
     //distances caches all computed distances between words.Should be cleared when new words are added to the model
     private SortedMap<String,SortedMap<String,Double>> distances;
     
-    //saves the occurences of the vectors in wordDirectory from all texts
+    //saves the occurences of the vectors in wordDirectory
     private Map<String, Integer> wordVectorFrequency;
 
     //contains the names of the parsed texts
@@ -147,12 +147,17 @@ public class Model implements Serializable{
         /* finally we remove also the vectorName */
         wordDirectory.remove(word);
         removeWordfromStringCache(word);
+        wordVectorFrequency.remove(word);
     }
 
     public synchronized void deleteContextWord(String vectorName, String contextWord){
- //       System.out.println(contextWord+" deleted in model");
         wordDirectory.get(vectorName).remove(contextWord);
         removeWordfromStringCache(contextWord);
+
+        /* no context word left in context vector, so we remove it too...*/
+        if(wordDirectory.get(vectorName).size() == 0){
+            deleteWordVector(vectorName);
+        }
     }
     
     

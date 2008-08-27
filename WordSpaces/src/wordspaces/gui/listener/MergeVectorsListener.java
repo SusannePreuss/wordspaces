@@ -58,7 +58,7 @@ public class MergeVectorsListener implements MenuListener{
                                 //now the vectors get merged.
                                 WordClassBuilder.mergeContextMaps(model.getContextVector(word), model.getContextVector(otherWord));
                                 //now the occurences have to be updated
-                                model.getWordVectorFrequency().put(word, model.getWordVectorFrequency().get(word)+model.getWordVectorFrequency().get(otherWord));
+                                model.getWordVectorFrequency().put(model.getStringCache().get(word), model.getWordVectorFrequency().get(word)+model.getWordVectorFrequency().get(otherWord));
                                 System.out.println(otherWord+" was merged with "+word);
                             }
                             else{

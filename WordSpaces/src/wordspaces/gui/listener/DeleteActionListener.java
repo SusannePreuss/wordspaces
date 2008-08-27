@@ -27,7 +27,7 @@ public class DeleteActionListener implements ActionListener{
     public void actionPerformed(ActionEvent evt) {
         JMenuItem menu = (JMenuItem)evt.getSource();
         if(menu.getText().equals("Delete vector")){
-            Model m = gui.getModel();
+            Model model = gui.getModel();
             JTable wordTable = gui.getWordTable();
             JTable contextTable = gui.getContextTable();
             DefaultTableModel wordModel = (DefaultTableModel) wordTable.getModel();
@@ -40,18 +40,17 @@ public class DeleteActionListener implements ActionListener{
                 selectedWord = (String) wordModel.getValueAt(selectedRow,0);
 
                 System.out.print("Deleting vector "+selectedWord+
-                        " old freqency "+m.getStringFrequency().get(selectedWord));
+                        " old freqency "+model.getStringFrequency().get(selectedWord));
                 
-                m.deleteWordVector(selectedWord);
+                model.deleteWordVector(selectedWord);
                 
-                System.out.println(" new frequency "+m.getStringFrequency().get(selectedWord));
+                System.out.println(" new frequency "+model.getStringFrequency().get(selectedWord));
 
-                m.getWordVectorFrequency().remove(selectedWord);
                 wordModel.removeRow(selectedRow);
             }
             contextModel.setRowCount(0);
-            gui.getSizeLabel().setText(m.getDirectorySize()+"");
-            gui.getTableModelMap().put(m.toString(), true);
+            gui.getSizeLabel().setText(model.getDirectorySize()+"");
+            gui.getTableModelMap().put(model.toString(), true);
         }
         
         else if(menu.getText().equals("Delete") || menu.getText().equals("Delete in all contexts")){
@@ -82,22 +81,20 @@ public class DeleteActionListener implements ActionListener{
             }
             /* Go through all wordVectors, this might be only one... */
             for(String wordVector:wordVectors){
-                SortedMap contextMap = model.getContextVector(wordVector);
                 /* Now delete all selected context words in contextmap */
                 System.out.print("deleting ");
                 for(String selectedWord:selectedContextWords){
-                    System.out.print(selectedWord+" ");
-                    contextMap.remove(selectedWord);
+                    System.out.print(selectedWord);
+                    model.deleteContextWord(wordVector, selectedWord);
                 }
-                System.out.println("from "+wordVector+"...");
-                if(contextMap.size() == 0){           //we deleted all context words from context vector
-                    model.deleteWordVector(wordVector);
+                System.out.println(" from "+wordVector+"...");
+                if(model.getContextVector(wordVector) == null){           //we deleted all context words from context vector
                     if(wordVectors.length == 1)       //we can only update the table if we delete from only one word vector
                         wordTableModel.removeRow(wordTable.convertRowIndexToModel(wordTable.getSelectedRow()));
                     
                 }else{
                     if(wordVectors.length == 1)       //we can only update the table if we delete from only one word vector
-                        wordTableModel.setValueAt(contextMap.size(), wordTable.convertRowIndexToModel(wordTable.getSelectedRow()), 2);
+                        wordTableModel.setValueAt(model.getContextVector(wordVector).size(), wordTable.convertRowIndexToModel(wordTable.getSelectedRow()), 2);
                 }
             }
             contextModel.setRowCount(0);    //better set this to zero     

@@ -83,15 +83,15 @@ public class Parser {
                 for(int i=0; i<lineTokens.size(); i++){         //go through all words...
                     word = lineTokens.elementAt(i);
                     if(!filler || (filler && !word.equals(FILLER))){
-                        //now the word gets counted in the treemap wordOccurences in the model                    
-                        if(model.getWordVectorFrequency().get(word) != null){     //word has already been seen
-                            model.getWordVectorFrequency().put(word, model.getWordVectorFrequency().get(word) + 1);
-                        }else{                                          //it's the first occurence of word
-                            model.getWordVectorFrequency().put(word, 1);
-                        }
-                    
-                    
                         if(focusWords == null || focusWords.contains(word)){
+                            /* now the word gets counted in the treemap wordVectorFreq
+                             * only if its a focusWord */
+                            if(model.getWordVectorFrequency().get(word) != null){     //word has already been seen
+                                model.getWordVectorFrequency().put(word, model.getWordVectorFrequency().get(word) + 1);
+                            }else{                                          //it's the first occurence of word
+                                model.getWordVectorFrequency().put(word, 1);
+                            }
+                              
                             //boundaries for context are determined
                             int leftBound  = i-leftContextWidth;
                             int rightBound = i+rightContextWidth;

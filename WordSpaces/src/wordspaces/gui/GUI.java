@@ -71,6 +71,7 @@ import wordspaces.gui.listener.DeleteActionListener;
 import wordspaces.gui.listener.DublicateModelActionListener;
 import wordspaces.gui.listener.MergeVectorsListener;
 import wordspaces.gui.listener.FileParserActionListener;
+import wordspaces.gui.listener.FilterExtremeValuesActionListener;
 import wordspaces.gui.listener.RenameModelActionListener;
 import wordspaces.gui.listener.SaveModelActionListener;
 import wordspaces.gui.listener.SelectAllActionListener;
@@ -623,8 +624,8 @@ public class GUI extends javax.swing.JFrame {
         JMenuItem deleteInContext       = new JMenuItem("Delete");
         JMenuItem deleteInAllContexts   = new JMenuItem("Delete in all contexts");
         JMenuItem filterContextWords    = new JMenuItem("Filter context frequencies");
-        JMenuItem removeExtremeValues   = new JMenuItem("Remove 20% of the extreme values");
-        contextPopup.add(removeExtremeValues);
+        JMenuItem filterExtremeValues   = new JMenuItem("Remove 20% of the extreme values");
+        contextPopup.add(filterExtremeValues);
         contextPopup.add(filterContextWords);
         contextPopup.add(deleteMenu);
         contextPopup.add(selectAllContextWords);
@@ -632,7 +633,7 @@ public class GUI extends javax.swing.JFrame {
         deleteMenu.add(deleteInAllContexts);
         //tool tips
         filterContextWords.setToolTipText("Filters context frequencies from all selected vectors.");
-        removeExtremeValues.setToolTipText("From all selected vectors remove 20% of the extreme values so that 60% remain.");
+        filterExtremeValues.setToolTipText("From all selected vectors remove 20% of the extreme values so that 60% remain.");
         deleteInAllContexts.setToolTipText("Deletes the selected words in every context in the current model.");
 
         textSourcesList.addMouseListener(new SourcePopupListener());
@@ -658,6 +659,7 @@ public class GUI extends javax.swing.JFrame {
         dublicateModelItem.addActionListener(new DublicateModelActionListener(this));
         renameModelItem.addActionListener(new RenameModelActionListener(this));
         mergeVectors.addMenuListener(new MergeVectorsListener(this));
+        filterExtremeValues.addActionListener(new FilterExtremeValuesActionListener(this));
         
         wordTableModel = new DefaultTableModel();
         wordTableModel = new javax.swing.table.DefaultTableModel(
@@ -808,7 +810,7 @@ public class GUI extends javax.swing.JFrame {
         filterContextWords.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 String string = JOptionPane.showInputDialog("Filter words with a frequency in all context vectors that is smaller or equal to");
-                if(!string.isEmpty()){
+                if(string != null && !string.isEmpty()){
                     int inputValue = Integer.parseInt(string);
                     final int[] indices = wordTable.getSelectedRows();
                     for( int i=indices.length-1 ; i>=0 ; i-- ){
@@ -865,7 +867,7 @@ public class GUI extends javax.swing.JFrame {
         filterWords.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 String string = JOptionPane.showInputDialog("Filter words with a frequency in text that is smaller or equal to");
-                if(!string.isEmpty()){
+                if(string != null && !string.isEmpty()){
                     int inputValue = Integer.parseInt(string);
                     FrequencyFilter.filterFrequenciesInWordMap(wordTableModel,model, inputValue);
                     modelHasChanged.put(model.toString(), true);

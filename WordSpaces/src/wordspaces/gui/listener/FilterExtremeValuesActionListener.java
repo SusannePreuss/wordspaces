@@ -18,11 +18,11 @@ import wordspaces.gui.GUI;
  *
  * @author alexander
  */
-public class RemoveExtremeValuesActionListener implements ActionListener{
+public class FilterExtremeValuesActionListener implements ActionListener{
 
     private GUI gui;
     
-    public RemoveExtremeValuesActionListener(GUI g){
+    public FilterExtremeValuesActionListener(GUI g){
         gui = g;
     }
     
@@ -45,6 +45,7 @@ public class RemoveExtremeValuesActionListener implements ActionListener{
         for(int i=0;i<indices.length;i++){
             selectedRow = gui.getWordTable().convertRowIndexToModel(indices[i]);
             selectedWord = (String) gui.getWordTable().getModel().getValueAt(selectedRow,0);
+            System.out.println("filtering in "+selectedWord);
             selectedMap = gui.getModel().getContextVector(selectedWord);
             removeable_count = (int)(((float)selectedMap.size() / (float)100)*10);
             set.addAll(selectedMap.entrySet());
