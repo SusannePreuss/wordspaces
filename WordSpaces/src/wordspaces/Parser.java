@@ -74,7 +74,7 @@ public class Parser {
                         if(stopWords != null && !stopWords.contains(w)){                //ignore all stop-words, filler disabled
                             lineTokens.addElement(w);
                         }else if(stopWords != null && filler){                              //exchange stop-words with filler
-                            lineTokens.addElement("xxxxxx");
+                            lineTokens.addElement(FILLER);
                         }else if(stopWords == null){                                    //stop-words disabled
                             lineTokens.addElement(w);
                         }
