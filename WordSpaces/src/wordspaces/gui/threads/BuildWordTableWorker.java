@@ -9,9 +9,7 @@
 
 package wordspaces.gui.threads;
 
-import java.util.Iterator;
 import java.util.Map;
-import java.util.SortedMap;
 import javax.swing.SwingWorker;
 import wordspaces.Model;
 
@@ -19,12 +17,12 @@ import wordspaces.Model;
  *
  * @author alexander
  */
-public class BuildWordTable extends SwingWorker<Object[][],Object[]>{
+public class BuildWordTableWorker extends SwingWorker<Object[][],Object[]>{
     
     private Model model;
     
     /** Creates a new instance of BuildWordTable */
-    public BuildWordTable(Model m) {
+    public BuildWordTableWorker(Model m) {
         model = m;
     }
 

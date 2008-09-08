@@ -9,7 +9,7 @@ package wordspaces.gui;
 //package wordspaces.gui;
 
 import java.io.IOException;
-import wordspaces.gui.threads.BuildWordTable;
+import wordspaces.gui.threads.BuildWordTableWorker;
 import wordspaces.gui.listener.ModelPopupListener;
 import wordspaces.gui.listener.ParserPopupListener;
 import wordspaces.gui.listener.CompareWordsListener;
@@ -76,7 +76,7 @@ import wordspaces.gui.listener.RenameModelActionListener;
 import wordspaces.gui.listener.SaveModelActionListener;
 import wordspaces.gui.listener.SelectAllActionListener;
 import wordspaces.gui.threads.BatchProcessingWorker;
-import wordspaces.gui.threads.FileFilterBalancer;
+import wordspaces.gui.threads.FileFilterBalancerWorker;
 import wordspaces.gui.threads.FileParserBalancerWorker;
 import wordspaces.gui.threads.LoadModelThread;
 
@@ -839,7 +839,7 @@ public class GUI extends javax.swing.JFrame {
                 progressBar.setString("(0/"+indices.length+") finished");
                 progressBar.setStringPainted(true);
                 progressBar.setIndeterminate(true);
-                final FileFilterBalancer filter = new FileFilterBalancer(files);
+                final FileFilterBalancerWorker filter = new FileFilterBalancerWorker(files);
                 filter.addPropertyChangeListener(new PropertyChangeListener() {
                     int counter = 0; boolean done = false;
                     public  void propertyChange(PropertyChangeEvent evt) {
@@ -1034,7 +1034,7 @@ public class GUI extends javax.swing.JFrame {
         if(!tableModelMap.containsKey(model.toString()) || (modelHasChanged.containsKey(model.toString()) && modelHasChanged.get(model.toString()))){
             System.out.println("Table Model is being build...");
             progressBar.setMaximum(model.getDirectorySize());
-            final BuildWordTable task = new BuildWordTable(model);
+            final BuildWordTableWorker task = new BuildWordTableWorker(model);
             task.addPropertyChangeListener(new PropertyChangeListener() {
                 boolean done = false;  //workaround,ensures that task.isDone is only once done...
                 /*This is to avoid duplicate events */

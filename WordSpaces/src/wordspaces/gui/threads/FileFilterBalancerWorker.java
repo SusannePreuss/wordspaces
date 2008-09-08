@@ -11,7 +11,7 @@ import javax.swing.SwingWorker;
  *
  * @author alexander
  */
-public class FileFilterBalancer extends SwingWorker<File, Integer>{
+public class FileFilterBalancerWorker extends SwingWorker<File, Integer>{
 
     private File[] files;
     
@@ -20,7 +20,7 @@ public class FileFilterBalancer extends SwingWorker<File, Integer>{
     /* Only allow two threads simultaniously to filter text files */
     private final Semaphore semaphore = new Semaphore(2);
     
-    public FileFilterBalancer(File[] files){
+    public FileFilterBalancerWorker(File[] files){
         this.files = files;
         queue = new Vector();
     }
