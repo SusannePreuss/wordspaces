@@ -789,7 +789,7 @@ public class GUI extends javax.swing.JFrame {
                                     progressBar.setValue(0);
                                     modelHasChanged.put(model.toString(), true);
                                     distPanel.visualizeButton.setEnabled(true);
-                                    distPanel.clearButton.setEnabled(true);
+                                    distPanel.clearDistancesButton.setEnabled(true);
                                 }
                             }
                     });

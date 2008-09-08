@@ -136,7 +136,7 @@ public class DistancesPanel extends javax.swing.JPanel {
         scalarLabel = new javax.swing.JLabel();
         euclideanLabel = new javax.swing.JLabel();
         visualizeButton = new javax.swing.JButton();
-        clearButton = new javax.swing.JButton();
+        clearDistancesButton = new javax.swing.JButton();
         calcGroupGradeButton = new javax.swing.JButton();
         clearGroupSettingsButton = new javax.swing.JButton();
 
@@ -177,7 +177,7 @@ public class DistancesPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(distancesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(distancesPanelLayout.createSequentialGroup()
-                        .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 841, Short.MAX_VALUE)
+                        .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 873, Short.MAX_VALUE)
                         .addContainerGap())
                     .addGroup(distancesPanelLayout.createSequentialGroup()
                         .addComponent(wordsCountLabel)
@@ -191,7 +191,7 @@ public class DistancesPanel extends javax.swing.JPanel {
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(groupGradeLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 191, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 225, Short.MAX_VALUE)
                         .addComponent(contextWordsCountLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel4)
@@ -200,7 +200,7 @@ public class DistancesPanel extends javax.swing.JPanel {
         distancesPanelLayout.setVerticalGroup(
             distancesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(distancesPanelLayout.createSequentialGroup()
-                .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE)
+                .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 296, Short.MAX_VALUE)
                 .addGap(9, 9, 9)
                 .addGroup(distancesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(wordsCountLabel)
@@ -234,7 +234,7 @@ public class DistancesPanel extends javax.swing.JPanel {
             .addGroup(comparisonPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(comparisonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 841, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 873, Short.MAX_VALUE)
                     .addGroup(comparisonPanelLayout.createSequentialGroup()
                         .addComponent(euclideanLabel)
                         .addGap(187, 187, 187)
@@ -248,7 +248,7 @@ public class DistancesPanel extends javax.swing.JPanel {
                     .addComponent(euclideanLabel)
                     .addComponent(scalarLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(42, 42, 42)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -263,10 +263,10 @@ public class DistancesPanel extends javax.swing.JPanel {
             }
         });
 
-        clearButton.setText("Clear all Distances"); // NOI18N
-        clearButton.addActionListener(new java.awt.event.ActionListener() {
+        clearDistancesButton.setText("Clear all Distances"); // NOI18N
+        clearDistancesButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                clearButtonActionPerformed(evt);
+                clearDistancesButtonActionPerformed(evt);
             }
         });
 
@@ -299,7 +299,7 @@ public class DistancesPanel extends javax.swing.JPanel {
                     .addComponent(distanceUpdateLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 902, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(clearButton)
+                        .addComponent(clearDistancesButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(clearGroupSettingsButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -320,14 +320,14 @@ public class DistancesPanel extends javax.swing.JPanel {
                     .addComponent(clearGroupSettingsButton)
                     .addComponent(visualizeButton)
                     .addComponent(calcGroupGradeButton)
-                    .addComponent(clearButton))
+                    .addComponent(clearDistancesButton))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void clearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearButtonActionPerformed
-        clearAll();
-}//GEN-LAST:event_clearButtonActionPerformed
+    private void clearDistancesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearDistancesButtonActionPerformed
+        clearDistances();
+}//GEN-LAST:event_clearDistancesButtonActionPerformed
 
     private void visualizeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_visualizeButtonActionPerformed
         String num = JOptionPane.showInputDialog(this, "Enter number of k-largest edges between nodes that should be considered");
@@ -502,7 +502,7 @@ public class DistancesPanel extends javax.swing.JPanel {
         }
         if(distances.size() > 0){
             visualizeButton.setEnabled(true);
-            clearButton.setEnabled(true);
+            clearDistancesButton.setEnabled(true);
         }
         wordsCountLabel.setText(distances.size()+"");
         setVisible(true);
@@ -523,7 +523,7 @@ public class DistancesPanel extends javax.swing.JPanel {
     /**
      * Clear everything from the tables to the groups and labels.
      */
-    public void clearAll(){
+    public void clearDistances(){
         gui.getModel().eraseDistanceCache();
         clearWordDirTable();
         clearWordDistTable();
@@ -532,10 +532,7 @@ public class DistancesPanel extends javax.swing.JPanel {
         euclideanLabel.setText("Euclidean distances");
         scalarLabel.setText("Scalarproduct");     
         visualizeButton.setEnabled(false);        
-        clearButton.setEnabled(false);
-        //now clear all group settings
-        clearGroups();
-        clearGroupLabels();
+        clearDistancesButton.setEnabled(false);
     }
     
     public void clearWordDirTable(){
@@ -596,7 +593,7 @@ public class DistancesPanel extends javax.swing.JPanel {
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JButton calcGroupGradeButton;
-    public javax.swing.JButton clearButton;
+    public javax.swing.JButton clearDistancesButton;
     public javax.swing.JButton clearGroupSettingsButton;
     private javax.swing.JPanel comparisonPanel;
     protected javax.swing.JTable comparisonTable;
