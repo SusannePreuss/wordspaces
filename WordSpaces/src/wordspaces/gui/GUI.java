@@ -165,7 +165,12 @@ public class GUI extends javax.swing.JFrame {
         toolsMenu = new javax.swing.JMenu();
         fetchFromInternetMenuItem = new javax.swing.JMenuItem();
         distanceMenu = new javax.swing.JMenu();
-        batchProcessingMenuItem = new javax.swing.JMenuItem();
+        batchMenu = new javax.swing.JMenu();
+        batchModelBuildingMenuItem = new javax.swing.JMenuItem();
+        batchModelProcessingMenu = new javax.swing.JMenu();
+        selectModelsMenuItem = new javax.swing.JMenuItem();
+        selectGroupXMLMenuItem = new javax.swing.JMenuItem();
+        batchModelProcessingMenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
         aboutMenuItem = new javax.swing.JMenuItem();
 
@@ -452,13 +457,46 @@ public class GUI extends javax.swing.JFrame {
         distanceMenu.setText("Distances");
         toolsMenu.add(distanceMenu);
 
-        batchProcessingMenuItem.setText("Batch processing");
-        batchProcessingMenuItem.addActionListener(new java.awt.event.ActionListener() {
+        batchMenu.setText("Batch processing");
+
+        batchModelBuildingMenuItem.setText("Batch model building");
+        batchModelBuildingMenuItem.setToolTipText("Build automatically models for each parser in list by using the loaded text files.");
+        batchModelBuildingMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                batchProcessingMenuItemActionPerformed(evt);
+                batchModelBuildingMenuItemActionPerformed(evt);
             }
         });
-        toolsMenu.add(batchProcessingMenuItem);
+        batchMenu.add(batchModelBuildingMenuItem);
+
+        batchModelProcessingMenu.setText("Batch model processing");
+
+        selectModelsMenuItem.setText("Select models to process");
+        selectModelsMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                selectModelsMenuItemActionPerformed(evt);
+            }
+        });
+        batchModelProcessingMenu.add(selectModelsMenuItem);
+
+        selectGroupXMLMenuItem.setText("Select group xml file");
+        selectGroupXMLMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                selectGroupXMLMenuItemActionPerformed(evt);
+            }
+        });
+        batchModelProcessingMenu.add(selectGroupXMLMenuItem);
+
+        batchModelProcessingMenuItem.setText("Start batch processing");
+        batchModelProcessingMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                batchModelProcessingMenuItemActionPerformed(evt);
+            }
+        });
+        batchModelProcessingMenu.add(batchModelProcessingMenuItem);
+
+        batchMenu.add(batchModelProcessingMenu);
+
+        toolsMenu.add(batchMenu);
 
         mainMenuBar.add(toolsMenu);
 
@@ -1119,7 +1157,7 @@ public class GUI extends javax.swing.JFrame {
 }//GEN-LAST:event_infoWindowButtonActionPerformed
 
     private void loadTextSourceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadTextSourceButtonActionPerformed
-        File[] files = LoadTextFiles();
+        File[] files = LoadFiles("Select text files",".txt");
         if(files != null){
             for(int i=0; i< files.length; i++){
                 if(files[i].isFile())
@@ -1145,7 +1183,7 @@ public class GUI extends javax.swing.JFrame {
         thread.execute();
     }//GEN-LAST:event_loadModelActionPerformed
 
-    private void batchProcessingMenuItemActionPerformed(java.awt.event.ActionEvent evt) {                                                        
+    private void batchModelBuildingMenuItemActionPerformed(java.awt.event.ActionEvent evt) {                                                        
     	Vector<File> files = new Vector();
     	final Parser[] parserVector = new Parser[parserListModel.getSize()];
     	/* Check if text sources and parser are avaiable... */
@@ -1218,6 +1256,20 @@ public class GUI extends javax.swing.JFrame {
         
         stopBatchButton.setEnabled(false);
     }//GEN-LAST:event_stopBatchButtonActionPerformed
+
+    private void selectModelsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectModelsMenuItemActionPerformed
+        selectedModels = LoadFiles("Select model files",".model");
+    }//GEN-LAST:event_selectModelsMenuItemActionPerformed
+
+    private void selectGroupXMLMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectGroupXMLMenuItemActionPerformed
+        groupXMLFile = LoadFiles("Select group xml file",".xml");
+    }//GEN-LAST:event_selectGroupXMLMenuItemActionPerformed
+
+    private void batchModelProcessingMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_batchModelProcessingMenuItemActionPerformed
+        if(selectedModels != null && groupXMLFile != null){
+            
+        }
+    }//GEN-LAST:event_batchModelProcessingMenuItemActionPerformed
     
 
     public void addFileParserBalancerWorker(FileParserBalancerWorker w){
@@ -1356,21 +1408,21 @@ public class GUI extends javax.swing.JFrame {
         return modelHasChanged;
     }
 
-    private File[] LoadTextFiles(){
+    private File[] LoadFiles(String title, final String fileType){
         JFileChooser chooser = new JFileChooser();
-        chooser.setDialogTitle("Select text files");
+        chooser.setDialogTitle(title);
         chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         chooser.setMultiSelectionEnabled(true);
         chooser.setFileFilter(new javax.swing.filechooser.FileFilter() {
             public boolean accept(File f) {
-                if(f.getName().toLowerCase().endsWith(".txt") || f.isDirectory()){
+                if(f.getName().toLowerCase().endsWith(fileType) || f.isDirectory()){
                     return true;
                 }
                 else 
                     return false;
             }
             public String getDescription() {
-                return "*.txt files";
+                return fileType+" files";
             }
         });
 
@@ -1399,7 +1451,10 @@ public class GUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;
-    private javax.swing.JMenuItem batchProcessingMenuItem;
+    private javax.swing.JMenu batchMenu;
+    private javax.swing.JMenuItem batchModelBuildingMenuItem;
+    private javax.swing.JMenu batchModelProcessingMenu;
+    private javax.swing.JMenuItem batchModelProcessingMenuItem;
     private javax.swing.JMenuItem buildWordClassesMenuItem;
     private javax.swing.JPanel contextPanel;
     private javax.swing.JScrollPane contextScrollPane;
@@ -1438,6 +1493,8 @@ public class GUI extends javax.swing.JFrame {
     protected javax.swing.JProgressBar progressBar;
     private javax.swing.JButton saveModelButton;
     private javax.swing.JTextField searchTextField;
+    private javax.swing.JMenuItem selectGroupXMLMenuItem;
+    private javax.swing.JMenuItem selectModelsMenuItem;
     private javax.swing.JLabel sizeLabel;
     private javax.swing.JScrollPane sourcesScrollPane;
     private javax.swing.JTabbedPane sourcesTabbedPane;
@@ -1475,6 +1532,10 @@ public class GUI extends javax.swing.JFrame {
     /* To be able to interrupt the parsing process,we keep an reference to the thread
      * which can be interrupted... */
     private FileParserBalancerWorker fileParserBalancerWorker;
+
+    /* These should get initialized when batch processing models... */
+    private File[] selectedModels;
+    private File[] groupXMLFile;    //only index 0 gets initialized
    
 
 

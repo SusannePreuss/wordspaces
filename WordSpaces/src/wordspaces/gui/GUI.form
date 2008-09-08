@@ -273,14 +273,53 @@
                 <Property name="text" type="java.lang.String" value="Distances"/>
               </Properties>
             </Menu>
-            <MenuItem class="javax.swing.JMenuItem" name="batchProcessingMenuItem">
+            <Menu class="javax.swing.JMenu" name="batchMenu">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Batch processing"/>
               </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="batchProcessingMenuItemActionPerformed"/>
-              </Events>
-            </MenuItem>
+              <SubComponents>
+                <MenuItem class="javax.swing.JMenuItem" name="batchModelBuildingMenuItem">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Batch model building"/>
+                    <Property name="toolTipText" type="java.lang.String" value="Build automatically models for each parser in list by using the loaded text files."/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="batchModelBuildingMenuItemActionPerformed"/>
+                  </Events>
+                </MenuItem>
+                <Menu class="javax.swing.JMenu" name="batchModelProcessingMenu">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Batch model processing"/>
+                  </Properties>
+                  <SubComponents>
+                    <MenuItem class="javax.swing.JMenuItem" name="selectModelsMenuItem">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Select models to process"/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="selectModelsMenuItemActionPerformed"/>
+                      </Events>
+                    </MenuItem>
+                    <MenuItem class="javax.swing.JMenuItem" name="selectGroupXMLMenuItem">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Select group xml file"/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="selectGroupXMLMenuItemActionPerformed"/>
+                      </Events>
+                    </MenuItem>
+                    <MenuItem class="javax.swing.JMenuItem" name="batchModelProcessingMenuItem">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Start batch processing"/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="batchModelProcessingMenuItemActionPerformed"/>
+                      </Events>
+                    </MenuItem>
+                  </SubComponents>
+                </Menu>
+              </SubComponents>
+            </Menu>
           </SubComponents>
         </Menu>
         <Menu class="javax.swing.JMenu" name="helpMenu">
