@@ -112,7 +112,7 @@ public class WordClassBuilder extends SwingWorker<Object, Integer>{
     }
     
     
-    /** Merges two contexts together. The two contexts are given as Treemaps  
+    /** Merges two contexts together. The two contexts are given as Maps  
      * and the stemContext represents the treemap to which we merge.
      * @param stemContext The TreeMap to which we merge
      * @param similarWordContext is merged into stemContext

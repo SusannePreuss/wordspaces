@@ -1157,7 +1157,7 @@ public class GUI extends javax.swing.JFrame {
 }//GEN-LAST:event_infoWindowButtonActionPerformed
 
     private void loadTextSourceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadTextSourceButtonActionPerformed
-        File[] files = LoadFiles("Select text files",".txt");
+        File[] files = LoadFiles("Select text files",".txt",true);
         if(files != null){
             for(int i=0; i< files.length; i++){
                 if(files[i].isFile())
@@ -1179,8 +1179,36 @@ public class GUI extends javax.swing.JFrame {
     }                                             
 
     private void loadModelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadModelActionPerformed
-        LoadModelThread thread = new LoadModelThread(this);
-        thread.execute();
+        File[] files = LoadFiles("Select the model",".model",false);
+        if(files[0] != null){
+            progressBar.setMaximum(1);
+            progressBar.setString("Loading...");
+            progressBar.setStringPainted(true);
+            progressBar.setIndeterminate(true);
+            final LoadModelThread thread = new LoadModelThread(files[0]);
+            thread.addPropertyChangeListener(new PropertyChangeListener() {
+                public void propertyChange(PropertyChangeEvent evt) {
+                    if ("modelLoaded".equals(evt.getPropertyName())) {
+                        addModel((Model)evt.getNewValue());
+                        //automatically selects the new model if no model was selected before
+                        if(getModel() == null){
+                            setModel(model);
+                            getModelList().setSelectedIndex(((DefaultListModel)gui.getModelList().getModel()).getSize()-1);     //select the last added model
+                            showWordTable();
+                            showHistoryTable();
+                        }
+                        System.out.println("Model '"+model+"' with "+model.getDirectorySize()+" words loaded...");
+                    }
+                    if(thread.isDone()){
+                        progressBar.setIndeterminate(false);
+                        progressBar.setString("");
+                        progressBar.setValue(0);
+                        progressBar.setStringPainted(false);
+                    }
+                }                
+            });  
+            thread.execute();
+        }
     }//GEN-LAST:event_loadModelActionPerformed
 
     private void batchModelBuildingMenuItemActionPerformed(java.awt.event.ActionEvent evt) {                                                        
@@ -1258,11 +1286,11 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_stopBatchButtonActionPerformed
 
     private void selectModelsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectModelsMenuItemActionPerformed
-        selectedModels = LoadFiles("Select model files",".model");
+        selectedModels = LoadFiles("Select model files",".model",true);
     }//GEN-LAST:event_selectModelsMenuItemActionPerformed
 
     private void selectGroupXMLMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectGroupXMLMenuItemActionPerformed
-        groupXMLFile = LoadFiles("Select group xml file",".xml");
+        groupXMLFile = LoadFiles("Select group xml file",".xml",false);
     }//GEN-LAST:event_selectGroupXMLMenuItemActionPerformed
 
     private void batchModelProcessingMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_batchModelProcessingMenuItemActionPerformed
@@ -1408,11 +1436,11 @@ public class GUI extends javax.swing.JFrame {
         return modelHasChanged;
     }
 
-    private File[] LoadFiles(String title, final String fileType){
+    private File[] LoadFiles(String title, final String fileType, boolean multiSelection){
         JFileChooser chooser = new JFileChooser();
         chooser.setDialogTitle(title);
         chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-        chooser.setMultiSelectionEnabled(true);
+        chooser.setMultiSelectionEnabled(multiSelection);
         chooser.setFileFilter(new javax.swing.filechooser.FileFilter() {
             public boolean accept(File f) {
                 if(f.getName().toLowerCase().endsWith(fileType) || f.isDirectory()){
