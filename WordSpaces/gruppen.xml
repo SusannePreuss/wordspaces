@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<groupsetting>
+	<group nr="0">
+		<word value="australia" />
+		<word value="china" />
+		<word value="england" />
+		<word value="germany" />
+		<word value="india" />
+		<word value="japan" />
+		<word value="mexico" />	
+		<word value="russia" />
+		<word value="spain" />
+		<word value="sweden" />
+	</group>
+	<group nr="1">
+		<word value="bach" />
+		<word value="beethoven" />
+		<word value="mozart" />
+		<word value="schubert" />
+		<word value="schumann" />
+		<word value="strauss" />
+		<word value="wagner" />
+	</group>
+	<group nr="2">
+		<word value="bird" />
+		<word value="cat" />
+		<word value="chicken" />
+		<word value="cow" />
+		<word value="dog" />
+		<word value="fish" />
+		<word value="horse" />
+		<word value="mouse" />
+		<word value="pig" />
+		<word value="sheep" />
+	</group>
+	<group nr="3">
+		<word value="chimney" />
+		<word value="door" />
+		<word value="floor" />
+		<word value="garage" />
+		<word value="kitchen" />
+		<word value="roof" />
+		<word value="room" />
+		<word value="toilet" />
+		<word value="wall" />
+		<word value="window" />
+	</group>
+	<group nr="4">
+		<word value="earth" />
+		<word value="jupiter" />
+		<word value="mars" />
+		<word value="mercury" />
+		<word value="neptune" />
+		<word value="pluto" />
+		<word value="saturn" />
+		<word value="uranus" />
+		<word value="venus" />
+	</group>
+</groupsetting>
+<tasks>
+	<remove word="windows" /> 
+	<merge mergeinto="bird" vector="birds" />
+</tasks>
+	

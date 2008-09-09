@@ -7,19 +7,19 @@ import javax.swing.SwingWorker;
  *
  * @author alexander
  */
-public class BatchModelEvaluatorWorker extends SwingWorker<Object[][],Object[]>{
+public class BatchModelEvaluatorWorker extends SwingWorker<Object,Object>{
 
     File[] models;
-    File xmlGroupFile;
+    File xmlConfigFile;
 
-    public BatchModelEvaluatorWorker(File[] models, File xmlGroups){
+    public BatchModelEvaluatorWorker(File[] models, File xmlFile){
         this.models = models;
-        this.xmlGroupFile = xmlGroups;
+        this.xmlConfigFile = xmlFile;
     }
 
 
     @Override
-    protected Object[][] doInBackground() throws Exception {
+    protected Object doInBackground() throws Exception {
 
     }
 

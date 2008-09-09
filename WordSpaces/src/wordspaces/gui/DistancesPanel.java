@@ -490,6 +490,13 @@ public class DistancesPanel extends javax.swing.JPanel {
     public HashMap<Integer,Vector> getGroups(){
         return groups;
     }
+    
+    public void setGroups(HashMap<Integer,Vector> g){
+        groups = g;
+        groupCounterLabel.setText(groups.size()+"");
+        calcGroupGradeButton.setEnabled(true);
+        clearGroupSettingsButton.setEnabled(true);
+    }
 
     public void showDistances(SortedMap distances){
         this.distances = distances;
@@ -569,8 +576,7 @@ public class DistancesPanel extends javax.swing.JPanel {
         return groups.size();
     }
 
- 
-    
+     
     /**
      * Returns the corresponding group number of
      * the given vectorName.
