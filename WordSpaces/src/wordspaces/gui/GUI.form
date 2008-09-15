@@ -273,51 +273,44 @@
                 <Property name="text" type="java.lang.String" value="Distances"/>
               </Properties>
             </Menu>
-            <Menu class="javax.swing.JMenu" name="batchMenu">
+            <MenuItem class="javax.swing.JMenuItem" name="batchModelBuildingMenuItem">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Batch processing"/>
+                <Property name="text" type="java.lang.String" value="Batch model building"/>
+                <Property name="toolTipText" type="java.lang.String" value="Build automatically models for each parser in list by using the loaded text files."/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="batchModelBuildingMenuItemActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <Menu class="javax.swing.JMenu" name="batchModelProcessingMenu">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Batch model processing"/>
               </Properties>
               <SubComponents>
-                <MenuItem class="javax.swing.JMenuItem" name="batchModelBuildingMenuItem">
+                <MenuItem class="javax.swing.JMenuItem" name="selectModelsMenuItem">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Batch model building"/>
-                    <Property name="toolTipText" type="java.lang.String" value="Build automatically models for each parser in list by using the loaded text files."/>
+                    <Property name="text" type="java.lang.String" value="Select models to process"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="batchModelBuildingMenuItemActionPerformed"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="selectModelsMenuItemActionPerformed"/>
                   </Events>
                 </MenuItem>
-                <Menu class="javax.swing.JMenu" name="batchModelProcessingMenu">
+                <MenuItem class="javax.swing.JMenuItem" name="selectGroupXMLMenuItem">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Batch model processing"/>
+                    <Property name="text" type="java.lang.String" value="Select group xml file"/>
                   </Properties>
-                  <SubComponents>
-                    <MenuItem class="javax.swing.JMenuItem" name="selectModelsMenuItem">
-                      <Properties>
-                        <Property name="text" type="java.lang.String" value="Select models to process"/>
-                      </Properties>
-                      <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="selectModelsMenuItemActionPerformed"/>
-                      </Events>
-                    </MenuItem>
-                    <MenuItem class="javax.swing.JMenuItem" name="selectGroupXMLMenuItem">
-                      <Properties>
-                        <Property name="text" type="java.lang.String" value="Select group xml file"/>
-                      </Properties>
-                      <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="selectGroupXMLMenuItemActionPerformed"/>
-                      </Events>
-                    </MenuItem>
-                    <MenuItem class="javax.swing.JMenuItem" name="batchModelProcessingMenuItem">
-                      <Properties>
-                        <Property name="text" type="java.lang.String" value="Start batch processing"/>
-                      </Properties>
-                      <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="batchModelProcessingMenuItemActionPerformed"/>
-                      </Events>
-                    </MenuItem>
-                  </SubComponents>
-                </Menu>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="selectGroupXMLMenuItemActionPerformed"/>
+                  </Events>
+                </MenuItem>
+                <MenuItem class="javax.swing.JMenuItem" name="batchModelProcessingMenuItem">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Start batch processing"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="batchModelProcessingMenuItemActionPerformed"/>
+                  </Events>
+                </MenuItem>
               </SubComponents>
             </Menu>
           </SubComponents>
@@ -368,12 +361,12 @@
                   <Component id="logPanel" alignment="0" max="32767" attributes="0"/>
                   <Component id="textSizeLabel" alignment="0" min="-2" pref="143" max="-2" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="sourcesTabbedPane" pref="400" max="32767" attributes="0"/>
+                      <Component id="sourcesTabbedPane" pref="406" max="32767" attributes="0"/>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
                           <Group type="102" attributes="0">
                               <EmptySpace min="-2" max="-2" attributes="0"/>
-                              <Component id="modelsTabbedPane" pref="218" max="32767" attributes="0"/>
+                              <Component id="modelsTabbedPane" pref="224" max="32767" attributes="0"/>
                               <EmptySpace min="-2" max="-2" attributes="0"/>
                               <Component id="parserTabbedPane" min="-2" pref="115" max="-2" attributes="2"/>
                           </Group>

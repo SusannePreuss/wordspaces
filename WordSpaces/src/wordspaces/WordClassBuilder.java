@@ -59,7 +59,7 @@ public class WordClassBuilder extends SwingWorker<Object, Integer>{
                 if(computeSimilarity(stem,word) >= THRESHOLD){                        //this indicates that the two words are similar               
                     firePropertyChange("merge", null, stem+" and "+word+" got merged...");
                     firePropertyChange("remove",null,wordPos);
-                    mergeContextMaps(model.getContextVector(stem), model.getContextVector(word));
+                    Fust.mergeContextMaps(model.getContextVector(stem), model.getContextVector(word));
                     occurences.put(stem, occurences.get(stem)+occurences.get(word));
                     model.deleteWordVector(word);           //'word' and its context must be deleted
                     
@@ -109,30 +109,6 @@ public class WordClassBuilder extends SwingWorker<Object, Integer>{
                 }
             }
         }        
-    }
-    
-    
-    /** Merges two contexts together. The two contexts are given as Maps  
-     * and the stemContext represents the treemap to which we merge.
-     * @param stemContext The TreeMap to which we merge
-     * @param similarWordContext is merged into stemContext
-     */
-    public static void mergeContextMaps(Map v1, Map v2){
-        Iterator iter = v2.keySet().iterator();
-        String contextWord = null;
-        double freq;
-        
-        while(iter.hasNext()){
-            contextWord = (String)iter.next();
-                   
-            if(v1.containsKey(contextWord)){
-                freq = (Double) v1.get(contextWord);
-                freq = freq + (Double) v2.get(contextWord);
-            } else{
-                freq = (Double) v2.get(contextWord);    
-            }
-            v1.put(contextWord,freq);
-        }   
     }
     
     private float computeSimilarity(String w1, String w2){

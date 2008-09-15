@@ -13,6 +13,7 @@ import javax.swing.JTable;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 import javax.swing.table.DefaultTableModel;
+import wordspaces.Fust;
 import wordspaces.Model;
 import wordspaces.WordClassBuilder;
 import wordspaces.gui.GUI;
@@ -56,7 +57,7 @@ public class MergeVectorsListener implements MenuListener{
                             String otherWord = (String) wordTableModel.getValueAt( wordTable.convertRowIndexToModel(indices[i]), 0);
                             if(!word.equals(otherWord)){
                                 //now the vectors get merged.
-                                WordClassBuilder.mergeContextMaps(model.getContextVector(word), model.getContextVector(otherWord));
+                                Fust.mergeContextMaps(model.getContextVector(word), model.getContextVector(otherWord));
                                 //now the occurences have to be updated
                                 model.getWordVectorFrequency().put(model.getStringCache().get(word), model.getWordVectorFrequency().get(word)+model.getWordVectorFrequency().get(otherWord));
                                 System.out.println(otherWord+" was merged with "+word);

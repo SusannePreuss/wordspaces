@@ -30,11 +30,13 @@ public class XMLParserWorker extends SwingWorker<Object,Object>{
     private File source;
     private BufferedReader fileReader;
     private SAXParser parser;
+    private Map<String, Object> tasks;
+    private Map<Integer, Vector> groups; 
     
     public XMLParserWorker(File groupFile){
         source = groupFile;
         parser = new SAXParser();
-        parser.setContentHandler(new GroupHandler());
+        parser.setContentHandler(new GroupHandler(this));
         try {
             fileReader = new BufferedReader(new FileReader(source));
         }catch (FileNotFoundException ex) {
@@ -57,7 +59,22 @@ public class XMLParserWorker extends SwingWorker<Object,Object>{
         return null;
     }
     
+    public Map<String, Object> getTasks(){
+        return tasks;
+    }
+    
+    public Map<Integer, Vector> getGroups(){
+        return groups;
+    }
+    
     class GroupHandler extends DefaultHandler{
+        
+        private XMLParserWorker worker;
+        
+        
+        public GroupHandler(XMLParserWorker w){
+            worker = w;
+        }
         
         Map<Integer, Vector> groups;
 
@@ -74,6 +91,8 @@ public class XMLParserWorker extends SwingWorker<Object,Object>{
         }
         
         public void endDocument(){
+            worker.groups = groups;
+            worker.tasks  = tasks;
             firePropertyChange("endDoc",null, "Finished reading from xml...");
         }
         
@@ -101,6 +120,8 @@ public class XMLParserWorker extends SwingWorker<Object,Object>{
             }
             else if(name.equals("remove")){
                 String word = atts.getValue("word");
+      //          System.out.println("Parsed remove "+word);
+
                 if(!tasks.containsKey("remove")){
                     tasks.put("remove", new Vector());
                 }
@@ -112,8 +133,12 @@ public class XMLParserWorker extends SwingWorker<Object,Object>{
                     Map<String, String> mergeMap = new HashMap();
                     tasks.put("merge", mergeMap);
                 }
+     //           System.out.println("Parsed merge "+atts.getValue("mergeinto"));
                 /* the first word in the list is the word we merge_TO */
                 ((Map)tasks.get("merge")).put(atts.getValue("mergeinto"), atts.getValue("vector"));
+            }
+            else{
+                System.out.println("XMLParser couldn't recognize element: "+name);
             }
         }
         

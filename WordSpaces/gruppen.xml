@@ -60,5 +60,5 @@
 <tasks>
 	<remove word="windows" /> 
 	<merge mergeinto="bird" vector="birds" />
-</tasks>
+</tasks> 
 	

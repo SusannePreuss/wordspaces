@@ -10,10 +10,8 @@ import wordspaces.gui.listener.CreateGroupListener;
 import wordspaces.gui.listener.CompareWordsListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -26,6 +24,8 @@ import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+import wordspaces.Fust;
+import wordspaces.GroupGradeCalculator;
 import wordspaces.Model;
 import wordspaces.gui.graph.Graph;
 
@@ -343,7 +343,7 @@ public class DistancesPanel extends javax.swing.JPanel {
 
             while(wordsIter.hasNext()){             //run through all words in wordDirTable
                 wordVector = (String) wordsIter.next();           
-                sortedSet = getKsmallestEdges( model.getCachedDistances().get(wordVector) , k_smallest_edges );
+                sortedSet = Fust.getKsmallestEdges( model.getCachedDistances().get(wordVector) , k_smallest_edges );
 
                 sortedSetIter = sortedSet.iterator();
 
@@ -361,58 +361,8 @@ public class DistancesPanel extends javax.swing.JPanel {
 }//GEN-LAST:event_visualizeButtonActionPerformed
 
     private void calcGroupGradeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calcGroupGradeButtonActionPerformed
-        float grade = 0, error = 0, group_error = 0, possible_maximal_error = 0;
-        Model model = gui.getModel();
-        Iterator<Integer> groupIter = groups.keySet().iterator();
-        Iterator<Entry<String,Double>> k_smallest_edges_iter;
-        String word, neighborWord;
-        Vector<String> members;
-        TreeSet<Entry<String, Double>> k_smallest_edges;
-        Entry entry;
-        int grp, grp_SIZE, errors = 0,
-            word_counter = 0, 
-            pos_in_k_smallest_edges = 0;     //pos of the word of k_smallest_edges, needed to calculate the error
-
-        while(groupIter.hasNext()){          //go through all groups
-            System.out.println("!!!!!!NEW GROUP!!!!");
-            grp = groupIter.next();
-            members = groups.get(grp);
-            //first identify the number of words in the same group as vectorName
-            grp_SIZE = members.size();
-            word_counter += (members.size()-1) * members.size();
-            group_error = 0;
-            possible_maximal_error += calcMaxGroupError(grp_SIZE);
-            System.out.println(possible_maximal_error);
-            
-            /* go through all words in the group */
-            for( int i=0 ; i < grp_SIZE ; i++ ){        
-                word = members.elementAt(i);            //get the next word name
-                k_smallest_edges = getKsmallestEdges(model.getCachedDistances().get(word), grp_SIZE-1);   //now we have the k smallest edges to word                                
-                k_smallest_edges_iter = k_smallest_edges.iterator();
-                pos_in_k_smallest_edges = 0;                    //is reseted for the next word
-                
-                /* now check for word how many errors have been made */
-                while(k_smallest_edges_iter.hasNext()){         
-                    entry = k_smallest_edges_iter.next();
-                    neighborWord = (String) entry.getKey();
-                    pos_in_k_smallest_edges++;                  //first word is at pos 1 and so on...
-                    /* now check if this neighborWord is in the same group as word, if so give points. */
-                    if(!members.contains(neighborWord)){
-                        /* Calculate the error by dividing 1 by pos_in_k_smallest_edges and add it to grade */
-                        error = (float) 1 / (float) pos_in_k_smallest_edges;
-                        group_error += error;
-                        errors++;
-                        System.out.println("Error! "+word.toUpperCase()+" neighbor is "+neighborWord.toUpperCase()+" pos is "+pos_in_k_smallest_edges+" error "+error);
-                     }
-                }
-            }
-            /* Normalize the group_error by dividing it by the size of the group */
-            group_error = group_error / (float) grp_SIZE;
-            System.out.println("Group error is "+group_error);
-            grade += group_error;
-        }
-        grade = (possible_maximal_error-grade) / possible_maximal_error;
-        groupGradeLabel.setText(grade+" ("+(possible_maximal_error-grade)+"/"+possible_maximal_error+") Errors:"+errors);
+        double[] results = GroupGradeCalculator.calcGroupGradeButtonActionPerformed(gui.getModel(), groups);
+        groupGradeLabel.setText(results[0]+" ("+(results[2]-results[0])+"/"+results[2]+") Errors:"+results[1]);
     }//GEN-LAST:event_calcGroupGradeButtonActionPerformed
 
     private void clearGroupSettingsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearGroupSettingsButtonActionPerformed
@@ -434,45 +384,8 @@ public class DistancesPanel extends javax.swing.JPanel {
     public void clearGroupLabels(){
         groupGradeLabel.setText("<not available>");
         wordDirTable.repaint();         //to remove the colored words...
-    }
+    }   
     
-    /**
-     * Computes the k greatest key-value pairs from map and returns them in descending
-     * order in a TreeSet.
-     * @param map Map from which the k greatest key-values pairs are computed.
-     * @param k Number of greatest key-value pairs in map where values are used for ordering.
-     * @return TreeSet<Entry>. Entries are sorted by values in descending order. If two 
-     * equal, then keys are used for ordering.
-     */     
-    public TreeSet< Entry<String,Double> > getKsmallestEdges(SortedMap<String, Double> map, int k){
-         TreeSet< Entry<String,Double> > result = new TreeSet(new Comparator() {
-            public int compare(Object obj, Object obj1) {
-                int vcomp = ((Comparable) ((Map.Entry) obj1).getValue()).compareTo(((Map.Entry) obj).getValue());
-                if (vcomp != 0) return vcomp;
-                else return ((Comparable) ((Map.Entry) obj1).getKey()).compareTo(((Map.Entry) obj).getKey());
-            }           
-         });           
-         result.addAll(map.entrySet());
-         Iterator< Entry<String,Double> > result_iter = result.descendingIterator(); //descending is wrong but its the only its running
-
-         int delete_counter = result.size() - k;
-         while(result_iter.hasNext() && delete_counter != 0){
-            result_iter.next();
-            result_iter.remove();
-            delete_counter--;
-         }
-
-         return result;
-    }
-    
-    public float calcMaxGroupError(int grp_SIZE){
-        float result = 0;
-        for(int i=1;i<grp_SIZE;i++){
-            result += (float) 1 / (float) i;
-        }
-        
-        return result;
-    }
 
     public void addtoGroup(String v, int grp){
         Vector vector;

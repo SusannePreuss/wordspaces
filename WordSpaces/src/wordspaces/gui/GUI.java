@@ -75,6 +75,7 @@ import wordspaces.gui.listener.FilterExtremeValuesActionListener;
 import wordspaces.gui.listener.RenameModelActionListener;
 import wordspaces.gui.listener.SaveModelActionListener;
 import wordspaces.gui.listener.SelectAllActionListener;
+import wordspaces.gui.threads.BatchModelEvaluatorWorker;
 import wordspaces.gui.threads.BatchProcessingWorker;
 import wordspaces.gui.threads.FileFilterBalancerWorker;
 import wordspaces.gui.threads.FileParserBalancerWorker;
@@ -165,7 +166,6 @@ public class GUI extends javax.swing.JFrame {
         toolsMenu = new javax.swing.JMenu();
         fetchFromInternetMenuItem = new javax.swing.JMenuItem();
         distanceMenu = new javax.swing.JMenu();
-        batchMenu = new javax.swing.JMenu();
         batchModelBuildingMenuItem = new javax.swing.JMenuItem();
         batchModelProcessingMenu = new javax.swing.JMenu();
         selectModelsMenuItem = new javax.swing.JMenuItem();
@@ -457,8 +457,6 @@ public class GUI extends javax.swing.JFrame {
         distanceMenu.setText("Distances");
         toolsMenu.add(distanceMenu);
 
-        batchMenu.setText("Batch processing");
-
         batchModelBuildingMenuItem.setText("Batch model building");
         batchModelBuildingMenuItem.setToolTipText("Build automatically models for each parser in list by using the loaded text files.");
         batchModelBuildingMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -466,7 +464,7 @@ public class GUI extends javax.swing.JFrame {
                 batchModelBuildingMenuItemActionPerformed(evt);
             }
         });
-        batchMenu.add(batchModelBuildingMenuItem);
+        toolsMenu.add(batchModelBuildingMenuItem);
 
         batchModelProcessingMenu.setText("Batch model processing");
 
@@ -494,9 +492,7 @@ public class GUI extends javax.swing.JFrame {
         });
         batchModelProcessingMenu.add(batchModelProcessingMenuItem);
 
-        batchMenu.add(batchModelProcessingMenu);
-
-        toolsMenu.add(batchMenu);
+        toolsMenu.add(batchModelProcessingMenu);
 
         mainMenuBar.add(toolsMenu);
 
@@ -524,12 +520,12 @@ public class GUI extends javax.swing.JFrame {
                     .add(org.jdesktop.layout.GroupLayout.LEADING, logPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(org.jdesktop.layout.GroupLayout.LEADING, textSizeLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 143, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(org.jdesktop.layout.GroupLayout.LEADING, layout.createSequentialGroup()
-                        .add(sourcesTabbedPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+                        .add(sourcesTabbedPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 406, Short.MAX_VALUE)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
                             .add(layout.createSequentialGroup()
                                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                                .add(modelsTabbedPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 218, Short.MAX_VALUE)
+                                .add(modelsTabbedPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE)
                                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                                 .add(parserTabbedPane, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 115, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                             .add(layout.createSequentialGroup()
@@ -1189,10 +1185,11 @@ public class GUI extends javax.swing.JFrame {
             thread.addPropertyChangeListener(new PropertyChangeListener() {
                 public void propertyChange(PropertyChangeEvent evt) {
                     if ("modelLoaded".equals(evt.getPropertyName())) {
-                        addModel((Model)evt.getNewValue());
+                        Model m = (Model)evt.getNewValue();
+                        addModel(m);
                         //automatically selects the new model if no model was selected before
                         if(getModel() == null){
-                            setModel(model);
+                            setModel(m);
                             getModelList().setSelectedIndex(((DefaultListModel)gui.getModelList().getModel()).getSize()-1);     //select the last added model
                             showWordTable();
                             showHistoryTable();
@@ -1226,7 +1223,7 @@ public class GUI extends javax.swing.JFrame {
         
            
             progressBar.setMaximum(parserVector.length*files.size());
-            progressBar.setString("(0/"+parserVector.length+") models finished");
+            progressBar.setString("(0/"+parserVector.length+") models builded");
             progressBar.setStringPainted(true);
             batchWorker = new BatchProcessingWorker(files,parserVector);
             batchWorker.addPropertyChangeListener(new PropertyChangeListener() {
@@ -1246,12 +1243,12 @@ public class GUI extends javax.swing.JFrame {
                     }
 
                     if("cancelled".equals(evt.getPropertyName())){
-                        System.out.println("Batch processing cancelled !");
+                        System.out.println("Batch model building cancelled !");
                     }
                     /* first check !done because batchWorker is set to null in body ! */
                     if(!done && batchWorker.isDone()){
                         done = true;
-                        System.out.println("Finished batch processing...");
+                        System.out.println("Finished batch model building...");
                         progressBar.setString("");
                         progressBar.setStringPainted(false);
                         progressBar.setValue(0);
@@ -1294,9 +1291,35 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_selectGroupXMLMenuItemActionPerformed
 
     private void batchModelProcessingMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_batchModelProcessingMenuItemActionPerformed
-        if(selectedModels != null && groupXMLFile != null){
-            
+        if(groupXMLFile == null || selectedModels == null){
+            selectedModels = LoadFiles("Select model files",".model",true);
+            groupXMLFile = LoadFiles("Select group xml file",".xml",false);
         }
+
+        progressBar.setMaximum(selectedModels.length);
+        progressBar.setString("(0/"+selectedModels.length+") models finished");
+        progressBar.setStringPainted(true);
+        final BatchModelEvaluatorWorker thread = new BatchModelEvaluatorWorker(selectedModels,groupXMLFile[0]);
+        thread.addPropertyChangeListener(new PropertyChangeListener() {
+            public  void propertyChange(PropertyChangeEvent evt) {
+                /* one file has been parsed */
+                if ("results".equals(evt.getPropertyName())) {
+                    double[] results = (double[]) evt.getNewValue();
+                    Model m = (Model) evt.getOldValue();
+                    System.out.println(m+":: Grade "+results[0]+" ("+(results[2]-results[0])+"/"+results[2]+") Errors:"+results[1]);
+                }
+                /* first check !done because batchWorker is set to null in body ! */
+                if(thread.isDone()){
+                    System.out.println("Finished batch processing...");
+                    progressBar.setString("");
+                    progressBar.setStringPainted(false);
+                    progressBar.setValue(0);
+                    batchWorker = null;
+                    stopBatchButton.setEnabled(false);
+                }
+            }
+        });
+        thread.execute();    
     }//GEN-LAST:event_batchModelProcessingMenuItemActionPerformed
     
 
@@ -1454,9 +1477,15 @@ public class GUI extends javax.swing.JFrame {
             }
         });
 
-        if(chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
+        if(multiSelection && chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
             return chooser.getSelectedFiles();
-
+        else if(!multiSelection && chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
+            File[] array = new File[1];
+            array[0] = chooser.getSelectedFile();
+            return array;
+        }
+           
+            
         return null;
     }
 
@@ -1479,7 +1508,6 @@ public class GUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;
-    private javax.swing.JMenu batchMenu;
     private javax.swing.JMenuItem batchModelBuildingMenuItem;
     private javax.swing.JMenu batchModelProcessingMenu;
     private javax.swing.JMenuItem batchModelProcessingMenuItem;

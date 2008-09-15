@@ -7,19 +7,19 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
 import javax.swing.SwingWorker;
+import wordspaces.Fust;
+import wordspaces.GroupGradeCalculator;
 import wordspaces.Model;
 
 /**
  *
  * @author alexander
  */
-public class BatchModelEvaluatorWorker extends SwingWorker<Object,Object>{
+public class BatchModelEvaluatorWorker extends SwingWorker<Object,double[]>{
 
     File[] modelFiles;
     File xmlConfigFile;
     Map<Integer, Vector> groupsMap;
-    Map<String,Object> tasks;
-
     Model model;
     
     public BatchModelEvaluatorWorker(File[] modelFiles, File xmlFile){
@@ -30,22 +30,15 @@ public class BatchModelEvaluatorWorker extends SwingWorker<Object,Object>{
 
     @Override
     protected Object doInBackground() throws Exception {     
-        final XMLParserWorker parser = new XMLParserWorker(xmlConfigFile);
-        parser.addPropertyChangeListener(new PropertyChangeListener(){
-            public void propertyChange(PropertyChangeEvent evt) {
-                if ("groups".equals(evt.getPropertyName())) {
-                    System.out.println("Groups ready");
-                    groupsMap = (Map<Integer, Vector>) evt.getNewValue();
-                }
-                if ("tasks".equals(evt.getPropertyName())) {
-                    tasks = (Map<String, Object>) evt.getNewValue();
-                    System.out.println("Tasks ready");
-                }
-            }            
-        });
-
+        Map<String,Object> tasks;
+        Map<Integer,Vector> groups;
+        XMLParserWorker parser = new XMLParserWorker(xmlConfigFile);
+   //     parser.addPropertyChangeListener(new ParserChangeListener());
+        
         parser.execute(); parser.get();
-        System.out.println("parser finished !"+groupsMap.get(0)+"   tasks:"+tasks.get("delete"));
+        tasks = parser.getTasks();
+        groups = parser.getGroups();
+        
         Iterator<String> taskIter = tasks.keySet().iterator();
         String cmd;
         /* For each file, load its model and process it ! */
@@ -54,25 +47,27 @@ public class BatchModelEvaluatorWorker extends SwingWorker<Object,Object>{
             modelLoader.addPropertyChangeListener(new PropertyChangeListener() {
                 public void propertyChange(PropertyChangeEvent evt) {
                     if ("modelLoaded".equals(evt.getPropertyName())) {
-                        model = (Model) evt.getNewValue();                        
                         firePropertyChange("progress",null, null);
-                    }
-                    if(modelLoader.isDone()){
-
                     }
                 }                
             });  
-            modelLoader.execute(); modelLoader.get();
+            modelLoader.execute();
+            model = modelLoader.get();
             
-            System.out.println("Loaded "+model.toString());
+            /* Execute all tasks */
             while(taskIter.hasNext()){
                 cmd = taskIter.next();
                 if(cmd.equals("merge")){
                     executeMergeTasks(model,(Map<String, String>) tasks.get(cmd));
                 }
                 else if(cmd.equals("remove")){
-                    
+                    executeRemoveTasks(model, (Vector<String>) tasks.get(cmd));
                 }
+            }
+
+            /* Calculating GroupGrade */
+            if(groups != null){
+                firePropertyChange("results",model, GroupGradeCalculator.calcGroupGradeButtonActionPerformed(model, groups));
             }
         }
 
@@ -80,7 +75,39 @@ public class BatchModelEvaluatorWorker extends SwingWorker<Object,Object>{
     }
 
     public void executeMergeTasks(Model model, Map<String, String> tasks){
-
+        Iterator<String> tasksIter = tasks.keySet().iterator();
+        String first, second;
+        Map firstMap, secMap;
+        while(tasksIter.hasNext()){
+            first  = tasksIter.next();
+            second = tasks.get(first);
+            firstMap = model.getContextVector(first);
+            secMap   = model.getContextVector(second);
+            Fust.mergeContextMaps(firstMap, secMap);
+            System.out.println(model+":: Merged "+first+" and "+second);
+        }
     }
 
+    public void executeRemoveTasks(Model model, Vector<String> tasks){
+        for(String word:tasks){
+            model.deleteWordVector(word);
+            System.out.println(model+":: Removed "+word);
+        }
+    }
+    
+    class ParserChangeListener implements PropertyChangeListener{
+        
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            if ("groups".equals(evt.getPropertyName())) {
+            }
+            if ("tasks".equals(evt.getPropertyName())) {
+            }
+            if ("startDoc".equals(evt.getPropertyName())) {
+            }
+            if ("endDoc".equals(evt.getPropertyName())) {
+            }
+        }            
+    }
 }
+
