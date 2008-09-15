@@ -8,6 +8,7 @@ package wordspaces.gui;
 
 //package wordspaces.gui;
 
+import wordspaces.gui.threads.CalculateDistance;
 import java.io.IOException;
 import wordspaces.gui.threads.BuildWordTableWorker;
 import wordspaces.gui.listener.ModelPopupListener;
@@ -25,6 +26,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -1176,7 +1179,7 @@ public class GUI extends javax.swing.JFrame {
 
     private void loadModelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadModelActionPerformed
         File[] files = LoadFiles("Select the model",".model",false);
-        if(files[0] != null){
+        if(files != null){
             progressBar.setMaximum(1);
             progressBar.setString("Loading...");
             progressBar.setStringPainted(true);
@@ -1295,27 +1298,53 @@ public class GUI extends javax.swing.JFrame {
             selectedModels = LoadFiles("Select model files",".model",true);
             groupXMLFile = LoadFiles("Select group xml file",".xml",false);
         }
-
+        
         progressBar.setMaximum(selectedModels.length);
         progressBar.setString("(0/"+selectedModels.length+") models finished");
         progressBar.setStringPainted(true);
-        final BatchModelEvaluatorWorker thread = new BatchModelEvaluatorWorker(selectedModels,groupXMLFile[0]);
+        final BatchModelEvaluatorWorker thread = new BatchModelEvaluatorWorker(selectedModels,groupXMLFile[0],distComputer);
         thread.addPropertyChangeListener(new PropertyChangeListener() {
+            int progress = 0;
+            FileWriter writer;
+
             public  void propertyChange(PropertyChangeEvent evt) {
                 /* one file has been parsed */
                 if ("results".equals(evt.getPropertyName())) {
                     double[] results = (double[]) evt.getNewValue();
                     Model m = (Model) evt.getOldValue();
+                    progressBar.setValue(++progress);
+                    progressBar.setString("("+progress+"/"+selectedModels.length+") models finished");
+
+                    /* first we once! initialize the fileWriter */
+                    if( writer == null){
+                        try {
+                            writer = new FileWriter(new File("results.txt"));
+                        } catch (IOException ex) {
+                            System.out.println(ex.getMessage());
+                        }
+                    }
+
+                    /* now we try to write the result into a file */
+                    try {
+                        writer.write(m + ":: Grade " + results[0] + " (" + (results[2] - results[0]) + "/" + results[2] + ") Errors:" + results[1]+"\n");
+                    } catch (IOException ex) {
+                        System.out.println(ex.getMessage());
+                    }
                     System.out.println(m+":: Grade "+results[0]+" ("+(results[2]-results[0])+"/"+results[2]+") Errors:"+results[1]);
                 }
                 /* first check !done because batchWorker is set to null in body ! */
                 if(thread.isDone()){
-                    System.out.println("Finished batch processing...");
+                    try {
+                        writer.close();
+                    } catch (IOException ex) {
+                        System.out.println(ex.getMessage());
+                    }
                     progressBar.setString("");
                     progressBar.setStringPainted(false);
                     progressBar.setValue(0);
                     batchWorker = null;
                     stopBatchButton.setEnabled(false);
+                    System.out.println("Finished batch processing...");
                 }
             }
         });
@@ -1640,10 +1669,10 @@ public class GUI extends javax.swing.JFrame {
     }
     
     class TextAreaOutputStream extends OutputStream {
-        private JTextArea textArea;
-        private JScrollBar scrollBar;
-        private DateFormat dateFormater;
-        private StringBuffer buffer;
+        JTextArea textArea;
+        JScrollBar scrollBar;
+        DateFormat dateFormater;
+        StringBuffer buffer;
         
         public TextAreaOutputStream(JTextArea a, JScrollBar b){
             textArea = a;

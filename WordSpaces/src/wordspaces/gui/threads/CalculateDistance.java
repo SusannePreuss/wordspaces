@@ -7,7 +7,7 @@
  * and open the template in the editor.
  */
 
-package wordspaces;
+package wordspaces.gui.threads;
 
 import javax.swing.SwingWorker;
 import plugins.ComputesDistance;

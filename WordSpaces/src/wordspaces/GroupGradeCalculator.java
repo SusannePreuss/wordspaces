@@ -45,7 +45,6 @@ public class GroupGradeCalculator {
             word_counter += (members.size()-1) * members.size();
             group_error = 0;
             possible_maximal_error += calcMaxGroupError(grp_SIZE);
-            System.out.println(possible_maximal_error);
             
             /* go through all words in the group */
             for( int i=0 ; i < grp_SIZE ; i++ ){        
@@ -71,7 +70,6 @@ public class GroupGradeCalculator {
             }
             /* Normalize the group_error by dividing it by the size of the group */
             group_error = group_error / (float) grp_SIZE;
-            System.out.println("Group error is "+group_error);
             grade += group_error;
         }
         result[0] = (possible_maximal_error-grade) / possible_maximal_error;

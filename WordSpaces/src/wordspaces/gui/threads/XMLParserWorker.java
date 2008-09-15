@@ -97,8 +97,10 @@ public class XMLParserWorker extends SwingWorker<Object,Object>{
         }
         
         public void startElement(String uri, String localName, String name, Attributes atts){
+            if(name.equals("configuration")){}  
+
             /* Begin of a group setting */
-            if(name.equals("groupsetting")){
+            else if(name.equals("groupsetting")){
                 groups = new HashMap();
             }
             /* Begin of a group */

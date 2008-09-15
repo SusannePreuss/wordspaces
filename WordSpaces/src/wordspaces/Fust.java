@@ -53,22 +53,27 @@ public class Fust {
      * @param stemContext The TreeMap to which we merge
      * @param similarWordContext is merged into stemContext
      */
-    public static void mergeContextMaps(Map v1, Map v2){
-        Iterator iter = v2.keySet().iterator();
-        String contextWord = null;
-        double freq;
+    public static void mergeContextMaps(Map v1, Map v2) throws NullPointerException{
+        if(v1 == null || v2 == null){
+            throw new NullPointerException("empty map in mergeContextMaps !");          
+        }
+        else {
+            Iterator iter = v2.keySet().iterator();
+            String contextWord = null;
+            double freq;
         
-        while(iter.hasNext()){
-            contextWord = (String)iter.next();
+            while(iter.hasNext()){
+                contextWord = (String)iter.next();
                    
-            if(v1.containsKey(contextWord)){
-                freq = (Double) v1.get(contextWord);
-                freq = freq + (Double) v2.get(contextWord);
-            } else{
-                freq = (Double) v2.get(contextWord);    
+                if(v1.containsKey(contextWord)){
+                    freq = (Double) v1.get(contextWord);
+                    freq = freq + (Double) v2.get(contextWord);
+                } else{
+                    freq = (Double) v2.get(contextWord);
+                }
+                v1.put(contextWord,freq);
             }
-            v1.put(contextWord,freq);
-        }   
+        }
     }
 
 }
