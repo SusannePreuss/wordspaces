@@ -62,6 +62,7 @@ public class BatchModelEvaluatorWorker extends SwingWorker<Object,double[]>{
             });  
             modelLoader.execute();
             model = modelLoader.get();
+            double time = System.currentTimeMillis();
             taskIter = tasks.keySet().iterator();
             /* Execute all tasks */
             while(taskIter.hasNext()){
@@ -96,8 +97,9 @@ public class BatchModelEvaluatorWorker extends SwingWorker<Object,double[]>{
                 result = GroupGradeCalculator.calcGroupGradeButtonActionPerformed(model, groups);
                 firePropertyChange("results",model, result);
             }
+            System.out.println("Time needed:"+(System.currentTimeMillis()-time));
         }
-
+        
         return null;
     }
 
