@@ -9,8 +9,11 @@
 
 package wordspaces;
 
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TreeSet;
 import java.util.Vector;
 import javax.swing.table.DefaultTableModel;
 
@@ -54,6 +57,42 @@ public class FrequencyFilter {
                 m.deleteWordVector(vectorName);
                 tableModel.removeRow(i);
             }
+        }
+    }
+    
+    public static void filterExtremeValues(Map<String, Map<String, Double>> selectedVectors, int percentage){
+        if(percentage > 0 && percentage <= 50){
+            /* this treeset is necessary to sort the TreeMap by values... */
+            TreeSet<Entry> set = new TreeSet(new Comparator() {
+                public int compare(Object obj, Object obj1) {
+                    int vcomp = ((Comparable) ((Map.Entry) obj1).getValue()).compareTo(((Map.Entry) obj).getValue());
+                    if (vcomp != 0) return vcomp;
+                    else return ((Comparable) ((Map.Entry) obj1).getKey()).compareTo(((Map.Entry) obj).getKey());
+                }
+            });
+                
+            Iterator<String> selectedVectorsIter = selectedVectors.keySet().iterator();
+            String vectorName;
+            Map<String, Double> contextMap;
+            int removeable_count;
+            Entry<String, Double> entry;
+            
+            while(selectedVectorsIter.hasNext()){
+                vectorName = selectedVectorsIter.next();
+                System.out.println("filtering in "+vectorName);
+                contextMap = selectedVectors.get(vectorName);
+                removeable_count = (int)(((float)contextMap.size() / (float)100)*percentage);
+                set.addAll(contextMap.entrySet());
+                for(int j=0;j<removeable_count;j++){
+                    entry = set.pollFirst();
+                    contextMap.remove(entry.getKey());
+                    entry = set.pollLast();
+                    contextMap.remove(entry.getKey());
+                }
+            }
+        }
+        else{
+            System.out.println("error: percentage is out of range -> "+percentage);
         }
     }
     

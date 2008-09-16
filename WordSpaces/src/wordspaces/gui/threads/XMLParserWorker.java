@@ -136,8 +136,14 @@ public class XMLParserWorker extends SwingWorker<Object,Object>{
                     tasks.put("merge", mergeMap);
                 }
      //           System.out.println("Parsed merge "+atts.getValue("mergeinto"));
-                /* the first word in the list is the word we merge_TO */
+                /* the first word is the word we merge_TO */
                 ((Map)tasks.get("merge")).put(atts.getValue("mergeinto"), atts.getValue("vector"));
+            }
+            else if(name.equals("filterextremevalues")){
+                tasks.put("filterextremevalues", Integer.parseInt(atts.getValue("percentage")));
+            }
+            else if(name.equals("filterfrequencies")){
+                tasks.put("filterfrequencies", Integer.parseInt(atts.getValue("upto")));
             }
             else{
                 System.out.println("XMLParser couldn't recognize element: "+name);

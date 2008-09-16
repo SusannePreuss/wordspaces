@@ -3,6 +3,7 @@ package wordspaces.gui.threads;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.SortedMap;
@@ -10,6 +11,7 @@ import java.util.TreeMap;
 import java.util.Vector;
 import javax.swing.SwingWorker;
 import plugins.ComputesDistance;
+import wordspaces.FrequencyFilter;
 import wordspaces.Fust;
 import wordspaces.GroupGradeCalculator;
 import wordspaces.Model;
@@ -70,6 +72,12 @@ public class BatchModelEvaluatorWorker extends SwingWorker<Object,double[]>{
                 else if(cmd.equals("remove")){
                     executeRemoveTasks(model, (Vector<String>) tasks.get(cmd));
                 }
+                else if(cmd.equals("filterfrequencies")){
+                    executeFilterFrequencies(model, (Integer) tasks.get(cmd));
+                }
+                else if(cmd.equals("filterextremevalues")){
+                    executeFilterExtremeValues(model,(Integer) tasks.get(cmd));
+                }
             }
             System.out.println("There are "+model.getDirectorySize()+" word vectors left in model "+model);
             /* Calculating GroupGrade */
@@ -118,6 +126,21 @@ public class BatchModelEvaluatorWorker extends SwingWorker<Object,double[]>{
             model.deleteWordVector(word);
             System.out.println(model+":: Removed "+word);
         }
+    }
+
+    public void executeFilterExtremeValues(Model model, int percentage){
+        Map<String, Map<String,Double>> selectedVectors = new HashMap();
+        String selectedWord;
+        for(int i=0;i<model.getDirectorySize();i++){
+            selectedWord = model.getVectorNameAt(i);             
+            selectedVectors.put(selectedWord, model.getContextVector(selectedWord));
+        }
+        
+        FrequencyFilter.filterExtremeValues(selectedVectors, percentage);
+    }
+    
+    public void executeFilterFrequencies(Model model, int upto){
+        FrequencyFilter.filterFrequenciesInWordMap(model, upto);
     }
 }
 
