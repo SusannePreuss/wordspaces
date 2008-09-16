@@ -42,7 +42,7 @@ public class CalculateDistance extends SwingWorker<Object,String>{
         try {
             getDistances();
         } catch (DimensionNotEqualException ex) {
-            ex.printStackTrace();
+            System.out.println(ex.getMessage());
         }
         return null;
     }
@@ -62,12 +62,10 @@ public class CalculateDistance extends SwingWorker<Object,String>{
             word       = (String)firstEntry.getKey();
             vector     = (SortedMap)firstEntry.getValue();
             iter       = vectors.keySet().iterator();
-
             /* Run through the rest of the entries from vector */
             while(iter.hasNext()){
                 compareWord   = (String)iter.next();
                 compareVector = vectors.get(compareWord);
-                
                 //check whether the distance between the two words has already been computed
                 if(!cachedDistances.containsKey(word) || !((SortedMap)cachedDistances.get(word)).containsKey(compareWord)  ){
                     Fust.mergeVectors(vector,compareVector);

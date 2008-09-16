@@ -86,14 +86,13 @@ public class BatchModelEvaluatorWorker extends SwingWorker<Object,double[]>{
                 wordVectorMap = new TreeMap();
                 /* First we have to build wordVectorMap<String, SortedMap<String, Double>> by iterating
                  * through all words in the model and putting them with their context vectors into
-                 * wordVectorMap. */
+                 * wordVectorMap. */               
                 for(int i=0; i<model.getDirectorySize();i++){
                     vectorName = model.getVectorNameAt(i);
                     wordVectorMap.put(vectorName, model.getContextVector(vectorName));
                 }
                 CalculateDistance task = new CalculateDistance(wordVectorMap, model.getCachedDistances(), cDist);
                 task.execute(); task.get();
-                
                 result = GroupGradeCalculator.calcGroupGradeButtonActionPerformed(model, groups);
                 firePropertyChange("results",model, result);
             }

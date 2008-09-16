@@ -6,6 +6,7 @@
 package wordspaces;
 
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -85,41 +86,22 @@ public class Fust {
      * @param v2 map that gets merged with first one
      */
     public static void mergeVectors(Map<String, Double> v1, Map<String, Double> v2){      
-        String entryLargeMap = null;
-        String entrySmallMap = null;
-        Map largeMap;
-        Map smallMap;
-        Iterator<String> smallMapIter;
-        Iterator<String> largeMapIter;
-        
-        if(v1.size() >= v2.size()){
-            largeMap = v1;
-            smallMap = v2;
-            largeMapIter = v1.keySet().iterator();
-            smallMapIter = v2.keySet().iterator();
-        }
-        else{
-            largeMap = v2;
-            smallMap = v1;
-            largeMapIter = v2.keySet().iterator();
-            smallMapIter = v1.keySet().iterator();
-        }
-        /* We run through all entries in largeMap and put them, if neccessary
-         * into smallMap. At most there are largeMap.size() steps ! */
-        while(largeMapIter.hasNext()){
-            entryLargeMap = (String) largeMapIter.next();  
-            if(!smallMap.containsKey(entryLargeMap)){
-                smallMap.put(entryLargeMap, 0.0);
-            }
-            
-            /* As long as there are entries in smallMap we try to put them
-             * into the large map. If not, smallMap is finished... */
-            if(smallMapIter.hasNext()){
-                entrySmallMap = (String) smallMapIter.next(); 
-                if(!largeMap.containsKey(entrySmallMap)){
-                    largeMap.put(entrySmallMap, 0.0);
-                }
+        Iterator iterV1 = v1.keySet().iterator();
+        String entryV1 = null;
+        String entryV2 = null;
+
+        while(iterV1.hasNext()){
+            entryV1 = (String) iterV1.next();
+            if(!v2.containsKey(entryV1)){
+                v2.put(entryV1, 0.0);
             }
         }
+        Iterator iterV2 = v2.keySet().iterator();
+        while (iterV2.hasNext()){
+            entryV2 = (String) iterV2.next();
+            if(!v1.containsKey(entryV2)){
+                v1.put(entryV2, 0.0);
+            }
+       }
     }
 }

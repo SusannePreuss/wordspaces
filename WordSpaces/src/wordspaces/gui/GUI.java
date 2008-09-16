@@ -1298,57 +1298,56 @@ public class GUI extends javax.swing.JFrame {
             selectedModels = LoadFiles("Select model files",".model",true);
             groupXMLFile = LoadFiles("Select group xml file",".xml",false);
         }
-        
-        progressBar.setMaximum(selectedModels.length);
-        progressBar.setString("(0/"+selectedModels.length+") models finished");
-        progressBar.setStringPainted(true);
-        final BatchModelEvaluatorWorker thread = new BatchModelEvaluatorWorker(selectedModels,groupXMLFile[0],distComputer);
-        thread.addPropertyChangeListener(new PropertyChangeListener() {
-            int progress = 0;
-            FileWriter writer;
+        final FileWriter writer;
+        try {
+            writer = new FileWriter(new File("results.txt"), true);
+            progressBar.setMaximum(selectedModels.length);
+            progressBar.setString("(0/"+selectedModels.length+") models finished");
+            progressBar.setStringPainted(true);
+            final BatchModelEvaluatorWorker thread = new BatchModelEvaluatorWorker(selectedModels,groupXMLFile[0],distComputer);
+            thread.addPropertyChangeListener(new PropertyChangeListener() {
+                int progress = 0;
 
-            public  void propertyChange(PropertyChangeEvent evt) {
-                /* one file has been parsed */
-                if ("results".equals(evt.getPropertyName())) {
-                    double[] results = (double[]) evt.getNewValue();
-                    Model m = (Model) evt.getOldValue();
-                    progressBar.setValue(++progress);
-                    progressBar.setString("("+progress+"/"+selectedModels.length+") models finished");
+                public  void propertyChange(PropertyChangeEvent evt) {
+                    /* one file has been parsed */
+                    if ("results".equals(evt.getPropertyName())) {
+                        double[] results = (double[]) evt.getNewValue();
+                        Model m = (Model) evt.getOldValue();
+                        progressBar.setValue(++progress);
+                        progressBar.setString("("+progress+"/"+selectedModels.length+") models finished");
 
-                    /* first we once! initialize the fileWriter */
-                    if( writer == null){
+                        /* now we try to write the result into a file */
                         try {
-                            writer = new FileWriter(new File("results.txt"), true);
+                            writer.write(m + ":: Grade " + results[0] + " (" + (results[2] - results[0]) + "/" + results[2] + ") Errors:" + results[1]+"\n");
+                            writer.flush();
                         } catch (IOException ex) {
                             System.out.println(ex.getMessage());
                         }
+                    
+                        System.out.println(m+":: Grade "+results[0]+" ("+(results[2]-results[0])+"/"+results[2]+") Errors:"+results[1]);
                     }
-
-                    /* now we try to write the result into a file */
-                    try {
-                        writer.write(m + ":: Grade " + results[0] + " (" + (results[2] - results[0]) + "/" + results[2] + ") Errors:" + results[1]+"\n");
-                    } catch (IOException ex) {
-                        System.out.println(ex.getMessage());
+                    /* first check !done because batchWorker is set to null in body ! */
+                    if(thread.isDone()){
+                        try {
+                            writer.close();
+                        } catch (IOException ex) {
+                            System.out.println(ex.getMessage());
+                        }
+                        groupXMLFile = null;
+                        selectedModels = null;
+                        progressBar.setString("");
+                        progressBar.setStringPainted(false);
+                        progressBar.setValue(0);
+                        batchWorker = null;
+                        stopBatchButton.setEnabled(false);
+                        System.out.println("Finished batch processing...");
                     }
-                    System.out.println(m+":: Grade "+results[0]+" ("+(results[2]-results[0])+"/"+results[2]+") Errors:"+results[1]);
                 }
-                /* first check !done because batchWorker is set to null in body ! */
-                if(thread.isDone()){
-                    try {
-                        writer.close();
-                    } catch (IOException ex) {
-                        System.out.println(ex.getMessage());
-                    }
-                    progressBar.setString("");
-                    progressBar.setStringPainted(false);
-                    progressBar.setValue(0);
-                    batchWorker = null;
-                    stopBatchButton.setEnabled(false);
-                    System.out.println("Finished batch processing...");
-                }
-            }
-        });
-        thread.execute();    
+            });
+            thread.execute();
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }           
     }//GEN-LAST:event_batchModelProcessingMenuItemActionPerformed
     
 
