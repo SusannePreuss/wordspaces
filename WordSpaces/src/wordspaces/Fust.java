@@ -14,7 +14,7 @@ import java.util.TreeSet;
 
 /**
  *
- * @author alexander
+ * @author alexander frey. afrey@uos.de
  */
 public class Fust {
     
@@ -54,7 +54,7 @@ public class Fust {
      * are given as Maps and the stemContext represents the treemap to
      * which we merge. v2 remains unchanged.
      * @param stemContext The TreeMap to which we merge
-     * @param similarWordContext is merged into stemContext
+     * @param similarWordContext is merged into stemContext, frequencies summed
      */
     public static void mergeContextMaps(Map v1, Map v2) throws NullPointerException{
         if(v1 == null || v2 == null){
