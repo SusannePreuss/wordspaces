@@ -1318,7 +1318,7 @@ public class GUI extends javax.swing.JFrame {
                     /* first we once! initialize the fileWriter */
                     if( writer == null){
                         try {
-                            writer = new FileWriter(new File("results.txt"));
+                            writer = new FileWriter(new File("results.txt"), true);
                         } catch (IOException ex) {
                             System.out.println(ex.getMessage());
                         }
