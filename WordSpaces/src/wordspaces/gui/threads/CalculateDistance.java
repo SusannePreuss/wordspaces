@@ -18,6 +18,7 @@ import exceptions.DimensionNotEqualException;
 import java.util.Map.Entry;
 import java.util.SortedMap;
 import plugins.EuclideanDistance;
+import wordspaces.Fust;
 
 /**
  *
@@ -56,19 +57,22 @@ public class CalculateDistance extends SwingWorker<Object,String>{
         double distance;
         
         while(!vectors.isEmpty()){
+            /* Get and delete the first entry from vectors */
             firstEntry = vectors.pollFirstEntry();
             word       = (String)firstEntry.getKey();
             vector     = (SortedMap)firstEntry.getValue();
             iter       = vectors.keySet().iterator();
-            
+
+            /* Run through the rest of the entries from vector */
             while(iter.hasNext()){
                 compareWord   = (String)iter.next();
                 compareVector = vectors.get(compareWord);
                 
                 //check whether the distance between the two words has already been computed
                 if(!cachedDistances.containsKey(word) || !((SortedMap)cachedDistances.get(word)).containsKey(compareWord)  ){
-                    mergeVectors(vector,compareVector);
+                    Fust.mergeVectors(vector,compareVector);
                     distance = sum(cDist.compute(vector,compareVector));
+
                     if(cDist instanceof EuclideanDistance)
                         distance = 1 / Math.sqrt(distance);
                     
@@ -90,31 +94,9 @@ public class CalculateDistance extends SwingWorker<Object,String>{
             this.firePropertyChange("progress",null,word);
         }
     } 
-    
-    
-    public static void mergeVectors(Map v1, Map v2){
-        Iterator iterV1 = v1.keySet().iterator();
-        String entryV1 = null;
-        String entryV2 = null;
-        
-        while(iterV1.hasNext()){
-            entryV1 = (String) iterV1.next();  
-            if(!v2.containsKey(entryV1)){
-                v2.put(entryV1, 0.0);
-            }
-        }
-        
-        Iterator iterV2 = v2.keySet().iterator();
-        while (iterV2.hasNext()){
-            entryV2 = (String) iterV2.next();  
-            if(!v1.containsKey(entryV2)){
-                v1.put(entryV2, 0.0);
-            }
-        } 
-    }
       
     public static double getDistance(SortedMap vector1, SortedMap vector2, ComputesDistance cDist) throws DimensionNotEqualException{        
-        mergeVectors(vector1, vector2);
+        Fust.mergeVectors(vector1, vector2);
         return sum(cDist.compute(vector1, vector2));
     } 
     

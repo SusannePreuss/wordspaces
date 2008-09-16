@@ -48,8 +48,11 @@ public class Fust {
     }
     
     
-    /** Merges two contexts together. The two contexts are given as Maps  
-     * and the stemContext represents the treemap to which we merge.
+    /** Merges two contexts together in such a way that v1 contains all
+     * elements from v2 including their frequncies. If v1 and v2 share a key
+     * the frequencies of both keys are summed and put into v1. The two contexts
+     * are given as Maps and the stemContext represents the treemap to
+     * which we merge. v2 remains unchanged.
      * @param stemContext The TreeMap to which we merge
      * @param similarWordContext is merged into stemContext
      */
@@ -75,5 +78,48 @@ public class Fust {
             }
         }
     }
-
+    
+    /** Merges two contexts together in such a way that both maps have the
+     * same length and the same set of keys. Values of keys get not summed.
+     * @param v1 first map that gets merged with second one
+     * @param v2 map that gets merged with first one
+     */
+    public static void mergeVectors(Map<String, Double> v1, Map<String, Double> v2){      
+        String entryLargeMap = null;
+        String entrySmallMap = null;
+        Map largeMap;
+        Map smallMap;
+        Iterator<String> smallMapIter;
+        Iterator<String> largeMapIter;
+        
+        if(v1.size() >= v2.size()){
+            largeMap = v1;
+            smallMap = v2;
+            largeMapIter = v1.keySet().iterator();
+            smallMapIter = v2.keySet().iterator();
+        }
+        else{
+            largeMap = v2;
+            smallMap = v1;
+            largeMapIter = v2.keySet().iterator();
+            smallMapIter = v1.keySet().iterator();
+        }
+        /* We run through all entries in largeMap and put them, if neccessary
+         * into smallMap. At most there are largeMap.size() steps ! */
+        while(largeMapIter.hasNext()){
+            entryLargeMap = (String) largeMapIter.next();  
+            if(!smallMap.containsKey(entryLargeMap)){
+                smallMap.put(entryLargeMap, 0.0);
+            }
+            
+            /* As long as there are entries in smallMap we try to put them
+             * into the large map. If not, smallMap is finished... */
+            if(smallMapIter.hasNext()){
+                entrySmallMap = (String) smallMapIter.next(); 
+                if(!largeMap.containsKey(entrySmallMap)){
+                    largeMap.put(entrySmallMap, 0.0);
+                }
+            }
+        }
+    }
 }
