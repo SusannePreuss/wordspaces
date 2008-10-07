@@ -1335,10 +1335,10 @@ public class GUI extends javax.swing.JFrame {
                         }
                         groupXMLFile = null;
                         selectedModels = null;
+                        batchWorker = null;
                         progressBar.setString("");
                         progressBar.setStringPainted(false);
-                        progressBar.setValue(0);
-                        batchWorker = null;
+                        progressBar.setValue(0);                       
                         stopBatchButton.setEnabled(false);
                         System.out.println("Finished batch processing...");
                     }

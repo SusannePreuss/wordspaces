@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<configuration>
+<groupsetting>
+	<group nr="0">
+		<word value="crime" />
+		<word value="tax" />
+		<word value="healthcare" />
+		<word value="abortion" />
+		<word value="unemployment" />
+		<word value="election" />
+	</group>
+	<group nr="1">
+		<word value="peace" />
+		<word value="war" />
+		<word value="terrorism" />
+		<word value="nato" />
+		<word value="diplomacy" />
+		<word value="disarmament" />
+	</group>
+</groupsetting>
+<tasks>
+	<remove word="afghanistan" /> 
+	<remove word="conflict" /> 
+	<remove word="defense" /> 
+	<remove word="immigration" />
+	<remove word="iraq" />
+	<remove word="nuke" />
+	<remove word="nukes" /> 
+	<remove word="taliban" />
+	<remove word="un" /> 
+	<merge mergeinto="tax" vector="taxes" />
+	<merge mergeinto="election" vector="elections" />
+</tasks> 
+</configuration>
+	

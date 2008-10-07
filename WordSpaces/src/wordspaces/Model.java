@@ -137,17 +137,20 @@ public class Model implements Serializable{
     }
     
     public synchronized void deleteWordVector(String word){       
-        /* run through all contextWords and remove them from the stringCache */
-        Iterator<String> contextIter = wordDirectory.get(word).keySet().iterator();
-        while(contextIter.hasNext()){
-            removeWordfromStringCache(contextIter.next());
-            contextIter.remove();
-        }
+        /* first check if the word is existing in wordDirectory... */
+        if(wordDirectory.get(word) != null){
+            /* run through all contextWords and remove them from the stringCache */
+            Iterator<String> contextIter = wordDirectory.get(word).keySet().iterator();
+            while(contextIter.hasNext()){
+                removeWordfromStringCache(contextIter.next());
+                contextIter.remove();
+            }
 
-        /* finally we remove also the vectorName */
-        wordDirectory.remove(word);
-        removeWordfromStringCache(word);
-        wordVectorFrequency.remove(word);
+            /* finally we remove also the vectorName */
+            wordDirectory.remove(word);
+            removeWordfromStringCache(word);
+            wordVectorFrequency.remove(word);
+        }    
     }
 
     public synchronized void deleteContextWord(String vectorName, String contextWord){
