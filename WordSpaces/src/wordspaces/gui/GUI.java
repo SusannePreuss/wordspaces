@@ -8,7 +8,7 @@ package wordspaces.gui;
 
 //package wordspaces.gui;
 
-import wordspaces.gui.threads.CalculateDistance;
+import wordspaces.gui.threads.DistanceCalculatorWorker;
 import java.io.IOException;
 import wordspaces.gui.threads.BuildWordTableWorker;
 import wordspaces.gui.listener.ModelPopupListener;
@@ -810,7 +810,7 @@ public class GUI extends javax.swing.JFrame {
                     }
                     textSizeLabel.setText("Calculating distances...");
                     progressBar.setMaximum(selection.size());
-                    final CalculateDistance task = new CalculateDistance(selection, model.getCachedDistances(), distComputer);
+                    final DistanceCalculatorWorker task = new DistanceCalculatorWorker(selection, model.getCachedDistances(), distComputer);
                     task.addPropertyChangeListener(new PropertyChangeListener() {
                         int counter = 0;
                         public  void propertyChange(PropertyChangeEvent evt) {

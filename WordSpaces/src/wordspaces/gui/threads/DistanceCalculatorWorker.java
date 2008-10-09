@@ -1,5 +1,5 @@
 /*
- * CalculateDistance.java
+ * DistanceCalculatorWorker.java
  *
  * Created on 14. Juni 2007, 11:16
  *
@@ -22,19 +22,19 @@ import wordspaces.Fust;
 
 /**
  *
- * @author alexander
+ * @author alexander frey. afrey@uos.de
  */
-public class CalculateDistance extends SwingWorker<Object,String>{
+public class DistanceCalculatorWorker extends SwingWorker<Object,String>{
     
     private TreeMap<String,SortedMap> vectors;
     private Map cachedDistances;
     private ComputesDistance cDist;
 
     
-    public CalculateDistance(TreeMap<String,SortedMap> vectors, Map distances, ComputesDistance cDist){
+    public DistanceCalculatorWorker(TreeMap<String,SortedMap> vectors, Map cache, ComputesDistance cDist){
         this.cDist           = cDist;
         this.vectors         = vectors;
-        this.cachedDistances = distances; 
+        this.cachedDistances = cache; 
     }
     
     
@@ -42,7 +42,7 @@ public class CalculateDistance extends SwingWorker<Object,String>{
         try {
             getDistances();
         } catch (DimensionNotEqualException ex) {
-            System.out.println(ex.getMessage());
+            ex.printStackTrace();
         }
         return null;
     }
@@ -62,10 +62,12 @@ public class CalculateDistance extends SwingWorker<Object,String>{
             word       = (String)firstEntry.getKey();
             vector     = (SortedMap)firstEntry.getValue();
             iter       = vectors.keySet().iterator();
+
             /* Run through the rest of the entries from vector */
             while(iter.hasNext()){
                 compareWord   = (String)iter.next();
                 compareVector = vectors.get(compareWord);
+                
                 //check whether the distance between the two words has already been computed
                 if(!cachedDistances.containsKey(word) || !((SortedMap)cachedDistances.get(word)).containsKey(compareWord)  ){
                     Fust.mergeVectors(vector,compareVector);

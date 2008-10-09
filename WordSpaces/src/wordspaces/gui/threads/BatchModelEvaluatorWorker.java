@@ -91,7 +91,7 @@ public class BatchModelEvaluatorWorker extends SwingWorker<Object,double[]>{
                     vectorName = model.getVectorNameAt(i);
                     wordVectorMap.put(vectorName, model.getContextVector(vectorName));
                 }
-                CalculateDistance task = new CalculateDistance(wordVectorMap, model.getCachedDistances(), cDist);
+                DistanceCalculatorWorker task = new DistanceCalculatorWorker(wordVectorMap, model.getCachedDistances(), cDist);
                 task.execute(); task.get();
                 result = GroupGradeCalculator.calcGroupGradeButtonActionPerformed(model, groups);
                 firePropertyChange("results",model, result);

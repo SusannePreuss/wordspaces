@@ -145,6 +145,9 @@ public class XMLParserWorker extends SwingWorker<Object,Object>{
             else if(name.equals("filterfrequencies")){
                 tasks.put("filterfrequencies", Integer.parseInt(atts.getValue("upto")));
             }
+            else if(name.equals("buildwordclasses")){
+                tasks.put("buildwordclasses", null);
+            }
             else{
                 System.out.println("XMLParser couldn't recognize element: "+name);
             }
