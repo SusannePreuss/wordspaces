@@ -1224,7 +1224,7 @@ public class GUI extends javax.swing.JFrame {
             for(int i=0;i<parserListModel.getSize();i++)
                 parserVector[i] = (Parser) parserListModel.elementAt(i);
         
-           
+            progressBar.setIndeterminate(false);
             progressBar.setMaximum(parserVector.length*files.size());
             progressBar.setString("(0/"+parserVector.length+") models builded");
             progressBar.setStringPainted(true);
@@ -1255,6 +1255,7 @@ public class GUI extends javax.swing.JFrame {
                         progressBar.setString("");
                         progressBar.setStringPainted(false);
                         progressBar.setValue(0);
+                        progressBar.setIndeterminate(false);
                         batchWorker = null;
                         stopBatchButton.setEnabled(false);
                     }
@@ -1301,6 +1302,7 @@ public class GUI extends javax.swing.JFrame {
         final FileWriter writer;
         try {
             writer = new FileWriter(new File("results.txt"), true);
+            progressBar.setIndeterminate(true);
             progressBar.setMaximum(selectedModels.length);
             progressBar.setString("(0/"+selectedModels.length+") models finished");
             progressBar.setStringPainted(true);
@@ -1318,13 +1320,13 @@ public class GUI extends javax.swing.JFrame {
 
                         /* now we try to write the result into a file */
                         try {
-                            writer.write(m + ":: Grade " + results[0] + " (" + (results[2] - results[0]) + "/" + results[2] + ") Errors:" + results[1]+"\n");
+                            writer.write(m + ":: Grade " + (1-(results[0] / results[2]))+" ("+(results[0])+"/"+results[2]+") Errors:"+results[1]+"\n");
                             writer.flush();
                         } catch (IOException ex) {
                             System.out.println(ex.getMessage());
                         }
                     
-                        System.out.println(m+":: Grade "+results[0]+" ("+(results[2]-results[0])+"/"+results[2]+") Errors:"+results[1]);
+                        System.out.println(m+":: Grade "+(1-(results[0] / results[2]))+" ("+(results[0])+"/"+results[2]+") Errors:"+results[1]);
                     }
                     /* first check !done because batchWorker is set to null in body ! */
                     if(thread.isDone()){
@@ -1338,7 +1340,8 @@ public class GUI extends javax.swing.JFrame {
                         batchWorker = null;
                         progressBar.setString("");
                         progressBar.setStringPainted(false);
-                        progressBar.setValue(0);                       
+                        progressBar.setValue(0);  
+                        progressBar.setIndeterminate(false);
                         stopBatchButton.setEnabled(false);
                         System.out.println("Finished batch processing...");
                     }

@@ -31,12 +31,12 @@ public class GroupGradeCalculator {
         Vector<String> members;
         TreeSet<Entry<String, Double>> k_smallest_edges;
         Entry entry;
-        float grade = 0, 
+        float summed_errors = 0,
               error = 0, 
-              group_error = 0, 
+              group_error = 0,
               possible_maximal_error = 0;
         
-        int grp, grp_SIZE, errors = 0,
+        int grp, grp_SIZE, error_counter = 0,
             pos_in_k_smallest_edges = 0;     //pos of the word of k_smallest_edges, needed to calculate the error
 
         while(groupIter.hasNext()){          //go through all groups
@@ -46,7 +46,6 @@ public class GroupGradeCalculator {
             //first identify the number of words in the same group as vectorName
             grp_SIZE = members.size();
             group_error = 0;
-            possible_maximal_error += calcMaxGroupError(grp_SIZE);
             
             /* go through all words in the group */
             for( int i=0 ; i < grp_SIZE ; i++ ){        
@@ -64,19 +63,21 @@ public class GroupGradeCalculator {
                     if(!members.contains(neighborWord)){
                         /* Calculate the error by dividing 1 by pos_in_k_smallest_edges */
                         error = (float) 1 / (float) pos_in_k_smallest_edges;
-                        group_error += error / possible_maximal_error;
-                        errors++;
+                        group_error += error;
+                        error_counter++;
                         System.out.println("Error! "+word.toUpperCase()+" neighbor is "+neighborWord.toUpperCase()+" pos is "+pos_in_k_smallest_edges+" error "+error);
                     }
                 }
             }
             /* Calculate the arithmetic average of the grp_error by dividing grp_error
              * by grp_SIZE. We get the average error for a word in the group. */
-            group_error = group_error / (float) grp_SIZE;
-            grade += group_error;
+            possible_maximal_error += grp_SIZE * calcMaxGroupError(grp_SIZE);
+   //         group_error = group_error / ( grp_SIZE * calcMaxGroupError(grp_SIZE) );
+            summed_errors += group_error;
         }
-        result[0] = 1 - ( grade / groups.size() );
-        result[1] = errors;
+        /* return the average group error */
+        result[0] = summed_errors;
+        result[1] = error_counter;
         result[2] = possible_maximal_error;
         return result;
     }

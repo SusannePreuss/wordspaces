@@ -362,7 +362,7 @@ public class DistancesPanel extends javax.swing.JPanel {
 
     private void calcGroupGradeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calcGroupGradeButtonActionPerformed
         double[] results = GroupGradeCalculator.calcGroupGradeButtonActionPerformed(gui.getModel(), groups);
-        groupGradeLabel.setText(results[0]+" ("+(results[2]-results[0])+"/"+results[2]+") Errors:"+results[1]);
+        groupGradeLabel.setText(1-(results[0] / results[2])+" ("+(results[0])+"/"+results[2]+") Errors:"+results[1]);
     }//GEN-LAST:event_calcGroupGradeButtonActionPerformed
 
     private void clearGroupSettingsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearGroupSettingsButtonActionPerformed
