@@ -27,6 +27,12 @@ public class BatchModelEvaluatorWorker extends SwingWorker<Object,double[]>{
     ComputesDistance cDist;
     Map<Integer, Vector> groupsMap;
     Model model;
+    /* The order of the command in the array determine the order in which
+     * the cmd's need to be executed */
+    String[] cmd_execution_array = {"remove",
+                                    "merge",
+                                    "filterfrequencies",
+                                    "filterextremevalues"};
     
     public BatchModelEvaluatorWorker(File[] modelFiles, File xmlFile, ComputesDistance cDist){
         this.modelFiles = modelFiles;
@@ -45,8 +51,6 @@ public class BatchModelEvaluatorWorker extends SwingWorker<Object,double[]>{
         tasks = parser.getTasks();
         groups = parser.getGroups();
         
-        Iterator<String> taskIter;
-        String cmd;
         double[] result;
         TreeMap<String, SortedMap> wordVectorMap;
         String vectorName;
@@ -63,21 +67,23 @@ public class BatchModelEvaluatorWorker extends SwingWorker<Object,double[]>{
             modelLoader.execute();
             model = modelLoader.get();
             double time = System.currentTimeMillis();
-            taskIter = tasks.keySet().iterator();
+
             /* Execute all tasks */
-            while(taskIter.hasNext()){
-                cmd = taskIter.next();
-                if(cmd.equals("merge")){
-                    executeMergeTasks(model,(Map<String, String>) tasks.get(cmd));
-                }
-                else if(cmd.equals("remove")){
-                    executeRemoveTasks(model, (Vector<String>) tasks.get(cmd));
-                }
-                else if(cmd.equals("filterfrequencies")){
-                    executeFilterFrequencies(model, (Integer) tasks.get(cmd));
-                }
-                else if(cmd.equals("filterextremevalues")){
-                    executeFilterExtremeValues(model,(Integer) tasks.get(cmd));
+            for(String cmd: cmd_execution_array){
+                /* Only execute cmd if it is present */
+                if(tasks.containsKey(cmd)){
+                    if(cmd.equals("merge")){
+                        executeMergeTasks(model,(Map<String, String>) tasks.get(cmd));
+                    }
+                    else if(cmd.equals("remove")){
+                        executeRemoveTasks(model, (Vector<String>) tasks.get(cmd));
+                    }
+                    else if(cmd.equals("filterfrequencies")){
+                        executeFilterFrequencies(model, (Integer) tasks.get(cmd));
+                    }
+                    else if(cmd.equals("filterextremevalues")){
+                        executeFilterExtremeValues(model,(Integer) tasks.get(cmd));
+                    }
                 }
             }
             System.out.println("There are "+model.getDirectorySize()+" word vectors left in model "+model);

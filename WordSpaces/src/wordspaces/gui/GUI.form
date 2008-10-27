@@ -365,7 +365,6 @@
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
                           <Group type="102" attributes="0">
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
                               <Component id="modelsTabbedPane" pref="224" max="32767" attributes="0"/>
                               <EmptySpace min="-2" max="-2" attributes="0"/>
                               <Component id="parserTabbedPane" min="-2" pref="115" max="-2" attributes="2"/>
@@ -614,7 +613,7 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="logScrollPane" alignment="1" pref="745" max="32767" attributes="0"/>
+              <Component id="logScrollPane" alignment="1" pref="757" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">

@@ -26,7 +26,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.OutputStream;
@@ -1295,7 +1294,7 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_selectGroupXMLMenuItemActionPerformed
 
     private void batchModelProcessingMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_batchModelProcessingMenuItemActionPerformed
-        if(groupXMLFile == null || selectedModels == null){
+        while(groupXMLFile == null || selectedModels == null){
             selectedModels = LoadFiles("Select model files",".model",true);
             groupXMLFile = LoadFiles("Select group xml file",".xml",false);
         }
@@ -1320,13 +1319,13 @@ public class GUI extends javax.swing.JFrame {
 
                         /* now we try to write the result into a file */
                         try {
-                            writer.write(m + ":: Grade " + (1-(results[0] / results[2]))+" ("+(results[0])+"/"+results[2]+") Errors:"+results[1]+"\n");
+                            writer.write(m + ":: Grade " + (1-(results[0] / results[2]))+" ( 1 - "+(results[0])+" / "+results[2]+") Errors:"+results[1]+"\n");
                             writer.flush();
                         } catch (IOException ex) {
                             System.out.println(ex.getMessage());
                         }
                     
-                        System.out.println(m+":: Grade "+(1-(results[0] / results[2]))+" ("+(results[0])+"/"+results[2]+") Errors:"+results[1]);
+                        System.out.println(m+":: Grade "+(1-(results[0] / results[2]))+" ( 1 - "+(results[0])+" / "+results[2]+") Errors:"+results[1]);
                     }
                     /* first check !done because batchWorker is set to null in body ! */
                     if(thread.isDone()){
