@@ -7,12 +7,8 @@ package wordspaces.gui.listener;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.SortedMap;
-import java.util.TreeSet;
 import javax.swing.JOptionPane;
 import wordspaces.FrequencyFilter;
 import wordspaces.gui.GUI;
