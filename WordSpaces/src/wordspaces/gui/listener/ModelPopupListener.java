@@ -50,7 +50,7 @@ public class ModelPopupListener extends MouseAdapter {
                 }
                 System.out.println("Parsed sources in model "+model.getParsedSources().size()+
                             ", vectors "+model.getDirectorySize()+
-                            ", word vector freq "+model.getWordVectorFrequency().size()+
+                            ", word vector freq "+model.getWordVectorFrequencies().size()+
                             ", string cache "+model.getStringCache().size()+
                             ", freq cache "+model.getStringFrequency().size());
                 gui.showHistoryTable();

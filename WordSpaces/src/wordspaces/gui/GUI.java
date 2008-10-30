@@ -730,7 +730,7 @@ public class GUI extends javax.swing.JFrame {
                     selectedVectors = new SortedMap[indices.length];
                     for(int i=0; i < indices.length; i++){
                         vectorName = (String) wordTableModel.getValueAt( wordTable.convertRowIndexToModel(indices[i]), 0);
-                        selectedVectors[i] = model.getContextVector(vectorName);
+                        selectedVectors[i] = model.getWordVector(vectorName);
                     }
 
                     progressBar.setMaximum(selectedVectors.length);
@@ -805,7 +805,7 @@ public class GUI extends javax.swing.JFrame {
                     selection = new TreeMap<String, SortedMap>();
                     for(int i=0; i < indices.length; i++){          //put the selected word vectors into selection
                         String word = (String) wordTableModel.getValueAt( wordTable.convertRowIndexToModel(indices[i]), 0);
-                        selection.put(word, model.getContextVector(word));
+                        selection.put(word, model.getWordVector(word));
                     }
                     textSizeLabel.setText("Calculating distances...");
                     progressBar.setMaximum(selection.size());
@@ -814,7 +814,7 @@ public class GUI extends javax.swing.JFrame {
                         int counter = 0;
                         public  void propertyChange(PropertyChangeEvent evt) {
                                 if ("progress".equals(evt.getPropertyName())) {
-                                    wordTableModel.setValueAt((model.getContextVector((String) evt.getNewValue())).size(),wordTable.convertRowIndexToModel(indices[counter]), 2);
+                                    wordTableModel.setValueAt((model.getWordVector((String) evt.getNewValue())).size(),wordTable.convertRowIndexToModel(indices[counter]), 2);
                                     distPanel.wordDirTableModel.addRow(new Object[] {evt.getNewValue()});
                                     distPanel.wordsCountLabel.setText(Integer.parseInt(distPanel.wordsCountLabel.getText())+1+"");
                                     progressBar.setValue(counter++);
@@ -851,8 +851,8 @@ public class GUI extends javax.swing.JFrame {
                     final int[] indices = wordTable.getSelectedRows();
                     for( int i=indices.length-1 ; i>=0 ; i-- ){
                         String vectorName = (String) wordTableModel.getValueAt( wordTable.convertRowIndexToModel(indices[i]), 0);
-                        FrequencyFilter.filterFrequenciesInContext(model.getContextVector(vectorName),inputValue);
-                        if(model.getContextVector(vectorName).size() == 0)
+                        FrequencyFilter.filterFrequenciesInContext(model.getWordVector(vectorName),inputValue);
+                        if(model.getWordVector(vectorName).size() == 0)
                             model.deleteWordVector(vectorName);
                     }
 
@@ -1646,12 +1646,12 @@ public class GUI extends javax.swing.JFrame {
                     String selectedWord = (String) wordTableModel.getValueAt(
                             wordTable.convertRowIndexToModel(wordTable.getSelectedRow()),0);
   //                  System.out.println("Start building context table!");
-                    Iterator<String> iter = model.getContextVector(selectedWord).keySet().iterator();
+                    Iterator<String> iter = model.getWordVector(selectedWord).keySet().iterator();
                     String contextWord;
                     while(iter.hasNext()){
                         contextWord = iter.next();
                         contextTableModel.addRow(new Object[] {
-                            contextWord, model.getContextVector(selectedWord).get(contextWord)
+                            contextWord, model.getWordVector(selectedWord).get(contextWord)
                         });
                     }
                     System.out.println("Finished context table building!");

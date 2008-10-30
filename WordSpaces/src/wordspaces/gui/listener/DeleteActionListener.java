@@ -88,13 +88,13 @@ public class DeleteActionListener implements ActionListener{
                     model.deleteContextWord(wordVector, selectedWord);
                 }
                 System.out.println(" from "+wordVector+"...");
-                if(model.getContextVector(wordVector) == null){           //we deleted all context words from context vector
+                if(model.getWordVector(wordVector) == null){           //we deleted all context words from context vector
                     if(wordVectors.length == 1)       //we can only update the table if we delete from only one word vector
                         wordTableModel.removeRow(wordTable.convertRowIndexToModel(wordTable.getSelectedRow()));
                     
                 }else{
                     if(wordVectors.length == 1)       //we can only update the table if we delete from only one word vector
-                        wordTableModel.setValueAt(model.getContextVector(wordVector).size(), wordTable.convertRowIndexToModel(wordTable.getSelectedRow()), 2);
+                        wordTableModel.setValueAt(model.getWordVector(wordVector).size(), wordTable.convertRowIndexToModel(wordTable.getSelectedRow()), 2);
                 }
             }
             contextModel.setRowCount(0);    //better set this to zero     

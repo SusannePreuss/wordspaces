@@ -36,7 +36,7 @@ public class FilterExtremeValuesActionListener implements ActionListener{
             for(int i=0;i<indices.length;i++){
                 selectedRow = gui.getWordTable().convertRowIndexToModel(indices[i]);
                 selectedWord = (String) gui.getWordTable().getModel().getValueAt(selectedRow,0);               
-                selectedVectors.put(selectedWord, gui.getModel().getContextVector(selectedWord));
+                selectedVectors.put(selectedWord, gui.getModel().getWordVector(selectedWord));
             }
             
             FrequencyFilter.filterExtremeValues(selectedVectors, Integer.parseInt(string));

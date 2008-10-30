@@ -57,9 +57,9 @@ public class MergeVectorsListener implements MenuListener{
                             String otherWord = (String) wordTableModel.getValueAt( wordTable.convertRowIndexToModel(indices[i]), 0);
                             if(!word.equals(otherWord)){
                                 //now the vectors get merged.
-                                Fust.mergeContextMaps(model.getContextVector(word), model.getContextVector(otherWord));
+                                Fust.mergeContextMaps(model.getWordVector(word), model.getWordVector(otherWord));
                                 //now the occurences have to be updated
-                                model.getWordVectorFrequency().put(model.getStringCache().get(word), model.getWordVectorFrequency().get(word)+model.getWordVectorFrequency().get(otherWord));
+                                model.getWordVectorFrequencies().put(model.getStringCache().get(word), model.getWordVectorFrequencies().get(word)+model.getWordVectorFrequencies().get(otherWord));
                                 System.out.println(otherWord+" was merged with "+word);
                             }
                             else{
@@ -67,15 +67,15 @@ public class MergeVectorsListener implements MenuListener{
                             }
                         }
                         //now the entries of the merge Vector get updated
-                        wordTableModel.setValueAt(model.getWordVectorFrequency().get(word),wordTable.convertRowIndexToModel(index_mergeVector), 1);
-                        wordTableModel.setValueAt(model.getContextVector(word).size(),wordTable.convertRowIndexToModel(index_mergeVector), 2);
+                        wordTableModel.setValueAt(model.getWordVectorFrequencies().get(word),wordTable.convertRowIndexToModel(index_mergeVector), 1);
+                        wordTableModel.setValueAt(model.getWordVector(word).size(),wordTable.convertRowIndexToModel(index_mergeVector), 2);
                         //now all vectors except the vector to which we merged get deleted
                         for(int i=indices.length-1;i>=0;i--){
                             int selectedRow = wordTable.convertRowIndexToModel(indices[i]);
                             String otherVecName = (String) wordTableModel.getValueAt( selectedRow, 0);
                             if(!word.equals(otherVecName)){
                                 model.deleteWordVector(otherVecName);
-                                model.getWordVectorFrequency().remove(otherVecName);
+                                model.getWordVectorFrequencies().remove(otherVecName);
                                 wordTableModel.removeRow(selectedRow);
                             }
                         }
