@@ -30,7 +30,7 @@ public class Model implements Serializable{
     private SortedMap<String,SortedMap<String,Double>> distances;
     
     //saves the occurences of the vectors in wordDirectory
-    private Map<String, Integer> wordVectorFrequencies;
+    private Map<String, Integer> wordVectorFrequency;
 
     //contains the names of the parsed texts
     private Vector<String> parsedSources;
@@ -46,7 +46,7 @@ public class Model implements Serializable{
 
     public Model(String name) {
         wordDirectory         = new TreeMap<String, SortedMap<String,Double>>();
-        wordVectorFrequencies = Collections.synchronizedMap(new HashMap<String, Integer>());
+        wordVectorFrequency = Collections.synchronizedMap(new HashMap<String, Integer>());
         distances             = new TreeMap<String, SortedMap<String,Double>>();
         parsedSources         = new Vector<String>();
         stringCache           = new HashMap();
@@ -72,15 +72,15 @@ public class Model implements Serializable{
         return distances;
     }
     
-    public Map<String, Integer> getWordVectorFrequencies(){
-        return wordVectorFrequencies;
+    public Map<String, Integer> getWordVectorFrequency(){
+        return wordVectorFrequency;
     }
     
     public Vector<String> getParsedSources(){
         return parsedSources;
     }
 
-    public SortedMap<String,Double> getWordVector(String vectorName){
+    public SortedMap<String,Double> getContextVector(String vectorName){
         if(wordDirectory.containsKey(vectorName))
             return wordDirectory.get(vectorName);
 
@@ -146,7 +146,7 @@ public class Model implements Serializable{
             /* finally we remove also the vectorName */
             wordDirectory.remove(word);
             removeWordfromStringCache(word);
-            wordVectorFrequencies.remove(word);
+            wordVectorFrequency.remove(word);
         }    
     }
 

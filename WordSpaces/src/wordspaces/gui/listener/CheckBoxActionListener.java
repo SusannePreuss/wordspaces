@@ -38,7 +38,7 @@ public class CheckBoxActionListener implements ActionListener {
             if(!focusWords.contains(word)){
                 model.deleteWordVector(word);
                 model.getCachedDistances().remove(word);
-                model.getWordVectorFrequencies().remove(word);
+                model.getWordVectorFrequency().remove(word);
             }
         }
         gui.setModelhasChanged(model);

@@ -53,12 +53,12 @@ public class ShowContextTableThread extends Thread{
     
     public void run(){
         System.out.println("Start building context table!");
-        Iterator iter = model.getWordVector(name).keySet().iterator();
+        Iterator iter = model.getContextVector(name).keySet().iterator();
         String contextWord;
         while(iter.hasNext()){
             contextWord = (String)iter.next();
             tableModel.addRow(new Object[] {
-                contextWord, model.getWordVector(name).get(contextWord)
+                contextWord, model.getContextVector(name).get(contextWord)
             });
         }
         System.out.println("Finished table building!");

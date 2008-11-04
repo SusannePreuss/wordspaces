@@ -32,7 +32,7 @@ public class WordClassBuilder extends SwingWorker<Object, Integer>{
      */
     public WordClassBuilder(Model m) {
         model      = m;
-        occurences = (Map<String, Integer>) m.getWordVectorFrequencies();
+        occurences = (Map<String, Integer>) m.getWordVectorFrequency();
     }
     
     public void buildWordClasses(){
@@ -47,7 +47,7 @@ public class WordClassBuilder extends SwingWorker<Object, Integer>{
             /* before we look for similar words, we find word classes in
              * the context vector of stem. This is done first when we see stem
              * and then after it has been merged with another context vector. */
-            shrinkContextWords(stem, model.getWordVector(stem));
+            shrinkContextWords(stem, model.getContextVector(stem));
 
 
             /* stop searching for similar words when the first letter changes 
@@ -59,13 +59,13 @@ public class WordClassBuilder extends SwingWorker<Object, Integer>{
                 if(computeSimilarity(stem,word) >= THRESHOLD){                        //this indicates that the two words are similar               
                     firePropertyChange("merge", null, stem+" and "+word+" got merged...");
                     firePropertyChange("remove",null,wordPos);
-                    Fust.mergeContextMaps(model.getWordVector(stem), model.getWordVector(word));
+                    Fust.mergeContextMaps(model.getContextVector(stem), model.getContextVector(word));
                     occurences.put(stem, occurences.get(stem)+occurences.get(word));
                     model.deleteWordVector(word);           //'word' and its context must be deleted
                     
                     /* now as the maps got merged we need to look for wordClasses
                      * in the contextVector of stem again. */
-                    shrinkContextWords(stem, model.getWordVector(stem));
+                    shrinkContextWords(stem, model.getContextVector(stem));
                 }
                 /* when sim was big enough there is no need for wordPos++
                  * since 'word' was deleted and we are already at the next wordPos ! */
@@ -147,7 +147,7 @@ public class WordClassBuilder extends SwingWorker<Object, Integer>{
                 return 1;
             }else if(attachement.equals("ly")){
                 return 1;
-            }else if(model.getWordVector(attachement) != null){    // -->check whether attachement is in wordMap
+            }else if(model.getContextVector(attachement) != null){    // -->check whether attachement is in wordMap
                 return 0;
             }
         }

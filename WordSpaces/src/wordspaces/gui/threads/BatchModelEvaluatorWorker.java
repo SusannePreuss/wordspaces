@@ -95,7 +95,7 @@ public class BatchModelEvaluatorWorker extends SwingWorker<Object,double[]>{
                  * wordVectorMap. */               
                 for(int i=0; i<model.getDirectorySize();i++){
                     vectorName = model.getVectorNameAt(i);
-                    wordVectorMap.put(vectorName, model.getWordVector(vectorName));
+                    wordVectorMap.put(vectorName, model.getContextVector(vectorName));
                 }
                 DistanceCalculatorWorker task = new DistanceCalculatorWorker(wordVectorMap, model.getCachedDistances(), cDist);
                 task.execute(); task.get();
@@ -115,8 +115,8 @@ public class BatchModelEvaluatorWorker extends SwingWorker<Object,double[]>{
         while(tasksIter.hasNext()){
             first  = tasksIter.next();
             second = tasks.get(first);
-            firstMap = model.getWordVector(first);
-            secMap   = model.getWordVector(second);
+            firstMap = model.getContextVector(first);
+            secMap   = model.getContextVector(second);
             try{
                 Fust.mergeContextMaps(firstMap, secMap);
                 model.deleteWordVector(second);
@@ -140,7 +140,7 @@ public class BatchModelEvaluatorWorker extends SwingWorker<Object,double[]>{
         String selectedWord;
         for(int i=0;i<model.getDirectorySize();i++){
             selectedWord = model.getVectorNameAt(i);             
-            selectedVectors.put(selectedWord, model.getWordVector(selectedWord));
+            selectedVectors.put(selectedWord, model.getContextVector(selectedWord));
         }
         
         FrequencyFilter.filterExtremeValues(selectedVectors, percentage);

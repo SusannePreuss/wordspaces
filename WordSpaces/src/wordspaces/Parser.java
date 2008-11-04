@@ -86,10 +86,10 @@ public class Parser {
                         if(focusWords == null || focusWords.contains(word)){
                             /* now the word gets counted in the treemap wordVectorFreq
                              * only if its a focusWord */
-                            if(model.getWordVectorFrequencies().get(word) != null){     //word has already been seen
-                                model.getWordVectorFrequencies().put(word, model.getWordVectorFrequencies().get(word) + 1);
+                            if(model.getWordVectorFrequency().get(word) != null){     //word has already been seen
+                                model.getWordVectorFrequency().put(word, model.getWordVectorFrequency().get(word) + 1);
                             }else{                                          //it's the first occurence of word
-                                model.getWordVectorFrequencies().put(word, 1);
+                                model.getWordVectorFrequency().put(word, 1);
                             }
                               
                             //boundaries for context are determined

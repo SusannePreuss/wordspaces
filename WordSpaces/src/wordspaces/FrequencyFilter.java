@@ -33,11 +33,11 @@ public class FrequencyFilter {
     }
     
     public static void filterFrequenciesInWordMap(Model m, int freq){
-        Iterator iter = m.getWordVectorFrequencies().keySet().iterator();
+        Iterator iter = m.getWordVectorFrequency().keySet().iterator();
         
         while(iter.hasNext()){
             String word = (String) iter.next();
-            int f = m.getWordVectorFrequencies().get(word);
+            int f = m.getWordVectorFrequency().get(word);
             if(f <= freq){
                 m.deleteWordVector(word);
             }
