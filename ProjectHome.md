@@ -1,0 +1,1 @@
+This began as a bachelor thesis and is now getting bigger and bigger. The goal is to develop a knowledge discovery framework with corresponding gui that gives the user the ability to build, evaluate and integrate word spaces (semantic spaces) in their own applications.
